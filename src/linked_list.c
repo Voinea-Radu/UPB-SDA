@@ -11,26 +11,23 @@ linked_list_t *create_linked_list()
 	linked_list_t* list = safe_malloc(sizeof(linked_list_t));
 	list->size = 0;
 	list->head = NULL;
+	list->tail = NULL;
 
 	return list;
 }
 
 void add_node(linked_list_t *list, void *data)
 {
-	node_t *new_node = safe_malloc(sizeof(node_t));
-	new_node->data = data;
-	new_node->next = NULL;
+	node_t *node = safe_malloc(sizeof(node_t));
+	node->data = data;
+	node->next = NULL;
 
 	if (list->head == NULL) {
-		list->head = new_node;
+		list->head = node;
+		list->tail = node;
 	} else {
-		node_t *current = list->head;
-
-		while (current->next != NULL) {
-			current = current->next;
-		}
-
-		current->next = new_node;
+		list->tail->next = node;
+		list->tail = node;
 	}
 
 	list->size++;
@@ -39,22 +36,27 @@ void add_node(linked_list_t *list, void *data)
 void remove_node(linked_list_t *list, void *data)
 {
 	node_t *current = list->head;
-	node_t *previous = NULL;
+	node_t *prev = NULL;
 
 	while (current != NULL) {
 		if (current->data == data) {
-			if (previous == NULL) {
+			if (prev == NULL) {
 				list->head = current->next;
 			} else {
-				previous->next = current->next;
+				prev->next = current->next;
+			}
+
+			if (current->next == NULL) {
+				list->tail = prev;
 			}
 
 			free(current);
 			list->size--;
+
 			return;
 		}
 
-		previous = current;
+		prev = current;
 		current = current->next;
 	}
 }

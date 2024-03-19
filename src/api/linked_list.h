@@ -10,12 +10,16 @@ Grupa: 315 CA
 
 typedef struct node {
 	void *data;
+
+	struct node *prev;
 	struct node *next;
 } node_t;
 
 typedef struct {
 	uint64_t size;
+
 	node_t *head;
+	node_t *tail;
 } linked_list_t;
 
 linked_list_t *create_linked_list();
