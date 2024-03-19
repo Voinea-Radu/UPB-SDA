@@ -13,6 +13,8 @@ static string_to_handle command_table[] = {
 		{"malloc",    handle_malloc},
 		{"dump",      handle_dump},
 		{"free",      handle_free},
+		{"write",     handle_write},
+		{"read",      handle_read},
 };
 
 uint8_t process_command(string_t command)
@@ -81,14 +83,6 @@ uint8_t handle_dump(int64_t args_size, string_t *args, heap_t *heap)
 
 uint8_t handle_free(int64_t args_size, string_t *args, heap_t *heap)
 {
-	string_t start_address_str = args[1];
-	uint64_t start_address_str_size = strlen(start_address_str);
-
-	if (start_address_str_size < 3 || start_address_str[0] != '0' || start_address_str[1] != 'x') {
-		printf("Invalid free\n");
-		return CONTINUE;
-	}
-
 	int64_t start_address = strtol(args[1], NULL, 16);
 
 	if (start_address % 8 != 0) {
@@ -102,6 +96,38 @@ uint8_t handle_free(int64_t args_size, string_t *args, heap_t *heap)
 		printf("Memory at address 0x%lx freed\n", start_address);
 	} else {
 		printf("Invalid free\n");
+	}
+
+	return CONTINUE;
+}
+
+uint8_t handle_write(int64_t args_size, string_t *args, heap_t *heap)
+{
+	int64_t start_address = strtol(args[1], NULL, 16);
+	string_t value = args[2];
+	int64_t write_size = strtol(args[3], NULL, 10);
+
+	bool success = heap_write(heap, start_address, write_size, value);
+
+	if (!success) {
+		printf("Invalid write\n");
+	} else {
+		printf("Write successful\n");
+	}
+
+	return CONTINUE;
+}
+
+uint8_t handle_read(int64_t args_size, string_t *args, heap_t *heap)
+{
+	int64_t start_address = strtol(args[1], NULL, 16);
+	//int64_t value = read_from_heap(heap, start_address);
+	int64_t value = -1;
+
+	if (value == -1) {
+		printf("Invalid read\n");
+	} else {
+		printf("Read value %ld from address 0x%lx\n", value, start_address);
 	}
 
 	return CONTINUE;

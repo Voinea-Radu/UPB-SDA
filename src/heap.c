@@ -21,7 +21,7 @@ int8_t compare_blocks(void *data1, void *data2)
 		return 0;
 	}
 
-	bool _tmp =  (block1->start_address < block2->start_address);
+	bool _tmp = (block1->start_address < block2->start_address);
 
 	return (_tmp) ? -1 : 1;
 }
@@ -44,13 +44,53 @@ int8_t compare_pools(void *data1, void *data2)
 	return pool1->block_size < pool2->block_size ? -1 : 1;
 }
 
+/**
+ * Compare two bytes by their address
+ * @param data1 This should be of instance heap_byte_t
+ * @param data2 This should be of instance heap_byte_t
+ * @return -1 if data1 < data2, 0 if data1 == data2, 1 if data1 > data2
+ */
+int8_t compare_bytes(void *data1, void *data2)
+{
+	heap_byte_t *byte1 = (heap_byte_t *)data1;
+	heap_byte_t *byte2 = (heap_byte_t *)data2;
+
+	if (byte1->address == byte2->address) {
+		return 0;
+	}
+
+	return byte1->address < byte2->address ? -1 : 1;
+}
+
+heap_byte_t *new_heap_byte(int64_t holding_block_start_address, int64_t offset)
+{
+	heap_byte_t *byte = safe_malloc(sizeof(heap_byte_t));
+
+	byte->holding_block_start_address = holding_block_start_address;
+	byte->address = holding_block_start_address + offset;
+	byte->data = 0;
+
+	return byte;
+}
+
+heap_byte_t **new_heap_bytes(heap_block_t *block)
+{
+	heap_byte_t **bytes = safe_malloc(block->size * sizeof(heap_byte_t *));
+
+	for (int64_t i = 0; i < block->size; i++) {
+		bytes[i] = new_heap_byte(block->start_address, i);
+	}
+
+	return bytes;
+}
+
 heap_t *new_heap(int64_t start_address)
 {
 	heap_t *heap = safe_malloc(sizeof(heap_t));
 
 	heap->start_address = start_address;
 	heap->pools = create_linked_list(compare_pools);
-	heap->used_blocks = create_linked_list(compare_blocks);
+	heap->bytes = create_linked_list(compare_bytes);
 
 	return heap;
 }
@@ -93,7 +133,7 @@ heap_t create_heap(int64_t start_address, int64_t number_of_pools, int64_t pool_
 
 			address += pool_size;
 
-			printf("Creating block at 0x%lx with size of %lu byte(s)\n", block->start_address*8, block->size);
+			printf("Creating block at 0x%lx with size of %lu byte(s)\n", block->start_address * 8, block->size);
 		}
 		printf("\n");
 
@@ -179,6 +219,7 @@ void heap_remove_block(heap_t *heap, heap_block_t *block)
 	}
 }
 
+
 int64_t heap_malloc(heap_t *heap, int64_t size)
 {
 	heap_block_t *current_block = heap_get_block_of_size(heap, size);
@@ -186,13 +227,24 @@ int64_t heap_malloc(heap_t *heap, int64_t size)
 	if (current_block != NULL) {
 		if (current_block->size == size) {
 			heap_remove_block(heap, current_block);
-			add_node(heap->used_blocks, current_block);
+
+			heap_byte_t **bytes = new_heap_bytes(current_block);
+
+			for (int64_t i = 0; i < current_block->size; i++) {
+				add_node(heap->bytes, bytes[i]);
+			}
 
 			return current_block->start_address;
 		}
 
 		heap_block_t *new_block = new_heap_block(current_block->start_address, size);
-		add_node(heap->used_blocks, new_block);
+
+		heap_byte_t **bytes = new_heap_bytes(new_block);
+
+		for (int64_t i = 0; i < new_block->size; i++) {
+			add_node(heap->bytes, bytes[i]);
+		}
+
 		heap_remove_block(heap, current_block);
 
 		heap_block_t *remaining_block = new_heap_block(current_block->start_address + size, current_block->size - size);
@@ -227,11 +279,11 @@ void dump_heap(heap_t *heap)
 	}
 	printf("\n");
 
-	node_t *used_block_node = heap->used_blocks->head;
+	node_t *used_block_node = heap->bytes->head;
 	printf("[Used] Heap at 0x%lx:\n", heap->start_address * 8);
 	while (used_block_node != NULL) {
-		heap_block_t *block = (heap_block_t *)used_block_node->data;
-		printf("\t- Block at 0x%lx with size %lu\n", block->start_address * 8, block->size);
+		heap_byte_t *byte = (heap_byte_t *)used_block_node->data;
+		printf("\t- Byte 0x%lx: %c (%d)\n", byte->address * 8, byte->data, byte->data);
 
 		used_block_node = used_block_node->next;
 	}
@@ -241,16 +293,55 @@ void dump_heap(heap_t *heap)
 
 bool heap_free(heap_t *heap, int64_t start_address)
 {
-	node_t *used_block_node = heap->used_blocks->head;
+	node_t *used_block_node = heap->bytes->head;
+	int64_t size = 0;
 
 	while (used_block_node != NULL) {
-		heap_block_t *block = (heap_block_t *)used_block_node->data;
+		heap_byte_t *byte = (heap_byte_t *)used_block_node->data;
 
-		if (block->start_address == start_address) {
-			remove_node(heap->used_blocks, block);
-			heap_add_block(heap, block);
+		if (byte->holding_block_start_address == start_address) {
+			remove_node(heap->bytes, byte);
+			size++;
+		}
 
-			return true;
+		used_block_node = used_block_node->next;
+	}
+
+	if (size != 0) {
+		heap_add_block(heap, new_heap_block(start_address, size));
+	}
+
+	return size != 0;
+}
+
+bool heap_write(heap_t *heap, int64_t start_address, int64_t size, string_t data)
+{
+	node_t *used_block_node = heap->bytes->head;
+	node_t *search_start_block_node;
+
+	while (used_block_node != NULL) {
+		heap_byte_t *block = (heap_byte_t *)used_block_node->data;
+
+		if (block->address == start_address) {
+			search_start_block_node = used_block_node;
+			for (int i = 0; i < size - 1; i++) {
+				used_block_node = used_block_node->next;
+
+				if (used_block_node == NULL) {
+					return false;
+				}
+			}
+
+			heap_byte_t *found_byte = (heap_byte_t *)used_block_node->data;
+
+			if (found_byte->address == start_address + size - 1) {
+				for (int i = 0; i < size; i++) {
+					heap_byte_t *byte = (heap_byte_t *)search_start_block_node->data;
+					byte->data = data[i];
+					search_start_block_node = search_start_block_node->next;
+				}
+				return true;
+			}
 		}
 
 		used_block_node = used_block_node->next;
