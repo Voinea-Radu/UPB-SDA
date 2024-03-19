@@ -15,6 +15,10 @@ Grupa: 315 CA
 
 // Math utils
 
+#define max(a, b) ((a) > (b) ? (a) : (b))
+
+#define min(a, b) ((a) < (b) ? (a) : (b))
+
 bool is_number(string_t string);
 
 // Memory utils
