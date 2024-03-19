@@ -67,10 +67,9 @@ heap_t create_heap(uint64_t start_address, uint64_t number_of_pools, uint64_t po
 	heap_t *heap = new_heap(start_address);
 
 	uint64_t address = start_address;
-	uint64_t pool_size = 4;
+	uint64_t pool_size = 1;
 
 	for (uint64_t i = 0; i < number_of_pools; i++) {
-		pool_size *= 2;
 		uint64_t blocks_size = pool_total_size / pool_size;
 		heap_pool_t *pool = new_heap_pool(address, pool_size);
 
@@ -78,13 +77,14 @@ heap_t create_heap(uint64_t start_address, uint64_t number_of_pools, uint64_t po
 			heap_block_t *block = new_heap_block(address, pool_size);
 			add_node_at_tail(pool->blocks, block);
 
-			address += pool_size;
+			address += pool_size * 8;
 
-			printf("Creating block at 0x%lx with size %lu\n", block->start_address, block->size);
+			printf("Creating block at 0x%lx with size of %lu byte(s)\n", block->start_address, block->size);
 		}
 		printf("\n");
 
 		add_node_at_tail(heap->pools, pool);
+		pool_size *= 2;
 	}
 
 	return *heap;

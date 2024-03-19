@@ -1,4 +1,4 @@
-init_heap 0 2 16 1
+init_heap 0 2 2 1
 dump
 
-init_heap 0 3 32 1
+init_heap 0 3 4 1
