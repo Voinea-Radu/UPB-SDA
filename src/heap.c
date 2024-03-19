@@ -30,7 +30,7 @@ int8_t compare_pools(void *data1, void *data2)
 	return pool1->block_size < pool2->block_size ? -1 : 1;
 }
 
-heap_t *new_heap(uint64_t start_address)
+heap_t *new_heap(int64_t start_address)
 {
 	heap_t *heap = safe_malloc(sizeof(heap_t));
 
@@ -41,7 +41,7 @@ heap_t *new_heap(uint64_t start_address)
 	return heap;
 }
 
-heap_pool_t *new_heap_pool(uint64_t start_address, uint64_t block_size)
+heap_pool_t *new_heap_pool(int64_t start_address, int64_t block_size)
 {
 	heap_pool_t *pool = safe_malloc(sizeof(heap_pool_t));
 
@@ -52,7 +52,7 @@ heap_pool_t *new_heap_pool(uint64_t start_address, uint64_t block_size)
 	return pool;
 }
 
-heap_block_t *new_heap_block(uint64_t start_address, uint64_t size)
+heap_block_t *new_heap_block(int64_t start_address, int64_t size)
 {
 	heap_block_t *block = safe_malloc(sizeof(heap_block_t));
 
@@ -62,18 +62,18 @@ heap_block_t *new_heap_block(uint64_t start_address, uint64_t size)
 	return block;
 }
 
-heap_t create_heap(uint64_t start_address, uint64_t number_of_pools, uint64_t pool_total_size, bool reconstruction_type)
+heap_t create_heap(int64_t start_address, int64_t number_of_pools, int64_t pool_total_size, bool reconstruction_type)
 {
 	heap_t *heap = new_heap(start_address);
 
-	uint64_t address = start_address;
-	uint64_t pool_size = 1;
+	int64_t address = start_address;
+	int64_t pool_size = 1;
 
-	for (uint64_t i = 0; i < number_of_pools; i++) {
-		uint64_t blocks_size = pool_total_size / pool_size;
+	for (int64_t i = 0; i < number_of_pools; i++) {
+		int64_t blocks_size = pool_total_size / pool_size;
 		heap_pool_t *pool = new_heap_pool(address, pool_size);
 
-		for (uint64_t j = 0; j < blocks_size; j++) {
+		for (int64_t j = 0; j < blocks_size; j++) {
 			heap_block_t *block = new_heap_block(address, pool_size);
 			add_node_at_tail(pool->blocks, block);
 
@@ -112,7 +112,7 @@ void heap_add_block(heap_t *heap, heap_block_t *block)
 	add_node(pool->blocks, block);
 }
 
-uint64_t heap_malloc(heap_t *heap, uint64_t size)
+int64_t heap_malloc(heap_t *heap, int64_t size)
 {
 	linked_list_t *pools = heap->pools;
 	linked_list_t *used_blocks = heap->used_blocks;

@@ -16,7 +16,7 @@ typedef struct node {
 } node_t;
 
 typedef struct {
-	uint64_t size;
+	int64_t size;
 
 	node_t *head;
 	node_t *tail;
@@ -32,6 +32,6 @@ void add_node(linked_list_t *list, void *data);
 
 void remove_node(linked_list_t *list, void *data);
 
-void remove_node_at(linked_list_t *list, uint64_t index);
+void remove_node_at(linked_list_t *list, int64_t index);
 
 #endif //TEMA1_LINKED_LIST_H
