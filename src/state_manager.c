@@ -107,6 +107,17 @@ uint8_t handle_write(int64_t args_size, string_t *args, heap_t *heap)
 	string_t value = args[2];
 	int64_t write_size = strtol(args[3], NULL, 10);
 
+	if(value[0] != '"' || value[strlen(value) - 1] != '"'){
+		printf("Invalid write\n");
+		return CONTINUE;
+	}
+
+	for (int i = 0; i < strlen(value); i++){
+		value[i] = value[i + 1];
+	}
+
+	value[strlen(value) - 1] = '\0';
+
 	bool success = heap_write(heap, start_address, write_size, value);
 
 	if (!success) {
