@@ -27,4 +27,6 @@ uint8_t handle_malloc(int64_t args_size, string_t *args, heap_t *heap);
 
 uint8_t handle_dump(int64_t args_size, string_t *args, heap_t *heap);
 
+uint8_t handle_free(int64_t args_size, string_t *args, heap_t *heap);
+
 #endif //TEMA1_STATE_MANAGER_H

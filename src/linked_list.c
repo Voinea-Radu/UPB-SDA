@@ -66,7 +66,16 @@ void add_node(linked_list_t *list, void *data)
 		void *current_data = current_node->data;
 		void *next_data = current_node->next == NULL ? NULL : current_node->next->data;
 
-		if (list->compare(current_data, data) == -1 && (next_data == NULL || list->compare(data, next_data) == 1)) {
+		bool result1 = list->compare(current_data, data) == -1;
+		bool result2 = 0;
+		if(next_data== NULL) {
+			result2 = 1;
+		}else{
+			result2 = list->compare(data, next_data) == -1;
+		}
+
+
+		if (result1 && ((next_data == NULL) || result2)) {
 			node_t *next_block_node = current_node->next;
 
 			node_t *block_node = safe_malloc(sizeof(node_t));
@@ -118,4 +127,6 @@ void remove_node(linked_list_t *list, void *data)
 		prev = current;
 		current = current->next;
 	}
+
+
 }

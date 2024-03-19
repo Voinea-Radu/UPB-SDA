@@ -32,6 +32,4 @@ void add_node(linked_list_t *list, void *data);
 
 void remove_node(linked_list_t *list, void *data);
 
-void remove_node_at(linked_list_t *list, int64_t index);
-
 #endif //TEMA1_LINKED_LIST_H

@@ -12,6 +12,7 @@ static string_to_handle command_table[] = {
 		{"init_heap", handle_init_heap},
 		{"malloc",    handle_malloc},
 		{"dump",      handle_dump},
+		{"free",      handle_free},
 };
 
 uint8_t process_command(string_t command)
@@ -61,8 +62,13 @@ uint8_t handle_init_heap(int64_t args_size, string_t *args, heap_t *heap)
 uint8_t handle_malloc(int64_t args_size, string_t *args, heap_t *heap)
 {
 	int64_t size = strtol(args[1], NULL, 10);
-
 	int64_t block_address = heap_malloc(heap, size);
+
+	if (block_address == 0xFFFFFFFFFFFFFFFF) { // Comparison with -1 is marked as a warning in CLion.
+		printf("Out of memory\n");
+	} else {
+		printf("Allocated memory at address 0x%lx\n", block_address * 8);
+	}
 
 	return CONTINUE;
 }
@@ -70,5 +76,33 @@ uint8_t handle_malloc(int64_t args_size, string_t *args, heap_t *heap)
 uint8_t handle_dump(int64_t args_size, string_t *args, heap_t *heap)
 {
 	dump_heap(heap);
+	return CONTINUE;
+}
+
+uint8_t handle_free(int64_t args_size, string_t *args, heap_t *heap)
+{
+	string_t start_address_str = args[1];
+	uint64_t start_address_str_size = strlen(start_address_str);
+
+	if (start_address_str_size < 3 || start_address_str[0] != '0' || start_address_str[1] != 'x') {
+		printf("Invalid free\n");
+		return CONTINUE;
+	}
+
+	int64_t start_address = strtol(args[1], NULL, 16);
+
+	if (start_address % 8 != 0) {
+		printf("Invalid free\n");
+		return CONTINUE;
+	}
+
+	bool success = heap_free(heap, start_address / 8);
+
+	if (success) {
+		printf("Memory at address 0x%lx freed\n", start_address);
+	} else {
+		printf("Invalid free\n");
+	}
+
 	return CONTINUE;
 }
