@@ -22,7 +22,9 @@ typedef struct {
 uint8_t process_command(string_t command);
 
 uint8_t handle_init_heap(uint64_t args_size, string_t *args, heap_t *heap);
+
 uint8_t handle_malloc(uint64_t args_size, string_t *args, heap_t *heap);
+
 uint8_t handle_dump(uint64_t args_size, string_t *args, heap_t *heap);
 
 #endif //TEMA1_STATE_MANAGER_H

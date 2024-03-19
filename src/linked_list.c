@@ -42,12 +42,12 @@ void add_node(linked_list_t *list, void *data)
 {
 	node_t *current_node = list->head;
 
-	if(current_node==NULL){
+	if (current_node == NULL) {
 		add_node_at_tail(list, data);
 		return;
 	}
 
-	if(list->compare(data, current_node->data) == -1){
+	if (list->compare(data, current_node->data) == -1) {
 		node_t *new_node = safe_malloc(sizeof(node_t));
 
 		new_node->data = data;

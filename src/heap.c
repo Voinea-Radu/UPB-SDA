@@ -62,7 +62,7 @@ heap_block_t *new_heap_block(uint64_t start_address, uint64_t size)
 	return block;
 }
 
-heap_t create_heap(uint64_t start_address, uint64_t number_of_pools, uint64_t pool_total_size, uint64_t reconstruction_type)
+heap_t create_heap(uint64_t start_address, uint64_t number_of_pools, uint64_t pool_total_size, bool reconstruction_type)
 {
 	heap_t *heap = new_heap(start_address);
 

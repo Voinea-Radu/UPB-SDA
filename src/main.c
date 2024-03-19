@@ -20,7 +20,7 @@ int main()
 			break;
 		}
 
-		if(command[0] == '\0'){
+		if (command[0] == '\0') {
 			continue;
 		}
 

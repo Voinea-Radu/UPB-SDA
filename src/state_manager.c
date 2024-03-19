@@ -10,15 +10,15 @@ Grupa: 315 CA
 
 static string_to_handle command_table[] = {
 		{"init_heap", handle_init_heap},
-		{"malloc",    handle_malloc   },
-		{"dump",      handle_dump     },
+		{"malloc",    handle_malloc},
+		{"dump",      handle_dump},
 };
 
 uint8_t process_command(string_t command)
 {
 	static heap_t *heap = NULL;
 
-	if(heap==NULL){
+	if (heap == NULL) {
 		heap = safe_malloc(sizeof(heap_t));
 	}
 
