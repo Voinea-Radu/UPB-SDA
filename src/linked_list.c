@@ -6,19 +6,24 @@ Grupa: 315 CA
 #include "api/linked_list.h"
 #include "api/utils.h"
 
-linked_list_t *create_linked_list()
+linked_list_t *create_linked_list(int8_t (*compare)(void *data1, void *data2))
 {
-	linked_list_t* list = safe_malloc(sizeof(linked_list_t));
+	linked_list_t *list = safe_malloc(sizeof(linked_list_t));
+
 	list->size = 0;
+
 	list->head = NULL;
 	list->tail = NULL;
+
+	list->compare = compare;
 
 	return list;
 }
 
-void add_node(linked_list_t *list, void *data)
+void add_node_at_tail(linked_list_t *list, void *data)
 {
 	node_t *node = safe_malloc(sizeof(node_t));
+
 	node->data = data;
 	node->next = NULL;
 
@@ -31,6 +36,60 @@ void add_node(linked_list_t *list, void *data)
 	}
 
 	list->size++;
+}
+
+void add_node(linked_list_t *list, void *data)
+{
+	node_t *current_node = list->head;
+
+	if(current_node==NULL){
+		add_node_at_tail(list, data);
+		return;
+	}
+
+	if(list->compare(data, current_node->data) == -1){
+		node_t *new_node = safe_malloc(sizeof(node_t));
+
+		new_node->data = data;
+		new_node->next = current_node;
+		new_node->prev = NULL;
+
+		current_node->prev = new_node;
+
+		list->head = new_node;
+		list->size++;
+
+		return;
+	}
+
+	while (current_node != NULL) {
+		void *current_data = current_node->data;
+		void *next_data = current_node->next == NULL ? NULL : current_node->next->data;
+
+		if (list->compare(current_data, data) == -1 && (next_data == NULL || list->compare(data, next_data) == 1)) {
+			node_t *next_block_node = current_node->next;
+
+			node_t *block_node = safe_malloc(sizeof(node_t));
+
+			block_node->data = data;
+			block_node->next = current_node->next;
+			block_node->prev = current_node;
+
+			current_node->next = block_node;
+
+			if (next_block_node != NULL) {
+				next_block_node->prev = block_node;
+			}
+
+			list->size++;
+
+			return;
+		}
+
+		current_node = current_node->next;
+	}
+
+	add_node_at_tail(list, data);
 }
 
 void remove_node(linked_list_t *list, void *data)

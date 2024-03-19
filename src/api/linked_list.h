@@ -20,9 +20,13 @@ typedef struct {
 
 	node_t *head;
 	node_t *tail;
+
+	int8_t (*compare)(void *data1, void *data2);
 } linked_list_t;
 
-linked_list_t *create_linked_list();
+linked_list_t *create_linked_list(int8_t (*compare)(void *data1, void *data2));
+
+void add_node_at_tail(linked_list_t *list, void *data);
 
 void add_node(linked_list_t *list, void *data);
 

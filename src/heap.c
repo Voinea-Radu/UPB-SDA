@@ -6,34 +6,77 @@ Grupa: 315 CA
 #include "api/heap.h"
 #include "api/utils.h"
 
+int8_t compare_blocks(void *data1, void *data2)
+{
+	heap_block_t *block1 = (heap_block_t *)data1;
+	heap_block_t *block2 = (heap_block_t *)data2;
+
+	if (block1->start_address == block2->start_address) {
+		return 0;
+	}
+
+	return block1->start_address < block2->start_address ? -1 : 1;
+}
+
+int8_t compare_pools(void *data1, void *data2)
+{
+	heap_pool_t *pool1 = (heap_pool_t *)data1;
+	heap_pool_t *pool2 = (heap_pool_t *)data2;
+
+	if (pool1->block_size == pool2->block_size) {
+		return 0;
+	}
+
+	return pool1->block_size < pool2->block_size ? -1 : 1;
+}
+
+heap_t *new_heap(uint64_t start_address)
+{
+	heap_t *heap = safe_malloc(sizeof(heap_t));
+
+	heap->start_address = start_address;
+	heap->pools = create_linked_list(compare_pools);
+	heap->used_blocks = create_linked_list(compare_blocks);
+
+	return heap;
+}
+
+heap_pool_t *new_heap_pool(uint64_t start_address, uint64_t block_size)
+{
+	heap_pool_t *pool = safe_malloc(sizeof(heap_pool_t));
+
+	pool->start_address = start_address;
+	pool->block_size = block_size;
+	pool->blocks = create_linked_list(compare_blocks);
+
+	return pool;
+}
+
+heap_block_t *new_heap_block(uint64_t start_address, uint64_t size)
+{
+	heap_block_t *block = safe_malloc(sizeof(heap_block_t));
+
+	block->start_address = start_address;
+	block->size = size;
+
+	return block;
+}
+
 heap_t create_heap(uint64_t start_address, uint64_t number_of_pools, uint64_t pool_total_size, uint64_t reconstruction_type)
 {
+	heap_t *heap = new_heap(start_address);
+
 	uint64_t address = start_address;
+	uint64_t pool_size = 4;
 
-	heap_t *heap = (heap_t *)safe_malloc(sizeof(heap_t));
-
-	heap->start_address = address;
-	heap->pools = create_linked_list();
-	heap->used_blocks = create_linked_list();
-
-	uint32_t pool_size = 4;
-
-	for (uint32_t i = 0; i < number_of_pools; i++) {
+	for (uint64_t i = 0; i < number_of_pools; i++) {
 		pool_size *= 2;
-		uint32_t blocks_size = pool_total_size / pool_size;
+		uint64_t blocks_size = pool_total_size / pool_size;
+		heap_pool_t *pool = new_heap_pool(address, pool_size);
 
-		heap_pool_t *pool = safe_malloc(sizeof(heap_pool_t));
-
-		pool->start_address = address;
-		pool->block_size = pool_size;
-		pool->blocks = create_linked_list();
-
-		for (uint32_t j = 0; j < blocks_size; j++) {
-			heap_block_t *block = safe_malloc(sizeof(heap_block_t));
-
-			block->start_address = address;
-			block->size = pool_size;
-			add_node(pool->blocks, block);
+		for (uint64_t j = 0; j < blocks_size; j++) {
+			heap_block_t *block = new_heap_block(address, pool_size);
+			add_node_at_tail(pool->blocks, block);
 
 			address += pool_size;
 
@@ -41,7 +84,7 @@ heap_t create_heap(uint64_t start_address, uint64_t number_of_pools, uint64_t po
 		}
 		printf("\n");
 
-		add_node(heap->pools, pool);
+		add_node_at_tail(heap->pools, pool);
 	}
 
 	return *heap;
@@ -54,62 +97,19 @@ void heap_add_block(heap_t *heap, heap_block_t *block)
 
 	while (current_pool_node != NULL) {
 		heap_pool_t *current_pool = (heap_pool_t *)current_pool_node->data;
-		heap_pool_t *next_pool = current_pool_node->next == NULL ? NULL : (heap_pool_t *)current_pool_node->next->data;
 
 		if (current_pool->block_size == block->size) {
-			node_t *current_block_node = current_pool->blocks->head;
-			while (current_block_node != NULL) {
-				heap_block_t *current_block = (heap_block_t *)current_block_node->data;
-				heap_block_t *next_block = current_pool_node->next == NULL ? NULL : (heap_block_t *)current_block_node->next->data;
-
-				if (current_block->start_address < block->start_address && (next_block == NULL || block->start_address < next_block->start_address)) {
-					node_t *new_node = safe_malloc(sizeof(node_t));
-
-					node_t *next_node = current_block_node->next;
-
-					new_node->data = block;
-					new_node->next = current_block_node->next;
-					new_node->prev = current_block_node;
-
-					current_block_node->next = new_node;
-					if(next_node != NULL){
-						next_node->prev = new_node;
-					}
-
-					return;
-				}
-
-				current_block_node = current_block_node->next;
-			}
-
 			add_node(current_pool->blocks, block);
-			return;
-		}
-
-		if (current_pool->block_size < block->size && (next_pool == NULL || block->size < next_pool->block_size)) {
-			heap_pool_t *new_pool = safe_malloc(sizeof(heap_pool_t));
-
-			new_pool->start_address = current_pool->start_address;
-			new_pool->block_size = block->size;
-			new_pool->blocks = create_linked_list();
-
-			node_t *next_pool_node = current_pool_node->next;
-			node_t *new_pool_node = safe_malloc(sizeof(node_t));
-
-			new_pool_node->data = new_pool;
-			new_pool_node->next = current_pool_node->next;
-			new_pool_node->prev = current_pool_node;
-
-			current_pool_node->next = new_pool_node;
-			if(next_pool_node != NULL){
-				next_pool_node->prev = new_pool_node;
-			}
-
 			return;
 		}
 
 		current_pool_node = current_pool_node->next;
 	}
+
+	heap_pool_t *pool = new_heap_pool(block->start_address, block->size);
+	add_node(pools_list, pool);
+
+	add_node(pool->blocks, block);
 }
 
 uint64_t heap_malloc(heap_t *heap, uint64_t size)
@@ -141,9 +141,7 @@ uint64_t heap_malloc(heap_t *heap, uint64_t size)
 			}
 
 			if (block->size > size) {
-				heap_block_t *new_block = safe_malloc(sizeof(heap_block_t));
-				new_block->start_address = block->start_address;
-				new_block->size = size;
+				heap_block_t *new_block = new_heap_block(block->start_address, size);
 
 				add_node(used_blocks, new_block);
 				remove_node(blocks, block);
@@ -152,7 +150,7 @@ uint64_t heap_malloc(heap_t *heap, uint64_t size)
 				block->size -= size;
 				heap_add_block(heap, block);
 
-				return new_block->start_address;
+				return block->start_address;
 			}
 
 			current_block = current_block->next;

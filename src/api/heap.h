@@ -31,4 +31,10 @@ uint64_t heap_malloc(heap_t *heap, uint64_t size);
 
 void dump_heap(heap_t *heap);
 
+heap_t *new_heap(uint64_t start_address);
+
+heap_pool_t *new_heap_pool(uint64_t start_address, uint64_t block_size);
+
+heap_block_t *new_heap_block(uint64_t start_address, uint64_t size);
+
 #endif //TEMA1_HEAP_H
