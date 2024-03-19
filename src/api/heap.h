@@ -9,20 +9,26 @@ Grupa: 315 CA
 #include "linked_list.h"
 
 typedef struct {
-	uint32_t start_address;
-	uint32_t size;
+	uint64_t start_address;
+	uint64_t size;
 } heap_block_t;
 
 typedef struct {
-	uint32_t start_address;
+	uint64_t start_address;
+	uint64_t block_size;
 	linked_list_t *blocks;
 } heap_pool_t;
 
 typedef struct {
-	uint32_t start_address;
+	uint64_t start_address;
 	linked_list_t *pools;
+	linked_list_t *used_blocks;
 } heap_t;
 
-heap_t create_heap(uint32_t start_address, uint32_t number_of_pools, uint32_t pool_size, uint32_t reconstruction_type);
+heap_t create_heap(uint64_t start_address, uint64_t number_of_pools, uint64_t pool_size, uint64_t reconstruction_type);
+
+uint64_t heap_malloc(heap_t *heap, uint64_t size);
+
+void dump_heap(heap_t *heap);
 
 #endif //TEMA1_HEAP_H

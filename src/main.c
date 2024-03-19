@@ -16,8 +16,12 @@ int main()
 	while (1) {
 		command = read_line(MAX_COMMAND_SIZE, stdin);
 
-		if (0 == command) {
+		if (command == NULL) {
 			break;
+		}
+
+		if(command[0] == '\0'){
+			continue;
 		}
 
 		to_lower(command);

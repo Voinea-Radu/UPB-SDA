@@ -9,11 +9,12 @@ Grupa: 315 CA
 #include "api/utils.h"
 
 static string_to_handle command_table[] = {
-		{"save",      foo},
-		{"init_heap", init_heap},
+		{"init_heap", handle_init_heap},
+		{"malloc",    handle_malloc   },
+		{"dump",      handle_dump     },
 };
 
-int process_command(string_t command)
+uint8_t process_command(string_t command)
 {
 	static heap_t *heap = NULL;
 
@@ -43,21 +44,32 @@ int process_command(string_t command)
 	return output;
 }
 
-int foo(int args_size, string_t *args, heap_t *heap)
+uint8_t handle_init_heap(uint64_t args_size, string_t *args, heap_t *heap)
 {
-	return CONTINUE;
-}
-
-int init_heap(int args_size, string_t *args, heap_t *heap)
-{
-	uint32_t start_address = strtol(args[1], NULL, 10);
-	uint32_t number_of_pools = strtol(args[2], NULL, 10);
-	uint32_t pool_total_size = strtol(args[3], NULL, 10);
-	uint32_t reconstruction_type = strtol(args[4], NULL, 10);
+	uint64_t start_address = strtol(args[1], NULL, 10);
+	uint64_t number_of_pools = strtol(args[2], NULL, 10);
+	uint64_t pool_total_size = strtol(args[3], NULL, 10);
+	uint64_t reconstruction_type = strtol(args[4], NULL, 10);
 
 	// TODO Free the old heap
 
 	*heap = create_heap(start_address, number_of_pools, pool_total_size, reconstruction_type);
+
+	return CONTINUE;
+}
+
+uint8_t handle_malloc(uint64_t args_size, string_t *args, heap_t *heap)
+{
+	uint64_t size = strtol(args[1], NULL, 10);
+
+	uint64_t block_address = heap_malloc(heap, size);
+
+	return CONTINUE;
+}
+
+uint8_t handle_dump(uint64_t args_size, string_t *args, heap_t *heap)
+{
+	dump_heap(heap);
 
 	return CONTINUE;
 }

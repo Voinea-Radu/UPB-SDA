@@ -8,6 +8,7 @@ Grupa: 315 CA
 #include <stdio.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include "api/string_utils.h"
 
 void *safe_malloc(size_t size)
@@ -53,4 +54,22 @@ bool is_number(string_t string)
 			return false;
 
 	return true;
+}
+
+/**
+ * This function exists for the sole reason that CLion debugger on windows is not printing any output unless fflush is called
+ */
+int printf(const char *format, ...)
+{
+	int output;
+
+	__builtin_va_list argv;
+	__builtin_va_start(argv, format);
+
+	output = vfprintf(stdout, format, argv);
+
+	__builtin_va_end(argv);
+	fflush(stdout);
+
+	return output;
 }
