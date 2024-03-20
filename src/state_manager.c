@@ -107,12 +107,12 @@ uint8_t handle_write(int64_t args_size, string_t *args, heap_t *heap)
 	string_t value = args[2];
 	int64_t write_size = strtol(args[3], NULL, 10);
 
-	if(value[0] != '"' || value[strlen(value) - 1] != '"'){
+	if (value[0] != '"' || value[strlen(value) - 1] != '"') {
 		printf("Invalid write\n");
 		return CONTINUE;
 	}
 
-	for (int i = 0; i < strlen(value); i++){
+	for (int i = 0; i < strlen(value); i++) {
 		value[i] = value[i + 1];
 	}
 
@@ -132,14 +132,16 @@ uint8_t handle_write(int64_t args_size, string_t *args, heap_t *heap)
 uint8_t handle_read(int64_t args_size, string_t *args, heap_t *heap)
 {
 	int64_t start_address = strtol(args[1], NULL, 16);
-	//int64_t value = read_from_heap(heap, start_address);
-	int64_t value = -1;
+	int64_t size = strtol(args[2], NULL, 10);
 
-	if (value == -1) {
+	string_t value = heap_read(heap, start_address, size);
+
+	if (strcmp(value, "") == 0) {
 		printf("Invalid read\n");
 	} else {
-		printf("Read value %ld from address 0x%lx\n", value, start_address);
+		printf("Read value %s from address 0x%lx\n", value, start_address);
 	}
 
 	return CONTINUE;
 }
+

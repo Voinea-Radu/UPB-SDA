@@ -62,6 +62,6 @@ bool heap_free(heap_t *heap, int64_t start_address);
 
 bool heap_write(heap_t *heap, int64_t start_address, int64_t size, string_t data);
 
-bool heap_read(heap_t *heap, int64_t start_address, int64_t size);
+string_t heap_read(heap_t *heap, int64_t start_address, int64_t size);
 
 #endif //TEMA1_HEAP_H

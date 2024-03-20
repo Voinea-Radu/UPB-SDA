@@ -352,3 +352,29 @@ bool heap_write(heap_t *heap, int64_t start_address, int64_t size, string_t data
 
 	return false;
 }
+
+string_t heap_read(heap_t *heap, int64_t start_address, int64_t size)
+{
+	string_t result = safe_malloc(size * sizeof(char) + 1);
+	node_t *used_block_node = heap->bytes->head;
+	int64_t current_address = start_address;
+	int64_t current_size = 0;
+
+	while (used_block_node != NULL) {
+		heap_byte_t *byte = (heap_byte_t *)used_block_node->data;
+
+		if (byte->address == current_address) {
+			result[current_size++] = byte->data;
+			current_address++;
+		}
+
+		if (current_size == size)
+			break;
+
+		used_block_node = used_block_node->next;
+	}
+
+	result[current_size] = '\0';
+
+	return result;
+}
