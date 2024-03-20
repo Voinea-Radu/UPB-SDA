@@ -50,7 +50,7 @@ uint8_t process_command(string_t command)
 
 uint8_t handle_init_heap(int64_t args_size, string_t *args, heap_t *heap)
 {
-	int64_t start_address = strtol(args[1], NULL, 10);
+	int64_t start_address = strtol(args[1], NULL, 16);
 	int64_t number_of_pools = strtol(args[2], NULL, 10);
 	int64_t pool_total_size = strtol(args[3], NULL, 10);
 	int64_t reconstruction_type = strtol(args[4], NULL, 10);
@@ -69,9 +69,10 @@ uint8_t handle_malloc(int64_t args_size, string_t *args, heap_t *heap)
 
 	if (block_address == 0xFFFFFFFFFFFFFFFF) { // Comparison with -1 is marked as a warning in CLion.
 		printf("Out of memory\n");
-	} else {
-		printf("Allocated memory at address 0x%lx\n", block_address * 8);
 	}
+	//else {
+	//	printf("Allocated memory at address 0x%lx\n", block_address * 8);
+	//}
 
 	return CONTINUE;
 }
@@ -123,9 +124,10 @@ uint8_t handle_write(int64_t args_size, string_t *args, heap_t *heap)
 
 	if (!success) {
 		printf("Invalid write\n");
-	} else {
-		printf("Write successful\n");
 	}
+	//else {
+	//	printf("Write successful\n");
+	//}
 
 	return CONTINUE;
 }
@@ -140,7 +142,7 @@ uint8_t handle_read(int64_t args_size, string_t *args, heap_t *heap)
 	if (strcmp(value, "") == 0) {
 		printf("Invalid read\n");
 	} else {
-		printf("Read value %s from address 0x%lx\n", value, start_address);
+		printf("%s\n", value);
 	}
 
 	return CONTINUE;

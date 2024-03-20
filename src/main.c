@@ -24,8 +24,6 @@ int main()
 			continue;
 		}
 
-		to_lower(command);
-
 		int result = process_command(command);
 		free(command);
 
