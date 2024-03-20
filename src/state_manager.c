@@ -9,12 +9,13 @@ Grupa: 315 CA
 #include "api/utils.h"
 
 static string_to_handle command_table[] = {
-		{"init_heap", handle_init_heap},
-		{"malloc",    handle_malloc},
-		{"dump",      handle_dump},
-		{"free",      handle_free},
-		{"write",     handle_write},
-		{"read",      handle_read},
+		{"init_heap",   handle_init_heap},
+		{"malloc",      handle_malloc},
+		{"dump",        handle_dump},
+		{"dump_memory", handle_dump},
+		{"free",        handle_free},
+		{"write",       handle_write},
+		{"read",        handle_read},
 };
 
 uint8_t process_command(string_t command)

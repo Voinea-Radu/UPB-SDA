@@ -223,6 +223,7 @@ void heap_remove_block(heap_t *heap, heap_block_t *block)
 
 int64_t heap_malloc(heap_t *heap, int64_t size)
 {
+	heap->malloc_calls_count++;
 	heap_block_t *current_block = heap_get_block_of_size(heap, size);
 
 	if (current_block != NULL) {
@@ -237,6 +238,8 @@ int64_t heap_malloc(heap_t *heap, int64_t size)
 
 			return current_block->start_address;
 		}
+
+		heap->fragmentation_count++;
 
 		heap_block_t *new_block = new_heap_block(current_block->start_address, size);
 
@@ -259,6 +262,7 @@ int64_t heap_malloc(heap_t *heap, int64_t size)
 
 void dump_heap(heap_t *heap)
 {
+	/*
 	node_t *pool_node = heap->pools->head;
 
 	printf("[Free] Heap at 0x%lx:\n", heap->start_address);
@@ -290,10 +294,91 @@ void dump_heap(heap_t *heap)
 	}
 
 	printf("\n");
+	*/
+
+	int64_t free_memory = heap_free_size(heap);
+	int64_t used_memory = heap->bytes->size;
+	int64_t total_memory = free_memory + used_memory;
+
+	printf("+++++DUMP+++++\n");
+	printf("Total memory: %ld bytes\n", total_memory);
+	printf("Total allocated memory: %ld bytes\n", used_memory);
+	printf("Total free memory: %ld bytes\n", free_memory);
+	printf("Number of free blocks: %ld\n", heap_get_free_blocks_count(heap));
+	printf("Number of allocated blocks: %ld\n", heap_get_allocated_blocks_count(heap));
+	printf("Number of malloc calls: %ld\n", heap->malloc_calls_count);
+	printf("Number of fragmentations: %ld\n", heap->fragmentation_count);
+	printf("Number of free calls: %ld\n", heap->free_calls_count);
+
+	node_t *pool_node = heap->pools->head;
+
+	while (pool_node != NULL) {
+		heap_pool_t *pool = (heap_pool_t *)pool_node->data;
+		printf("Blocks with %lu bytes - %lu free block(s) : ", pool->block_size, pool->blocks->size);
+
+		node_t *block_node = pool->blocks->head;
+
+		while (block_node != NULL) {
+			heap_block_t *block = (heap_block_t *)block_node->data;
+			printf("0x%lx ", block->start_address * 8);
+
+			block_node = block_node->next;
+		}
+		printf("\n");
+
+		pool_node = pool_node->next;
+	}
+	printf("Allocated blocks: ");
+	node_t *used_block_node = heap->bytes->head;
+
+	int64_t size = 1;
+	int64_t last_address = -1;
+
+	while (used_block_node != NULL) {
+		heap_byte_t *byte = (heap_byte_t *)used_block_node->data;
+
+		if (byte->holding_block_start_address == last_address) {
+			size++;
+		} else {
+			if (last_address != -1) {
+				printf("(0x%lx - %ld bytes) ", last_address * 8, size);
+			}
+			last_address = byte->holding_block_start_address;
+			size = 1;
+		}
+
+		used_block_node = used_block_node->next;
+	}
+
+	if (last_address != -1) {
+		printf("(0x%lx - %ld bytes) ", last_address * 8, size);
+	}
+
+	printf("\n");
+	printf("-----DUMP-----\n");
+}
+
+int64_t heap_free_size(heap_t *heap)
+{
+	int64_t size = 0;
+	node_t *pool_node = heap->pools->head;
+	while (pool_node != NULL) {
+		heap_pool_t *pool = (heap_pool_t *)pool_node->data;
+		node_t *block_node = pool->blocks->head;
+		while (block_node != NULL) {
+			heap_block_t *block = (heap_block_t *)block_node->data;
+			size += block->size;
+			block_node = block_node->next;
+		}
+		pool_node = pool_node->next;
+	}
+	return size;
+
 }
 
 bool heap_free(heap_t *heap, int64_t start_address)
 {
+	heap->free_calls_count++;
 	node_t *used_block_node = heap->bytes->head;
 	int64_t size = 0;
 
@@ -377,4 +462,39 @@ string_t heap_read(heap_t *heap, int64_t start_address, int64_t size)
 	result[current_size] = '\0';
 
 	return result;
+}
+
+int64_t heap_get_allocated_blocks_count(heap_t *heap)
+{
+	int64_t count = 0;
+	node_t *byte_node = heap->bytes->head;
+	int64_t last_address = -1;
+
+	while (byte_node != NULL) {
+		heap_byte_t *pool = (heap_byte_t *)byte_node->data;
+
+		if (pool->holding_block_start_address != last_address) {
+			count++;
+			last_address = pool->holding_block_start_address;
+		}
+
+		byte_node = byte_node->next;
+	}
+	return count;
+}
+
+int64_t heap_get_free_blocks_count(heap_t *heap)
+{
+	int64_t count = 0;
+	node_t *pool_node = heap->pools->head;
+	while (pool_node != NULL) {
+		heap_pool_t *pool = (heap_pool_t *)pool_node->data;
+		node_t *block_node = pool->blocks->head;
+		while (block_node != NULL) {
+			count++;
+			block_node = block_node->next;
+		}
+		pool_node = pool_node->next;
+	}
+	return count;
 }

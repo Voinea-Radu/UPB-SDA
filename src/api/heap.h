@@ -32,6 +32,11 @@ typedef struct {
 	int64_t start_address; // in bytes
 	linked_list_t *pools;
 	linked_list_t *bytes;
+
+	// Statistics
+	int64_t malloc_calls_count;
+	int64_t free_calls_count;
+	int64_t fragmentation_count;
 } heap_t;
 
 heap_t *new_heap(int64_t start_address);
@@ -63,5 +68,11 @@ bool heap_free(heap_t *heap, int64_t start_address);
 bool heap_write(heap_t *heap, int64_t start_address, int64_t size, string_t data);
 
 string_t heap_read(heap_t *heap, int64_t start_address, int64_t size);
+
+int64_t heap_free_size(heap_t *heap);
+
+int64_t heap_get_allocated_blocks_count(heap_t *heap);
+
+int64_t heap_get_free_blocks_count(heap_t *heap);
 
 #endif //TEMA1_HEAP_H
