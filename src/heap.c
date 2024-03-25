@@ -445,6 +445,9 @@ string_t heap_read(heap_t *heap, int64_t start_address, int64_t size)
 		if (byte->address == current_address) {
 			result[current_size++] = byte->data;
 			current_address++;
+		} else{
+			free(result);
+			return NULL;
 		}
 
 		if (current_size == size)

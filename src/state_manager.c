@@ -135,15 +135,20 @@ uint8_t handle_write(int64_t args_size, string_t *args, heap_t *heap)
 	value[strlen(value) - 1] = '\0';
 
 	bool success = heap_write(heap, start_address, write_size, value);
-
-	if (!success) {
-		printf("Segmentation fault (core dumped)\n");
-		handle_dump(0, NULL, heap);
-	}
-
 	free(value);
 
+	if (!success) {
+		seg_fault(heap);
+		return EXIT;
+	}
+
 	return CONTINUE;
+}
+
+void seg_fault(heap_t *heap)
+{
+	printf("Segmentation fault (core dumped)\n");
+	handle_dump(0, NULL, heap);
 }
 
 uint8_t handle_read(int64_t args_size, string_t *args, heap_t *heap)
@@ -152,6 +157,11 @@ uint8_t handle_read(int64_t args_size, string_t *args, heap_t *heap)
 	int64_t size = strtol(args[2], NULL, 10);
 
 	string_t value = heap_read(heap, start_address, size);
+
+	if (value == NULL) {
+		seg_fault(heap);
+		return EXIT;
+	}
 
 	if (strcmp(value, "") == 0) {
 		printf("Invalid read\n");
