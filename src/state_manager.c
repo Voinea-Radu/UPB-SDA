@@ -137,7 +137,8 @@ uint8_t handle_write(int64_t args_size, string_t *args, heap_t *heap)
 	bool success = heap_write(heap, start_address, write_size, value);
 
 	if (!success) {
-		printf("Invalid write\n");
+		printf("Segmentation fault (core dumped)\n");
+		handle_dump(0, NULL, heap);
 	}
 
 	free(value);
