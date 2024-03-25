@@ -158,19 +158,14 @@ uint8_t handle_read(int64_t args_size, string_t *args, heap_t *heap)
 
 	string_t value = heap_read(heap, start_address, size);
 
-	if (value == NULL) {
+	if (value == NULL || strcmp(value, "") == 0) {
 		seg_fault(heap);
+		free(value);
 		return EXIT;
 	}
 
-	if (strcmp(value, "") == 0) {
-		printf("Invalid read\n");
-	} else {
-		printf("%s\n", value);
-	}
-
+	printf("%s\n", value);
 	free(value);
-
 	return CONTINUE;
 }
 
