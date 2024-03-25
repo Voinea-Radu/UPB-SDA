@@ -20,6 +20,8 @@ Grupa: 315 CA
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
+int64_t clamp(int64_t value, int64_t min, int64_t max);
+
 // Memory utils
 void *safe_malloc(size_t size);
 

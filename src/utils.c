@@ -38,4 +38,17 @@ int printf(const char *format, ...)
 	return output;
 }
 
+int64_t clamp(int64_t value, int64_t min, int64_t max)
+{
+	if (value < min) {
+		return min;
+	}
+
+	if (value > max) {
+		return max;
+	}
+
+	return value;
+}
+
 
