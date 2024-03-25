@@ -1,5 +1,7 @@
 /cmake-build-debug/
 /cmake-build-debug-wsl/
 /.idea/
-
+*.out
+*.valgrind
 .check.grade
+sfl

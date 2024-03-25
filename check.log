@@ -23,317 +23,319 @@ python3              - installed
 		+++++ running test 00-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.035715
+				stage time: 0:00:00.032398
 			running check      ...
 [F			running check      - OK
-				stage time: 0:00:00.082965
+				stage time: 0:00:00.050787
 			running valgrind   ...
 [F			running valgrind   - OK
-				stage time: 0:00:00.282029
+				stage time: 0:00:00.295919
 		----- running test 00-sfl - grade 2/2
 
 		+++++ running test 01-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.013590
+				stage time: 0:00:00.011708
 			running check      ...
 [F			running check      - OK
-				stage time: 0:00:00.069203
+				stage time: 0:00:00.045629
 			running valgrind   ...
 [F			running valgrind   - OK
-				stage time: 0:00:00.267399
+				stage time: 0:00:00.265612
 		----- running test 01-sfl - grade 2/2
 
 		+++++ running test 02-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.093368
+				stage time: 0:00:00.073858
 			running check      ...
-[F			running check      - WA: response #43 wrong: "Number of free calls: 3
-" vs "Number of free calls: 2
-"
-				stage time: 0:00:00.076700
-		----- running test 02-sfl - grade 0/2
+[F			running check      - OK
+				stage time: 0:00:00.043294
+			running valgrind   ...
+[F			running valgrind   - OK
+				stage time: 0:00:00.359223
+		----- running test 02-sfl - grade 2/2
 
 		+++++ running test 03-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.016687
+				stage time: 0:00:00.012374
 			running check      ...
 [F			running check      - OK
-				stage time: 0:00:00.075246
+				stage time: 0:00:00.042080
 			running valgrind   ...
 [F			running valgrind   - OK
-				stage time: 0:00:00.275033
+				stage time: 0:00:00.268563
 		----- running test 03-sfl - grade 2/2
 
 		+++++ running test 04-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.008707
+				stage time: 0:00:00.008127
 			running check      ...
 [F			running check      - OK
-				stage time: 0:00:00.067863
+				stage time: 0:00:00.044209
 			running valgrind   ...
 [F			running valgrind   - OK
-				stage time: 0:00:00.262074
+				stage time: 0:00:00.270667
 		----- running test 04-sfl - grade 2/2
 
 		+++++ running test 05-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.082206
+				stage time: 0:00:00.072753
 			running check      ...
 [F			running check      - WA: response #7 wrong: "Number of malloc calls: 1
 " vs "Number of malloc calls: 0
 "
-				stage time: 0:00:00.081675
+				stage time: 0:00:00.056291
 		----- running test 05-sfl - grade 0/2
 
 		+++++ running test 06-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.015730
+				stage time: 0:00:00.019690
 			running check      ...
 [F			running check      - WA: response #22 wrong: "Number of malloc calls: 3
 " vs "Number of malloc calls: 2
 "
-				stage time: 0:00:00.086901
+				stage time: 0:00:00.055608
 		----- running test 06-sfl - grade 0/2
 
 		+++++ running test 07-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.027478
+				stage time: 0:00:00.040198
 			running check      ...
 [F			running check      - OK
-				stage time: 0:00:00.066798
+				stage time: 0:00:00.059392
 			running valgrind   ...
 [F			running valgrind   - OK
-				stage time: 0:00:00.292658
+				stage time: 0:00:00.307402
 		----- running test 07-sfl - grade 2/2
 
 		+++++ running test 08-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.013390
+				stage time: 0:00:00.019794
 			running check      ...
-[F			running check      - WA: response #9 wrong: "Number of free calls: 2
-" vs "Number of free calls: 1
-"
-				stage time: 0:00:00.061885
-		----- running test 08-sfl - grade 0/2
+[F			running check      - OK
+				stage time: 0:00:00.045079
+			running valgrind   ...
+[F			running valgrind   - OK
+				stage time: 0:00:00.293453
+		----- running test 08-sfl - grade 2/2
 
 		+++++ running test 09-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.007398
+				stage time: 0:00:00.006879
 			running check      ...
 [F			running check      - OK
-				stage time: 0:00:00.075658
+				stage time: 0:00:00.046430
 			running valgrind   ...
 [F			running valgrind   - OK
-				stage time: 0:00:00.262797
+				stage time: 0:00:00.258583
 		----- running test 09-sfl - grade 2/2
 
 		+++++ running test 10-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.013484
+				stage time: 0:00:00.014789
 			running check      ...
 [F			running check      - WA: wrong number of lines: 31 vs 29
-				stage time: 0:00:00.064263
+				stage time: 0:00:00.040892
 		----- running test 10-sfl - grade 0/3.1
 
 		+++++ running test 11-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.016121
+				stage time: 0:00:00.015139
 			running check      ...
 [F			running check      - WA: wrong number of lines: 30 vs 28
-				stage time: 0:00:00.078696
+				stage time: 0:00:00.042762
 		----- running test 11-sfl - grade 0/3.1
 
 		+++++ running test 12-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.012699
+				stage time: 0:00:00.010197
 			running check      ...
 [F			running check      - WA: wrong number of lines: 15 vs 14
-				stage time: 0:00:00.071460
+				stage time: 0:00:00.046581
 		----- running test 12-sfl - grade 0/3.1
 
 		+++++ running test 13-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.010580
+				stage time: 0:00:00.013197
 			running check      ...
 [F			running check      - WA: wrong number of lines: 15 vs 14
-				stage time: 0:00:00.068082
+				stage time: 0:00:00.046826
 		----- running test 13-sfl - grade 0/3.1
 
 		+++++ running test 14-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.010975
+				stage time: 0:00:00.011482
 			running check      ...
 [F			running check      - WA: wrong number of lines: 15 vs 29
-				stage time: 0:00:00.070972
+				stage time: 0:00:00.046314
 		----- running test 14-sfl - grade 0/3.1
 
 		+++++ running test 15-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.016296
+				stage time: 0:00:00.013242
 			running check      ...
 [F			running check      - WA: wrong number of lines: 30 vs 29
-				stage time: 0:00:00.094493
+				stage time: 0:00:00.044125
 		----- running test 15-sfl - grade 0/3.1
 
 		+++++ running test 16-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.019674
+				stage time: 0:00:00.013050
 			running check      ...
 [F			running check      - WA: wrong number of lines: 31 vs 29
-				stage time: 0:00:00.080297
+				stage time: 0:00:00.041362
 		----- running test 16-sfl - grade 0/3.1
 
 		+++++ running test 17-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.013095
+				stage time: 0:00:00.010291
 			running check      ...
 [F			running check      - WA: wrong number of lines: 16 vs 15
-				stage time: 0:00:00.080984
+				stage time: 0:00:00.044220
 		----- running test 17-sfl - grade 0/3.1
 
 		+++++ running test 18-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.016502
+				stage time: 0:00:00.010071
 			running check      ...
 [F			running check      - WA: wrong number of lines: 17 vs 16
-				stage time: 0:00:00.080089
+				stage time: 0:00:00.042340
 		----- running test 18-sfl - grade 0/3.1
 
 		+++++ running test 19-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.010822
+				stage time: 0:00:00.007428
 			running check      ...
 [F			running check      - WA: wrong number of lines: 2 vs 15
-				stage time: 0:00:00.088112
+				stage time: 0:00:00.051399
 		----- running test 19-sfl - grade 0/3.1
 
 		+++++ running test 20-sfl
 			running test       ...
 [F			running test       - TLE: Command '/mnt/c/Users/raduv/OneDrive/CLionProjects/sd/tema/tema1/sfl' timed out after 5 seconds
-				stage time: 0:00:05.010778
+				stage time: 0:00:05.009608
 		----- running test 20-sfl - grade 0/3.1
 
 		+++++ running test 21-sfl
 			running test       ...
 [F			running test       - UPS: exit code = -6
-				stage time: 0:00:01.221368
+				stage time: 0:00:01.420915
 		----- running test 21-sfl - grade 0/3.1
 
 		+++++ running test 22-sfl
 			running test       ...
 [F			running test       - TLE: Command '/mnt/c/Users/raduv/OneDrive/CLionProjects/sd/tema/tema1/sfl' timed out after 5 seconds
-				stage time: 0:00:05.009905
+				stage time: 0:00:05.008692
 		----- running test 22-sfl - grade 0/3.1
 
 		+++++ running test 23-sfl
 			running test       ...
 [F			running test       - TLE: Command '/mnt/c/Users/raduv/OneDrive/CLionProjects/sd/tema/tema1/sfl' timed out after 5 seconds
-				stage time: 0:00:05.009940
+				stage time: 0:00:05.008952
 		----- running test 23-sfl - grade 0/3.1
 
 		+++++ running test 24-sfl
 			running test       ...
 [F			running test       - TLE: Command '/mnt/c/Users/raduv/OneDrive/CLionProjects/sd/tema/tema1/sfl' timed out after 5 seconds
-				stage time: 0:00:05.010952
+				stage time: 0:00:05.009243
 		----- running test 24-sfl - grade 0/3.1
 
 		+++++ running test 25-sfl
 			running test       ...
 [F			running test       - TLE: Command '/mnt/c/Users/raduv/OneDrive/CLionProjects/sd/tema/tema1/sfl' timed out after 5 seconds
-				stage time: 0:00:05.011048
+				stage time: 0:00:05.008714
 		----- running test 25-sfl - grade 0/3.1
 
 		+++++ running test 26-sfl
 			running test       ...
 [F			running test       - TLE: Command '/mnt/c/Users/raduv/OneDrive/CLionProjects/sd/tema/tema1/sfl' timed out after 5 seconds
-				stage time: 0:00:05.010571
+				stage time: 0:00:05.008545
 		----- running test 26-sfl - grade 0/3.1
 
 		+++++ running test 27-sfl
 			running test       ...
 [F			running test       - TLE: Command '/mnt/c/Users/raduv/OneDrive/CLionProjects/sd/tema/tema1/sfl' timed out after 5 seconds
-				stage time: 0:00:05.009781
+				stage time: 0:00:05.009700
 		----- running test 27-sfl - grade 0/3.1
 
 		+++++ running test 28-sfl
 			running test       ...
 [F			running test       - TLE: Command '/mnt/c/Users/raduv/OneDrive/CLionProjects/sd/tema/tema1/sfl' timed out after 5 seconds
-				stage time: 0:00:05.008175
+				stage time: 0:00:05.010422
 		----- running test 28-sfl - grade 0/3.1
 
 		+++++ running test 29-sfl
 			running test       ...
 [F			running test       - TLE: Command '/mnt/c/Users/raduv/OneDrive/CLionProjects/sd/tema/tema1/sfl' timed out after 5 seconds
-				stage time: 0:00:05.011574
+				stage time: 0:00:05.009048
 		----- running test 29-sfl - grade 0/3.1
 
 		+++++ running test 30-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.014323
+				stage time: 0:00:00.009485
 			running check      ...
 [F			running check      - WA: wrong number of lines: 38 vs 37
-				stage time: 0:00:00.070230
+				stage time: 0:00:00.039973
 		----- running test 30-sfl - grade 0/2
 
 		+++++ running test 31-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.011579
+				stage time: 0:00:00.009568
 			running check      ...
 [F			running check      - WA: wrong number of lines: 37 vs 36
-				stage time: 0:00:00.068011
+				stage time: 0:00:00.038887
 		----- running test 31-sfl - grade 0/4
 
 		+++++ running test 32-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.009705
+				stage time: 0:00:00.009594
 			running check      ...
 [F			running check      - WA: wrong number of lines: 28 vs 25
-				stage time: 0:00:00.067199
+				stage time: 0:00:00.040193
 		----- running test 32-sfl - grade 0/4
 
 		+++++ running test 33-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.014751
+				stage time: 0:00:00.012683
 			running check      ...
 [F			running check      - WA: response #4 wrong: "Free blocks: 64
 " vs "Free blocks: 8
 "
-				stage time: 0:00:00.068781
+				stage time: 0:00:00.041865
 		----- running test 33-sfl - grade 0/4
 
 		+++++ running test 34-sfl
 			running test       ...
 [F			running test       - OK
-				stage time: 0:00:00.109084
+				stage time: 0:00:00.105975
 			running check      ...
 [F			running check      - WA: wrong number of lines: 12 vs 16
-				stage time: 0:00:00.066303
+				stage time: 0:00:00.042120
 		----- running test 34-sfl - grade 0/4
 
-	----- running task sfl - grade 12/100
+	----- running task sfl - grade 16/100
 
 sh: 1: kill: Usage: kill [-s sigspec | -signum | -sigspec] [pid | job]... or
 kill -l [exitstatus]
@@ -908,9 +910,8 @@ kill -l [exitstatus]
 ./src/heap.c:351: CHECK:COMPARISON_TO_NULL: Comparison to NULL could be written "pool_node"
 ./src/heap.c:354: CHECK:COMPARISON_TO_NULL: Comparison to NULL could be written "block_node"
 ./src/heap.c:363: CHECK:BRACES: Blank lines aren't necessary before a close brace '}'
-./src/heap.c:370: CHECK:PREFER_KERNEL_TYPES: Prefer kernel type 's64' over 'int64_t'
-./src/heap.c:372: CHECK:COMPARISON_TO_NULL: Comparison to NULL could be written "used_block_node"
-./src/heap.c:389: WARNING:BRACES: braces {} are not necessary for single statement blocks
+./src/heap.c:369: CHECK:PREFER_KERNEL_TYPES: Prefer kernel type 's64' over 'int64_t'
+./src/heap.c:371: CHECK:COMPARISON_TO_NULL: Comparison to NULL could be written "used_block_node"
 ./src/heap.c:396: CHECK:LONG_LINE: line length of 81 exceeds 80 columns
 ./src/heap.c:403: CHECK:COMPARISON_TO_NULL: Comparison to NULL could be written "used_block_node"
 ./src/heap.c:411: WARNING:BRACES: braces {} are not necessary for single statement blocks
@@ -1009,8 +1010,8 @@ kill -l [exitstatus]
 +++++ make_clean ...
 ----- make_clean
 
-			Final grade: 12
-TOTAL: 12/100
+			Final grade: 16
+TOTAL: 16/100
 
 
-Total execution time: 0:00:56.095450
+Total execution time: 0:00:56.038832

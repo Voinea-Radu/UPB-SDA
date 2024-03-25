@@ -364,7 +364,6 @@ int64_t heap_free_size(heap_t *heap)
 
 bool heap_free(heap_t *heap, int64_t start_address)
 {
-	heap->free_calls_count++;
 	node_t *used_block_node = heap->bytes->head;
 	node_t *next_used_block_node;
 	int64_t size = 0;
@@ -388,6 +387,7 @@ bool heap_free(heap_t *heap, int64_t start_address)
 
 	if (size != 0) {
 		heap_add_block(heap, new_heap_block(start_address, size));
+		heap->free_calls_count++;
 	}
 
 	return size != 0;
