@@ -25,4 +25,8 @@ int64_t clamp(int64_t value, int64_t min, int64_t max);
 // Memory utils
 void *safe_malloc(size_t size);
 
+void *safe_realloc(void *ptr, size_t size);
+
+void *safe_calloc(size_t size);
+
 #endif //TEMA1_UTILS_H

@@ -105,8 +105,23 @@ uint8_t handle_free(int64_t args_size, string_t *args, heap_t *heap)
 uint8_t handle_write(int64_t args_size, string_t *args, heap_t *heap)
 {
 	int64_t start_address = strtol(args[1], NULL, 16);
-	string_t value = args[2];
-	int64_t write_size = strtol(args[3], NULL, 10);
+
+	string_t value = malloc(sizeof(char));
+	value[0] = '\0';
+	int64_t value_size = 0;
+
+	for (int i = 2; i < args_size - 1; i++) {
+		value_size += strlen(args[i]) + 1;
+		value = safe_realloc(value, value_size * sizeof(char));
+		strcat(value, args[i]);
+
+		if (i != args_size - 2) {
+			value_size++;
+			value = safe_realloc(value, value_size * sizeof(char));
+			strcat(value, " ");
+		}
+	}
+	int64_t write_size = strtol(args[args_size - 1], NULL, 10);
 
 	if (value[0] != '"' || value[strlen(value) - 1] != '"') {
 		printf("Invalid write\n");
@@ -124,6 +139,8 @@ uint8_t handle_write(int64_t args_size, string_t *args, heap_t *heap)
 	if (!success) {
 		printf("Invalid write\n");
 	}
+
+	free(value);
 
 	return CONTINUE;
 }
