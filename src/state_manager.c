@@ -9,13 +9,14 @@ Grupa: 315 CA
 #include "api/utils.h"
 
 static string_to_handle command_table[] = {
-		{"init_heap",   handle_init_heap},
-		{"malloc",      handle_malloc},
-		{"dump",        handle_dump},
-		{"dump_memory", handle_dump},
-		{"free",        handle_free},
-		{"write",       handle_write},
-		{"read",        handle_read},
+		{"init_heap",    handle_init_heap},
+		{"malloc",       handle_malloc},
+		{"dump",         handle_dump},
+		{"dump_memory",  handle_dump},
+		{"free",         handle_free},
+		{"write",        handle_write},
+		{"read",         handle_read},
+		{"destroy_heap", handle_destroy},
 };
 
 uint8_t process_command(string_t command)
@@ -44,6 +45,11 @@ uint8_t process_command(string_t command)
 
 	if (UNKNOWN_COMMAND == output)
 		printf("Invalid command\n");
+
+	for (int i = 0; i < args_size; i++) {
+		free(args[i]);
+	}
+	free(args);
 
 	return output;
 }
@@ -87,16 +93,9 @@ uint8_t handle_free(int64_t args_size, string_t *args, heap_t *heap)
 {
 	int64_t start_address = strtol(args[1], NULL, 16);
 
-	if (start_address % 8 != 0) {
-		printf("Invalid free\n");
-		return CONTINUE;
-	}
+	bool success = heap_free(heap, start_address);
 
-	bool success = heap_free(heap, start_address / 8);
-
-	if (success) {
-		printf("Memory at address 0x%lx freed\n", start_address);
-	} else {
+	if (!success) {
 		printf("Invalid free\n");
 	}
 
@@ -125,9 +124,6 @@ uint8_t handle_write(int64_t args_size, string_t *args, heap_t *heap)
 	if (!success) {
 		printf("Invalid write\n");
 	}
-	//else {
-	//	printf("Write successful\n");
-	//}
 
 	return CONTINUE;
 }
@@ -148,3 +144,8 @@ uint8_t handle_read(int64_t args_size, string_t *args, heap_t *heap)
 	return CONTINUE;
 }
 
+uint8_t handle_destroy(int64_t args_size, string_t *args, heap_t *heap)
+{
+	heap_destroy(heap);
+	return EXIT;
+}

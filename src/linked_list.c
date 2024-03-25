@@ -67,10 +67,10 @@ void add_node(linked_list_t *list, void *data)
 		void *next_data = current_node->next == NULL ? NULL : current_node->next->data;
 
 		bool result1 = list->compare(current_data, data) == -1;
-		bool result2 = 0;
-		if(next_data== NULL) {
-			result2 = 1;
-		}else{
+		bool result2 = false;
+		if (next_data == NULL) {
+			result2 = true;
+		} else {
 			result2 = list->compare(data, next_data) == -1;
 		}
 
@@ -101,30 +101,41 @@ void add_node(linked_list_t *list, void *data)
 	add_node_at_tail(list, data);
 }
 
-void remove_node(linked_list_t *list, void *data)
+node_t *remove_node(linked_list_t *list, void *data)
 {
 	node_t *current = list->head;
-	node_t *prev = NULL;
 
 	while (current != NULL) {
 		if (current->data == data) {
-			if (prev == NULL) {
+			node_t *output = current;
+
+			if (current == list->head) {
+				output = list->head;
+
 				list->head = current->next;
+
+				if (list->head != NULL) {
+					list->head->prev = NULL;
+				}
+			} else if (current == list->tail) {
+				output = list->tail;
+
+				list->tail = current->prev;
+
+				if (list->tail != NULL) {
+					list->tail->next = NULL;
+				}
 			} else {
-				prev->next = current->next;
+				output = current;
+
+				current->next->prev = current->prev;
+				current->prev->next = current->next;
 			}
 
-			if (current->next == NULL) {
-				list->tail = prev;
-			}
-
-			free(current);
 			list->size--;
-
-			return;
+			return output;
 		}
 
-		prev = current;
 		current = current->next;
 	}
 

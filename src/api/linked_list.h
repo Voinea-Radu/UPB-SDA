@@ -30,6 +30,6 @@ void add_node_at_tail(linked_list_t *list, void *data);
 
 void add_node(linked_list_t *list, void *data);
 
-void remove_node(linked_list_t *list, void *data);
+node_t* remove_node(linked_list_t *list, void *data);
 
 #endif //TEMA1_LINKED_LIST_H

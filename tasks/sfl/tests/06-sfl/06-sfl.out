@@ -1,0 +1,53 @@
++++++DUMP+++++
+Total memory: 1000743031068281173 bytes
+Total allocated memory: 0 bytes
+Total free memory: 1000743031068281173 bytes
+Free blocks: 8
+Number of allocated blocks: 0
+Number of malloc calls: 1
+Number of fragmentations: 1
+Number of free calls: 1
+Blocks with 8 bytes - 4 free block(s) : 0xb055 0xb05d 0xb065 0xb06d
+Blocks with 16 bytes - 2 free block(s) : 0xb075 0xb085
+Blocks with 17 bytes - 1 free block(s) : 0xb095
+Blocks with 32 bytes - 0 free block(s) :
+Blocks with 1000743031068281092 bytes - 1 free block(s) : 0x564451e81855
+Allocated blocks :
+-----DUMP-----
++++++DUMP+++++
+Total memory: 2001486062136562291 bytes
+Total allocated memory: 21 bytes
+Total free memory: 2001486062136562270 bytes
+Free blocks: 8
+Number of allocated blocks: 2
+Number of malloc calls: 3
+Number of fragmentations: 3
+Number of free calls: 1
+Blocks with 8 bytes - 3 free block(s) : 0xb05d 0xb065 0xb06d
+Blocks with 16 bytes - 2 free block(s) : 0xb075 0xb085
+Blocks with 17 bytes - 1 free block(s) : 0xb095
+Blocks with 32 bytes - 0 free block(s) :
+Blocks with 1000743031068281091 bytes - 1 free block(s) : 0x564451e812e6
+Blocks with 1000743031068281092 bytes - 0 free block(s) :
+Blocks with 1000743031068281106 bytes - 1 free block(s) : 0x564451e81a27
+Allocated blocks : (0xb055 - 3) (0x564451e81855 - 18)
+-----DUMP-----
++++++DUMP+++++
+Total memory: 2001486062136562291 bytes
+Total allocated memory: 18 bytes
+Total free memory: 2001486062136562273 bytes
+Free blocks: 9
+Number of allocated blocks: 1
+Number of malloc calls: 3
+Number of fragmentations: 3
+Number of free calls: 2
+Blocks with 3 bytes - 1 free block(s) : 0xb055
+Blocks with 8 bytes - 3 free block(s) : 0xb05d 0xb065 0xb06d
+Blocks with 16 bytes - 2 free block(s) : 0xb075 0xb085
+Blocks with 17 bytes - 1 free block(s) : 0xb095
+Blocks with 32 bytes - 0 free block(s) :
+Blocks with 1000743031068281091 bytes - 1 free block(s) : 0x564451e812e6
+Blocks with 1000743031068281092 bytes - 0 free block(s) :
+Blocks with 1000743031068281106 bytes - 1 free block(s) : 0x564451e81a27
+Allocated blocks : (0x564451e81855 - 18)
+-----DUMP-----

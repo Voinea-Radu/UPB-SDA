@@ -1,0 +1,77 @@
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
+Invalid free
++++++DUMP+++++
+Total memory: 7033224813040893784 bytes
+Total allocated memory: 63 bytes
+Total free memory: 7033224813040893721 bytes
+Free blocks: 9
+Number of allocated blocks: 1
+Number of malloc calls: 64
+Number of fragmentations: 64
+Number of free calls: 64
+Blocks with 1 bytes - 1 free block(s) : 0x1
+Blocks with 8 bytes - 0 free block(s) :
+Blocks with 3184996110843805667 bytes - 8 free block(s) : 0x55f3bd7cd4f0 0x55f3bd7cd630 0x55f3bd7cd670 0x55f3bd7cd730 0x55f3bd7cd770 0x55f3bd7cd7b0 0x55f3bd7cd7f0 0x55f3bd7cd910
+Allocated blocks : (0x55f3bd7cd4f0 - 54)
+-----DUMP-----

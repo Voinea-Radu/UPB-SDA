@@ -1,0 +1,15 @@
+==311465== Memcheck, a memory error detector
+==311465== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==311465== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==311465== Command: /mnt/c/Users/raduv/OneDrive/CLionProjects/sd/tema/tema1/sfl
+==311465== Parent PID: 311464
+==311465== 
+==311465== 
+==311465== HEAP SUMMARY:
+==311465==     in use at exit: 0 bytes in 0 blocks
+==311465==   total heap usage: 343 allocs, 343 frees, 16,593 bytes allocated
+==311465== 
+==311465== All heap blocks were freed -- no leaks are possible
+==311465== 
+==311465== For lists of detected and suppressed errors, rerun with: -s
+==311465== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

@@ -1,0 +1,58 @@
+==309649== Memcheck, a memory error detector
+==309649== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==309649== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==309649== Command: /mnt/c/Users/raduv/OneDrive/CLionProjects/sd/tema/tema1/sfl
+==309649== Parent PID: 309648
+==309649== 
+==309649== 
+==309649== HEAP SUMMARY:
+==309649==     in use at exit: 584 bytes in 25 blocks
+==309649==   total heap usage: 140 allocs, 115 frees, 12,586 bytes allocated
+==309649== 
+==309649== 16 bytes in 1 blocks are definitely lost in loss record 1 of 4
+==309649==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==309649==    by 0x109F43: safe_malloc (utils.c:13)
+==309649==    by 0x10A357: new_heap_block (heap.c:116)
+==309649==    by 0x10A440: create_heap (heap.c:136)
+==309649==    by 0x109525: handle_init_heap (state_manager.c:66)
+==309649==    by 0x1093C3: process_command (state_manager.c:43)
+==309649==    by 0x10B16D: main (main.c:27)
+==309649== 
+==309649== 16 bytes in 1 blocks are definitely lost in loss record 2 of 4
+==309649==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==309649==    by 0x109F43: safe_malloc (utils.c:13)
+==309649==    by 0x10A357: new_heap_block (heap.c:116)
+==309649==    by 0x10A802: heap_malloc (heap.c:252)
+==309649==    by 0x1095C5: handle_malloc (state_manager.c:74)
+==309649==    by 0x1093C3: process_command (state_manager.c:43)
+==309649==    by 0x10B16D: main (main.c:27)
+==309649== 
+==309649== 168 bytes in 7 blocks are definitely lost in loss record 3 of 4
+==309649==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==309649==    by 0x109F43: safe_malloc (utils.c:13)
+==309649==    by 0x10A19E: new_heap_byte (heap.c:68)
+==309649==    by 0x10A22B: new_heap_bytes (heap.c:82)
+==309649==    by 0x10A812: heap_malloc (heap.c:254)
+==309649==    by 0x1095C5: handle_malloc (state_manager.c:74)
+==309649==    by 0x1093C3: process_command (state_manager.c:43)
+==309649==    by 0x10B16D: main (main.c:27)
+==309649== 
+==309649== 384 bytes in 16 blocks are definitely lost in loss record 4 of 4
+==309649==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==309649==    by 0x109F43: safe_malloc (utils.c:13)
+==309649==    by 0x10A19E: new_heap_byte (heap.c:68)
+==309649==    by 0x10A22B: new_heap_bytes (heap.c:82)
+==309649==    by 0x10A762: heap_malloc (heap.c:236)
+==309649==    by 0x1095C5: handle_malloc (state_manager.c:74)
+==309649==    by 0x1093C3: process_command (state_manager.c:43)
+==309649==    by 0x10B16D: main (main.c:27)
+==309649== 
+==309649== LEAK SUMMARY:
+==309649==    definitely lost: 584 bytes in 25 blocks
+==309649==    indirectly lost: 0 bytes in 0 blocks
+==309649==      possibly lost: 0 bytes in 0 blocks
+==309649==    still reachable: 0 bytes in 0 blocks
+==309649==         suppressed: 0 bytes in 0 blocks
+==309649== 
+==309649== For lists of detected and suppressed errors, rerun with: -s
+==309649== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)

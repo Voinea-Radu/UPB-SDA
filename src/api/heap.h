@@ -39,7 +39,7 @@ typedef struct {
 	int64_t fragmentation_count;
 } heap_t;
 
-heap_t *new_heap(int64_t start_address);
+heap_t new_heap(int64_t start_address);
 
 heap_pool_t *new_heap_pool(int64_t start_address, int64_t block_size);
 
@@ -74,5 +74,7 @@ int64_t heap_free_size(heap_t *heap);
 int64_t heap_get_allocated_blocks_count(heap_t *heap);
 
 int64_t heap_get_free_blocks_count(heap_t *heap);
+
+void heap_destroy(heap_t *heap);
 
 #endif //TEMA1_HEAP_H

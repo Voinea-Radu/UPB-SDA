@@ -33,4 +33,6 @@ uint8_t handle_write(int64_t args_size, string_t *args, heap_t *heap);
 
 uint8_t handle_read(int64_t args_size, string_t *args, heap_t *heap);
 
+uint8_t handle_destroy(int64_t args_size, string_t *args, heap_t *heap);
+
 #endif //TEMA1_STATE_MANAGER_H

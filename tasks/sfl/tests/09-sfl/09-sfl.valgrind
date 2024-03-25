@@ -1,0 +1,322 @@
+==305131== Memcheck, a memory error detector
+==305131== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==305131== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==305131== Command: /mnt/c/Users/raduv/OneDrive/CLionProjects/sd/tema/tema1/sfl
+==305131== Parent PID: 305130
+==305131== 
+==305131== Invalid read of size 8
+==305131==    at 0x10AD19: heap_free (heap.c:358)
+==305131==    by 0x10967D: handle_free (state_manager.c:100)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131==  Address 0x4a8fcb0 is 16 bytes inside a block of size 24 free'd
+==305131==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F02: remove_node (linked_list.c:121)
+==305131==    by 0x10AD0F: heap_free (heap.c:354)
+==305131==    by 0x10967D: handle_free (state_manager.c:100)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131==  Block was alloc'd at
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x109C0F: add_node_at_tail (linked_list.c:25)
+==305131==    by 0x109CBC: add_node (linked_list.c:46)
+==305131==    by 0x10A8C7: heap_malloc (heap.c:248)
+==305131==    by 0x1095E5: handle_malloc (state_manager.c:69)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 
+==305131== HEAP SUMMARY:
+==305131==     in use at exit: 3,677 bytes in 139 blocks
+==305131==   total heap usage: 191 allocs, 52 frees, 14,285 bytes allocated
+==305131== 
+==305131== 8 bytes in 1 blocks are definitely lost in loss record 1 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x10A31F: new_heap_bytes (heap.c:79)
+==305131==    by 0x10A800: heap_malloc (heap.c:232)
+==305131==    by 0x1095E5: handle_malloc (state_manager.c:69)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 16 bytes in 1 blocks are still reachable in loss record 2 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x10A448: new_heap_block (heap.c:112)
+==305131==    by 0x10AD41: heap_free (heap.c:362)
+==305131==    by 0x10967D: handle_free (state_manager.c:100)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 16 bytes in 1 blocks are definitely lost in loss record 3 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x10A448: new_heap_block (heap.c:112)
+==305131==    by 0x10A4FB: create_heap (heap.c:132)
+==305131==    by 0x109545: handle_init_heap (state_manager.c:61)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 16 bytes in 1 blocks are definitely lost in loss record 4 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x10A448: new_heap_block (heap.c:112)
+==305131==    by 0x10A912: heap_malloc (heap.c:253)
+==305131==    by 0x1095E5: handle_malloc (state_manager.c:69)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 24 bytes in 1 blocks are still reachable in loss record 5 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x10A3F2: new_heap_pool (heap.c:101)
+==305131==    by 0x10A4DA: create_heap (heap.c:129)
+==305131==    by 0x109545: handle_init_heap (state_manager.c:61)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 24 bytes in 1 blocks are still reachable in loss record 6 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x109C0F: add_node_at_tail (linked_list.c:25)
+==305131==    by 0x10A544: create_heap (heap.c:140)
+==305131==    by 0x109545: handle_init_heap (state_manager.c:61)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 24 bytes in 1 blocks are still reachable in loss record 7 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x10A3F2: new_heap_pool (heap.c:101)
+==305131==    by 0x10A62F: heap_add_block (heap.c:163)
+==305131==    by 0x10A929: heap_malloc (heap.c:254)
+==305131==    by 0x1095E5: handle_malloc (state_manager.c:69)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 24 bytes in 1 blocks are still reachable in loss record 8 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x109CEE: add_node (linked_list.c:51)
+==305131==    by 0x10A646: heap_add_block (heap.c:164)
+==305131==    by 0x10A929: heap_malloc (heap.c:254)
+==305131==    by 0x1095E5: handle_malloc (state_manager.c:69)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 24 bytes in 1 blocks are still reachable in loss record 9 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x109C0F: add_node_at_tail (linked_list.c:25)
+==305131==    by 0x109CBC: add_node (linked_list.c:46)
+==305131==    by 0x10A65D: heap_add_block (heap.c:166)
+==305131==    by 0x10A929: heap_malloc (heap.c:254)
+==305131==    by 0x1095E5: handle_malloc (state_manager.c:69)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 24 bytes in 1 blocks are still reachable in loss record 10 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x109C0F: add_node_at_tail (linked_list.c:25)
+==305131==    by 0x109CBC: add_node (linked_list.c:46)
+==305131==    by 0x10A65D: heap_add_block (heap.c:166)
+==305131==    by 0x10AD53: heap_free (heap.c:362)
+==305131==    by 0x10967D: handle_free (state_manager.c:100)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 24 bytes in 1 blocks are still reachable in loss record 11 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x10A2CA: new_heap_byte (heap.c:68)
+==305131==    by 0x10A357: new_heap_bytes (heap.c:82)
+==305131==    by 0x10A800: heap_malloc (heap.c:232)
+==305131==    by 0x1095E5: handle_malloc (state_manager.c:69)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 24 bytes in 1 blocks are still reachable in loss record 12 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x109C0F: add_node_at_tail (linked_list.c:25)
+==305131==    by 0x109CBC: add_node (linked_list.c:46)
+==305131==    by 0x10A837: heap_malloc (heap.c:235)
+==305131==    by 0x1095E5: handle_malloc (state_manager.c:69)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 32 bytes in 1 blocks are still reachable in loss record 13 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x109BB8: create_linked_list (linked_list.c:11)
+==305131==    by 0x10A3AF: new_heap (heap.c:93)
+==305131==    by 0x10A498: create_heap (heap.c:122)
+==305131==    by 0x109545: handle_init_heap (state_manager.c:61)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 32 bytes in 1 blocks are still reachable in loss record 14 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x109BB8: create_linked_list (linked_list.c:11)
+==305131==    by 0x10A3C6: new_heap (heap.c:94)
+==305131==    by 0x10A498: create_heap (heap.c:122)
+==305131==    by 0x109545: handle_init_heap (state_manager.c:61)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 32 bytes in 1 blocks are still reachable in loss record 15 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x109BB8: create_linked_list (linked_list.c:11)
+==305131==    by 0x10A41C: new_heap_pool (heap.c:105)
+==305131==    by 0x10A4DA: create_heap (heap.c:129)
+==305131==    by 0x109545: handle_init_heap (state_manager.c:61)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 32 bytes in 1 blocks are still reachable in loss record 16 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x109BB8: create_linked_list (linked_list.c:11)
+==305131==    by 0x10A41C: new_heap_pool (heap.c:105)
+==305131==    by 0x10A62F: heap_add_block (heap.c:163)
+==305131==    by 0x10A929: heap_malloc (heap.c:254)
+==305131==    by 0x1095E5: handle_malloc (state_manager.c:69)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 48 bytes in 1 blocks are still reachable in loss record 17 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x10937D: process_command (state_manager.c:27)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 48 bytes in 1 blocks are definitely lost in loss record 18 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x10A391: new_heap (heap.c:90)
+==305131==    by 0x10A498: create_heap (heap.c:122)
+==305131==    by 0x109545: handle_init_heap (state_manager.c:61)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 80 bytes in 5 blocks are still reachable in loss record 19 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x10A448: new_heap_block (heap.c:112)
+==305131==    by 0x10A912: heap_malloc (heap.c:253)
+==305131==    by 0x1095E5: handle_malloc (state_manager.c:69)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 80 bytes in 5 blocks are definitely lost in loss record 20 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x10A448: new_heap_block (heap.c:112)
+==305131==    by 0x10AD41: heap_free (heap.c:362)
+==305131==    by 0x10967D: handle_free (state_manager.c:100)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 96 bytes in 4 blocks are still reachable in loss record 21 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x109CEE: add_node (linked_list.c:51)
+==305131==    by 0x10A600: heap_add_block (heap.c:156)
+==305131==    by 0x10A929: heap_malloc (heap.c:254)
+==305131==    by 0x1095E5: handle_malloc (state_manager.c:69)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 96 bytes in 6 blocks are definitely lost in loss record 22 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x10A448: new_heap_block (heap.c:112)
+==305131==    by 0x10A880: heap_malloc (heap.c:243)
+==305131==    by 0x1095E5: handle_malloc (state_manager.c:69)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 144 bytes in 6 blocks are still reachable in loss record 23 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x10A3F2: new_heap_pool (heap.c:101)
+==305131==    by 0x10A62F: heap_add_block (heap.c:163)
+==305131==    by 0x10AD53: heap_free (heap.c:362)
+==305131==    by 0x10967D: handle_free (state_manager.c:100)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 144 bytes in 6 blocks are still reachable in loss record 24 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x109DF0: add_node (linked_list.c:81)
+==305131==    by 0x10A646: heap_add_block (heap.c:164)
+==305131==    by 0x10AD53: heap_free (heap.c:362)
+==305131==    by 0x10967D: handle_free (state_manager.c:100)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 159 bytes in 16 blocks are indirectly lost in loss record 25 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x10998D: split_string (string_utils.c:42)
+==305131==    by 0x1093AA: process_command (state_manager.c:35)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 192 bytes in 6 blocks are still reachable in loss record 26 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x109BB8: create_linked_list (linked_list.c:11)
+==305131==    by 0x10A41C: new_heap_pool (heap.c:105)
+==305131==    by 0x10A62F: heap_add_block (heap.c:163)
+==305131==    by 0x10AD53: heap_free (heap.c:362)
+==305131==    by 0x10967D: handle_free (state_manager.c:100)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 206 bytes in 18 blocks are indirectly lost in loss record 27 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x109A11: split_string (string_utils.c:52)
+==305131==    by 0x1093AA: process_command (state_manager.c:35)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 648 bytes in 27 blocks are indirectly lost in loss record 28 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x10A2CA: new_heap_byte (heap.c:68)
+==305131==    by 0x10A357: new_heap_bytes (heap.c:82)
+==305131==    by 0x10A890: heap_malloc (heap.c:245)
+==305131==    by 0x1095E5: handle_malloc (state_manager.c:69)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 864 (216 direct, 648 indirect) bytes in 6 blocks are definitely lost in loss record 29 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x10A31F: new_heap_bytes (heap.c:79)
+==305131==    by 0x10A890: heap_malloc (heap.c:245)
+==305131==    by 0x1095E5: handle_malloc (state_manager.c:69)
+==305131==    by 0x109423: process_command (state_manager.c:43)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== 1,509 (1,144 direct, 365 indirect) bytes in 16 blocks are definitely lost in loss record 30 of 30
+==305131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==305131==    by 0x109F53: safe_malloc (utils.c:16)
+==305131==    by 0x109971: split_string (string_utils.c:40)
+==305131==    by 0x1093AA: process_command (state_manager.c:35)
+==305131==    by 0x10B091: main (main.c:27)
+==305131== 
+==305131== LEAK SUMMARY:
+==305131==    definitely lost: 1,624 bytes in 37 blocks
+==305131==    indirectly lost: 1,013 bytes in 61 blocks
+==305131==      possibly lost: 0 bytes in 0 blocks
+==305131==    still reachable: 1,040 bytes in 41 blocks
+==305131==         suppressed: 0 bytes in 0 blocks
+==305131== 
+==305131== For lists of detected and suppressed errors, rerun with: -s
+==305131== ERROR SUMMARY: 35 errors from 9 contexts (suppressed: 0 from 0)

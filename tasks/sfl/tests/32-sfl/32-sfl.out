@@ -1,0 +1,15 @@
+Out of memory
+Out of memory
++++++DUMP+++++
+Total memory: -3501568801733919640 bytes
+Total allocated memory: 22 bytes
+Total free memory: -3501568801733919662 bytes
+Free blocks: 1
+Number of allocated blocks: 3
+Number of malloc calls: 5
+Number of fragmentations: 1
+Number of free calls: 0
+Blocks with 14945175271975631954 bytes - 1 free block(s) : 0x55e9fe23b8f1
+Blocks with 8 bytes - 0 free block(s) :
+Blocks with 16 bytes - 0 free block(s) :
+Allocated blocks : (0x1 - 8) (0x9 - 8) (0x11 - 6)
