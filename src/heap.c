@@ -229,14 +229,13 @@ void heap_remove_block(heap_t *heap, heap_block_t *block)
 }
 
 
-	int64_t heap_malloc(heap_t *heap, int64_t size)
+int64_t heap_malloc(heap_t *heap, int64_t size)
 {
 	heap->malloc_calls_count++;
 	heap_block_t *current_block = heap_get_block_of_size(heap, size);
 
 	if (current_block != NULL) {
 		if (current_block->size == size) {
-
 			heap_byte_t **bytes = new_heap_bytes(current_block);
 
 			for (int64_t i = 0; i < current_block->size; i++) {
@@ -254,6 +253,7 @@ void heap_remove_block(heap_t *heap, heap_block_t *block)
 		heap->fragmentation_count++;
 
 		heap_block_t *new_block = new_heap_block(current_block->start_address, size);
+		int64_t address = new_block->start_address;
 
 		heap_byte_t **bytes = new_heap_bytes(new_block);
 
@@ -263,12 +263,12 @@ void heap_remove_block(heap_t *heap, heap_block_t *block)
 
 		free(bytes);
 
-		heap_remove_block(heap, current_block);
-
 		heap_block_t *remaining_block = new_heap_block(current_block->start_address + size, current_block->size - size);
 		heap_add_block(heap, remaining_block);
+		heap_remove_block(heap, current_block);
+		free(new_block);
 
-		return new_block->start_address;
+		return address;
 	}
 
 	return -1;
@@ -294,6 +294,12 @@ void dump_heap(heap_t *heap)
 
 	while (pool_node != NULL) {
 		heap_pool_t *pool = (heap_pool_t *)pool_node->data;
+
+		if (pool->blocks->size == 0) {
+			pool_node = pool_node->next;
+			continue;
+		}
+
 		printf("Blocks with %lu bytes - %lu free block(s) :", pool->block_size, pool->blocks->size);
 
 		node_t *block_node = pool->blocks->head;
@@ -368,7 +374,7 @@ bool heap_free(heap_t *heap, int64_t start_address)
 		heap_byte_t *byte = (heap_byte_t *)used_block_node->data;
 
 		if (byte->holding_block_start_address == start_address) {
-			node_t* removed_byte_node = remove_node(heap->bytes, byte);
+			node_t *removed_byte_node = remove_node(heap->bytes, byte);
 			heap_byte_t *removed_byte = (heap_byte_t *)removed_byte_node->data;
 
 			free(removed_byte_node);
