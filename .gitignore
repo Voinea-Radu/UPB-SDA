@@ -5,3 +5,4 @@
 *.valgrind
 .check.grade
 sfl
+check.log

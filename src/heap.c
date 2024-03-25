@@ -231,7 +231,6 @@ void heap_remove_block(heap_t *heap, heap_block_t *block)
 
 int64_t heap_malloc(heap_t *heap, int64_t size)
 {
-	heap->malloc_calls_count++;
 	heap_block_t *current_block = heap_get_block_of_size(heap, size);
 
 	if (current_block != NULL) {
@@ -247,6 +246,7 @@ int64_t heap_malloc(heap_t *heap, int64_t size)
 			heap_remove_block(heap, current_block);
 			free(bytes);
 
+			heap->malloc_calls_count++;
 			return address;
 		}
 
@@ -268,6 +268,7 @@ int64_t heap_malloc(heap_t *heap, int64_t size)
 		heap_remove_block(heap, current_block);
 		free(new_block);
 
+		heap->malloc_calls_count++;
 		return address;
 	}
 
