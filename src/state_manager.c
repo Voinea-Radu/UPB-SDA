@@ -159,6 +159,8 @@ uint8_t handle_read(int64_t args_size, string_t *args, heap_t *heap)
 		printf("%s\n", value);
 	}
 
+	free(value);
+
 	return CONTINUE;
 }
 
