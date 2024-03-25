@@ -7,7 +7,7 @@ Grupa: 315 CA
 #include "api/state_manager.h"
 #include "api/heap.h"
 
-#define MAX_COMMAND_SIZE 100
+#define MAX_COMMAND_SIZE 700
 
 int main()
 {

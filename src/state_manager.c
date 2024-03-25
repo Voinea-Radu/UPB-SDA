@@ -149,6 +149,7 @@ void seg_fault(heap_t *heap)
 {
 	printf("Segmentation fault (core dumped)\n");
 	handle_dump(0, NULL, heap);
+	handle_destroy(0, NULL, heap);
 }
 
 uint8_t handle_read(int64_t args_size, string_t *args, heap_t *heap)
