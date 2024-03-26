@@ -276,11 +276,11 @@ bool heap_free(heap_t *heap, int64_t start_address)
 
 	int size = 0;
 
-	if (heap->bytes[start_address]->holding_block_start_address != start_address) {
+	heap_byte_t *byte = heap->bytes[start_address];
+
+	if (byte == NULL || byte->holding_block_start_address != start_address) {
 		return false;
 	}
-
-	heap_byte_t *byte = heap->bytes[start_address + size];
 
 	while (byte != NULL && byte->holding_block_start_address == start_address){
 		free(byte);
