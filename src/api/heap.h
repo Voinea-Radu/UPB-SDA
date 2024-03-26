@@ -24,13 +24,10 @@ typedef struct {
 
 typedef struct {
 	int64_t start_address; // in bytes
-	int64_t block_size; // in bytes
-	linked_list_t *blocks;
-} heap_pool_t;
 
-typedef struct {
-	int64_t start_address; // in bytes
-	linked_list_t *pools;
+	linked_list_t **pools; // array<linked_list_t*>
+	int64_t pools_size;
+
 	linked_list_t *bytes;
 
 	// Statistics
@@ -39,9 +36,7 @@ typedef struct {
 	int64_t fragmentation_count;
 } heap_t;
 
-heap_t new_heap(int64_t start_address);
-
-heap_pool_t *new_heap_pool(int64_t start_address, int64_t block_size);
+heap_t new_heap(int64_t start_address, int64_t number_of_pools, int64_t max_pool_size);
 
 heap_block_t *new_heap_block(int64_t start_address, int64_t size);
 
@@ -69,7 +64,7 @@ bool heap_write(heap_t *heap, int64_t start_address, int64_t size, string_t data
 
 string_t heap_read(heap_t *heap, int64_t start_address, int64_t size);
 
-int64_t heap_free_size(heap_t *heap);
+int64_t heap_get_free_size(heap_t *heap);
 
 int64_t heap_get_allocated_blocks_count(heap_t *heap);
 

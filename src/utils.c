@@ -75,4 +75,9 @@ int64_t clamp(int64_t value, int64_t min, int64_t max)
 	return value;
 }
 
+int64_t power_of_two(int64_t value)
+{
+	return 1 << value;
+}
+
 

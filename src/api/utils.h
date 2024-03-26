@@ -22,6 +22,8 @@ Grupa: 315 CA
 
 int64_t clamp(int64_t value, int64_t min, int64_t max);
 
+int64_t power_of_two(int64_t value);
+
 // Memory utils
 void *safe_malloc(size_t size);
 

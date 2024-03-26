@@ -28,24 +28,6 @@ int8_t compare_blocks(void *data1, void *data2)
 }
 
 /**
- * Compare two pools by their block size
- * @param data1 This should be of instance heap_pool_t
- * @param data2 This should be of instance heap_pool_t
- * @return -1 if data1 < data2, 0 if data1 == data2, 1 if data1 > data2
- */
-int8_t compare_pools(void *data1, void *data2)
-{
-	heap_pool_t *pool1 = (heap_pool_t *)data1;
-	heap_pool_t *pool2 = (heap_pool_t *)data2;
-
-	if (pool1->block_size == pool2->block_size) {
-		return 0;
-	}
-
-	return pool1->block_size < pool2->block_size ? -1 : 1;
-}
-
-/**
  * Compare two bytes by their address
  * @param data1 This should be of instance heap_byte_t
  * @param data2 This should be of instance heap_byte_t
@@ -85,12 +67,19 @@ heap_byte_t **new_heap_bytes(heap_block_t *block)
 	return bytes;
 }
 
-heap_t new_heap(int64_t start_address)
+heap_t new_heap(int64_t start_address, int64_t number_of_pools, int64_t max_pool_size)
 {
 	heap_t heap;
 
 	heap.start_address = start_address;
-	heap.pools = new_linked_list(compare_pools);
+
+	heap.pools_size = min(power_of_two(number_of_pools + 2), max_pool_size) + 1;
+	heap.pools = safe_malloc(heap.pools_size * sizeof(linked_list_t*));
+
+	for (int64_t i = 0; i < heap.pools_size; i++) {
+		heap.pools[i] = new_linked_list(compare_blocks);
+	}
+
 	heap.bytes = new_linked_list(compare_bytes);
 
 	heap.malloc_calls_count = 0;
@@ -98,17 +87,6 @@ heap_t new_heap(int64_t start_address)
 	heap.fragmentation_count = 0;
 
 	return heap;
-}
-
-heap_pool_t *new_heap_pool(int64_t start_address, int64_t block_size)
-{
-	heap_pool_t *pool = safe_malloc(sizeof(heap_pool_t));
-
-	pool->start_address = start_address;
-	pool->block_size = block_size;
-	pool->blocks = new_linked_list(compare_blocks);
-
-	return pool;
 }
 
 heap_block_t *new_heap_block(int64_t start_address, int64_t size)
@@ -123,25 +101,23 @@ heap_block_t *new_heap_block(int64_t start_address, int64_t size)
 
 heap_t create_heap(int64_t start_address, int64_t number_of_pools, int64_t pool_total_size, bool reconstruction_type)
 {
-	heap_t heap = new_heap(start_address);
+	heap_t heap = new_heap(start_address, number_of_pools, pool_total_size);
 
 	int64_t address = start_address;
 	int64_t pool_size = 8;
 
 	for (int64_t i = 0; i < number_of_pools; i++) {
 		int64_t blocks_size = pool_total_size / pool_size;
-		heap_pool_t *pool = new_heap_pool(address, pool_size);
 
 		for (int64_t j = 0; j < blocks_size; j++) {
 			heap_block_t *block = new_heap_block(address, pool_size);
-			add_node_at_tail(pool->blocks, block);
+			add_node_at_tail(heap.pools[pool_size], block);
 
 			address += pool_size;
 			//printf("Creating block at 0x%lx with size of %lu byte(s)\n", block->start_address * 8, block->size);
 		}
 		//printf("\n");
 
-		add_node_at_tail(heap.pools, pool);
 		pool_size *= 2;
 	}
 
@@ -150,24 +126,8 @@ heap_t create_heap(int64_t start_address, int64_t number_of_pools, int64_t pool_
 
 void heap_add_block(heap_t *heap, heap_block_t *block)
 {
-	linked_list_t *pools_list = heap->pools;
-	node_t *current_pool_node = pools_list->head;
-
-	while (current_pool_node != NULL) {
-		heap_pool_t *current_pool = (heap_pool_t *)current_pool_node->data;
-
-		if (current_pool->block_size == block->size) {
-			add_node_sorted(current_pool->blocks, block);
-			return;
-		}
-
-		current_pool_node = current_pool_node->next;
-	}
-
-	heap_pool_t *pool = new_heap_pool(block->start_address, block->size);
-	add_node_sorted(pools_list, pool);
-
-	add_node_sorted(pool->blocks, block);
+	linked_list_t *pool = heap->pools[block->size];
+	add_node_sorted(pool, block);
 }
 
 /**
@@ -178,29 +138,18 @@ void heap_add_block(heap_t *heap, heap_block_t *block)
  */
 heap_block_t *heap_get_block_of_size(heap_t *heap, int64_t size)
 {
-	linked_list_t *pools = heap->pools;
-	node_t *current_pool = pools->head;
+	linked_list_t *exact_size_pool = heap->pools[size];
 
-	while (current_pool != NULL) {
-		heap_pool_t *pool = (heap_pool_t *)current_pool->data;
-		linked_list_t *blocks = pool->blocks;
+	if (exact_size_pool->size > 0) {
+		return (heap_block_t *)exact_size_pool->head->data;
+	}
 
-		if (blocks->head == NULL) {
-			current_pool = current_pool->next;
-			continue;
+	for (int64_t i = size + 1; i < heap->pools_size; i++) {
+		linked_list_t *pool = heap->pools[i];
+
+		if (pool->size > 0) {
+			return (heap_block_t *)pool->head->data;
 		}
-
-		heap_block_t *head_block = (heap_block_t *)blocks->head->data;
-
-		if (pool->block_size < size) {
-			// no-op
-		} else if (pool->block_size >= size) {
-			if (head_block != NULL) {
-				return head_block;
-			}
-		}
-
-		current_pool = current_pool->next;
 	}
 
 	return NULL;
@@ -208,24 +157,13 @@ heap_block_t *heap_get_block_of_size(heap_t *heap, int64_t size)
 
 void heap_remove_block(heap_t *heap, heap_block_t *block)
 {
-	linked_list_t *pools_list = heap->pools;
-	node_t *current_pool_node = pools_list->head;
+	linked_list_t *pool = heap->pools[block->size];
 
-	while (current_pool_node != NULL) {
-		heap_pool_t *current_pool = (heap_pool_t *)current_pool_node->data;
+	node_t *removed_block_node = remove_node(pool, block);
+	heap_block_t *removed_block = (heap_block_t *)removed_block_node->data;
 
-		if (current_pool->block_size == block->size) {
-			node_t *removed_block_node = remove_node(current_pool->blocks, block);
-			heap_block_t *removed_block = (heap_block_t *)removed_block_node->data;
-
-			free(removed_block_node);
-			free(removed_block);
-
-			return;
-		}
-
-		current_pool_node = current_pool_node->next;
-	}
+	free(removed_block_node);
+	free(removed_block);
 }
 
 
@@ -277,7 +215,7 @@ int64_t heap_malloc(heap_t *heap, int64_t size)
 
 void dump_heap(heap_t *heap)
 {
-	int64_t free_memory = heap_free_size(heap);
+	int64_t free_memory = heap_get_free_size(heap);
 	int64_t used_memory = heap->bytes->size;
 	int64_t total_memory = free_memory + used_memory;
 
@@ -291,19 +229,16 @@ void dump_heap(heap_t *heap)
 	printf("Number of fragmentations: %ld\n", heap->fragmentation_count);
 	printf("Number of free calls: %ld\n", heap->free_calls_count);
 
-	node_t *pool_node = heap->pools->head;
+	for (int64_t i = 0; i < heap->pools_size; i++){
+		linked_list_t *pool = heap->pools[i];
 
-	while (pool_node != NULL) {
-		heap_pool_t *pool = (heap_pool_t *)pool_node->data;
-
-		if (pool->blocks->size == 0) {
-			pool_node = pool_node->next;
+		if (pool->size == 0) {
 			continue;
 		}
 
-		printf("Blocks with %lu bytes - %lu free block(s) :", pool->block_size, pool->blocks->size);
+		printf("Blocks with %lu bytes - %lu free block(s) :", i, pool->size);
 
-		node_t *block_node = pool->blocks->head;
+		node_t *block_node = pool->head;
 
 		while (block_node != NULL) {
 			heap_block_t *block = (heap_block_t *)block_node->data;
@@ -312,9 +247,8 @@ void dump_heap(heap_t *heap)
 			block_node = block_node->next;
 		}
 		printf("\n");
-
-		pool_node = pool_node->next;
 	}
+
 	printf("Allocated blocks :");
 	node_t *used_byte_node = heap->bytes->head;
 
@@ -345,20 +279,15 @@ void dump_heap(heap_t *heap)
 	printf("-----DUMP-----\n");
 }
 
-int64_t heap_free_size(heap_t *heap)
+int64_t heap_get_free_size(heap_t *heap)
 {
 	int64_t size = 0;
-	node_t *pool_node = heap->pools->head;
-	while (pool_node != NULL) {
-		heap_pool_t *pool = (heap_pool_t *)pool_node->data;
-		node_t *block_node = pool->blocks->head;
-		while (block_node != NULL) {
-			heap_block_t *block = (heap_block_t *)block_node->data;
-			size += block->size;
-			block_node = block_node->next;
-		}
-		pool_node = pool_node->next;
+
+	for (int i = 0; i < heap->pools_size; i++){
+		linked_list_t *pool = heap->pools[i];
+		size+=pool->size * i;
 	}
+
 	return size;
 
 }
@@ -483,29 +412,20 @@ int64_t heap_get_allocated_blocks_count(heap_t *heap)
 int64_t heap_get_free_blocks_count(heap_t *heap)
 {
 	int64_t count = 0;
-	node_t *pool_node = heap->pools->head;
-	while (pool_node != NULL) {
-		heap_pool_t *pool = (heap_pool_t *)pool_node->data;
-		node_t *block_node = pool->blocks->head;
-		while (block_node != NULL) {
-			count++;
-			block_node = block_node->next;
-		}
-		pool_node = pool_node->next;
+
+	for (int i = 0; i < heap->pools_size; i++){
+		linked_list_t *pool = heap->pools[i];
+		count+=pool->size;
 	}
+
 	return count;
 }
 
 void heap_destroy(heap_t *heap)
 {
-	node_t *pool_node = heap->pools->head;
-	node_t *next_pool_node;
-
-	while (pool_node != NULL) {
-		next_pool_node = pool_node->next;
-
-		heap_pool_t *pool = (heap_pool_t *)pool_node->data;
-		node_t *block_node = pool->blocks->head;
+	for (int i = 0; i < heap->pools_size; i++) {
+		linked_list_t *pool = heap->pools[i];
+		node_t *block_node = pool->head;
 		node_t *next_block_node;
 
 		while (block_node != NULL) {
@@ -518,12 +438,7 @@ void heap_destroy(heap_t *heap)
 			block_node = next_block_node;
 		}
 
-		free(pool->blocks);
 		free(pool);
-
-		free(pool_node);
-
-		pool_node = next_pool_node;
 	}
 
 	node_t *byte_node = heap->bytes->head;
