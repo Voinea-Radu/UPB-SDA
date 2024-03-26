@@ -13,8 +13,7 @@ Grupa: 315 CA
 typedef struct {
 	int64_t holding_block_start_address; // in bytes
 
-	int64_t address; // in bytes
-	char data;
+	int8_t data;
 } heap_byte_t;
 
 typedef struct {
@@ -25,10 +24,11 @@ typedef struct {
 typedef struct {
 	int64_t start_address; // in bytes
 
-	linked_list_t **pools; // array<linked_list_t*>
+	linked_list_t *(*pools); // array<linked_list_t*>
 	int64_t pools_size;
 
-	linked_list_t *bytes;
+	heap_byte_t *(*bytes); // array<heap_byte_t*>
+	int64_t bytes_size;
 
 	// Statistics
 	int64_t malloc_calls_count;
@@ -40,13 +40,11 @@ heap_t new_heap(int64_t start_address, int64_t number_of_pools, int64_t max_pool
 
 heap_block_t *new_heap_block(int64_t start_address, int64_t size);
 
-heap_byte_t *new_heap_byte(int64_t holding_block_start_address, int64_t offset);
+heap_byte_t *new_heap_byte(int64_t holding_block_start_address);
 
 heap_byte_t **new_heap_bytes(heap_block_t *block);
 
 int8_t compare_blocks(void *data1, void *data2);
-
-int8_t compare_pools(void *data1, void *data2);
 
 int8_t compare_bytes(void *data1, void *data2);
 
@@ -71,5 +69,7 @@ int64_t heap_get_allocated_blocks_count(heap_t *heap);
 int64_t heap_get_free_blocks_count(heap_t *heap);
 
 void heap_destroy(heap_t *heap);
+
+int64_t heap_get_used_size(heap_t *heap);
 
 #endif //TEMA1_HEAP_H

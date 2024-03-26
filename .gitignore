@@ -6,3 +6,4 @@
 .check.grade
 sfl
 check.log
+*.tmp
