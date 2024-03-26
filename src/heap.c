@@ -307,13 +307,14 @@ bool heap_write(heap_t *heap, int64_t start_address, int64_t size, string_t data
 	}
 
 	for (int64_t index = 0; index < size; index++) {
-		heap_byte_t *byte = heap->bytes[start_address + size];
+		heap_byte_t *byte = heap->bytes[start_address + index];
 
 		if (byte == NULL) {
 			return false;
 		}
 
 		byte->data = data[index];
+		int a=1;
 	}
 
 	return true;
@@ -332,9 +333,10 @@ string_t heap_read(heap_t *heap, int64_t start_address, int64_t size)
 		}
 
 		result[i] = byte->data;
+		result[i+1] = '\0';
 	}
 
-	result[size] = '\0';
+	//result[size] = '\0';
 
 	return result;
 }
