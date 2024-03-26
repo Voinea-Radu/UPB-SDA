@@ -138,6 +138,9 @@ void heap_add_block(heap_t *heap, heap_block_t *block)
  */
 heap_block_t *heap_get_block_of_size(heap_t *heap, int64_t size)
 {
+	if(size >= heap->pools_size)
+		return NULL;
+
 	linked_list_t *exact_size_pool = heap->pools[size];
 
 	if (exact_size_pool->size > 0) {
