@@ -56,6 +56,11 @@ u8 process_command(string_t command)
 
 u8 handle_init_heap(s64 args_size, string_t *args, heap_t *heap)
 {
+	if (args_size != 5) {
+		printf("Invalid command\n");
+		return CONTINUE;
+	}
+
 	s64 start_address = strtol(args[1], NULL, 16);
 	s64 number_of_pools = strtol(args[2], NULL, 10);
 	s64 pool_total_size = strtol(args[3], NULL, 10);
@@ -69,17 +74,22 @@ u8 handle_init_heap(s64 args_size, string_t *args, heap_t *heap)
 
 u8 handle_malloc(s64 args_size, string_t *args, heap_t *heap)
 {
+	if (args_size != 2) {
+		printf("Invalid command\n");
+		return CONTINUE;
+	}
+
 	s64 size = strtol(args[1], NULL, 10);
 	s64 block_address = heap_malloc(heap, size);
 
-	// Comparison with -1 is marked as a warning in CLion.
-	if (block_address == 0xFFFFFFFFFFFFFFFF)
+	if (block_address == -1)
 		printf("Out of memory\n");
 
 	return CONTINUE;
 }
 
-u8 handle_dump(s64 args_size, string_t *args, heap_t *heap)
+u8 handle_dump(__attribute__((unused))s64 args_size,
+			   __attribute__((unused)) string_t *args, heap_t *heap)
 {
 	dump_heap(heap);
 	return CONTINUE;
@@ -87,6 +97,11 @@ u8 handle_dump(s64 args_size, string_t *args, heap_t *heap)
 
 u8 handle_free(s64 args_size, string_t *args, heap_t *heap)
 {
+	if (args_size != 2) {
+		printf("Invalid command\n");
+		return CONTINUE;
+	}
+
 	s64 start_address = strtol(args[1], NULL, 16);
 
 	bool success = heap_free(heap, start_address);
@@ -99,6 +114,11 @@ u8 handle_free(s64 args_size, string_t *args, heap_t *heap)
 
 u8 handle_write(s64 args_size, string_t *args, heap_t *heap)
 {
+	if (args_size < 4) {
+		printf("Invalid command\n");
+		return CONTINUE;
+	}
+
 	s64 start_address = strtol(args[1], NULL, 16);
 
 	string_t value = malloc(sizeof(char));
@@ -123,7 +143,7 @@ u8 handle_write(s64 args_size, string_t *args, heap_t *heap)
 		return CONTINUE;
 	}
 
-	for (int i = 0; i < strlen(value); i++)
+	for (size_t i = 0; i < strlen(value); i++)
 		value[i] = value[i + 1];
 
 	value[strlen(value) - 1] = '\0';
@@ -148,6 +168,11 @@ void seg_fault(heap_t *heap)
 
 u8 handle_read(s64 args_size, string_t *args, heap_t *heap)
 {
+	if (args_size != 3) {
+		printf("Invalid command\n");
+		return CONTINUE;
+	}
+
 	s64 start_address = strtol(args[1], NULL, 16);
 	s64 size = strtol(args[2], NULL, 10);
 
@@ -164,7 +189,8 @@ u8 handle_read(s64 args_size, string_t *args, heap_t *heap)
 	return CONTINUE;
 }
 
-u8 handle_destroy(s64 args_size, string_t *args, heap_t *heap)
+u8 handle_destroy(__attribute__((unused)) s64 args_size,
+				  __attribute__((unused)) string_t *args, heap_t *heap)
 {
 	heap_destroy(heap);
 	return FINISH;

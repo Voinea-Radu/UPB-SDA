@@ -69,7 +69,7 @@ heap_block_t *new_heap_block(s64 start_address, s64 size)
 }
 
 heap_t create_heap(s64 start_address, s64 number_of_pools, s64 pool_total_size,
-				   bool reconstruction_type)
+				   __attribute__((unused)) bool reconstruction_type)
 {
 	heap_t heap = new_heap(start_address, number_of_pools, pool_total_size);
 

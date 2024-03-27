@@ -18,4 +18,7 @@ pack:
 clean:
 	rm -f $(TARGETS)
 
+run_sfl: sfl
+	./sfl
+
 .PHONY: pack clean

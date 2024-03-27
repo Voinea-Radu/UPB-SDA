@@ -4,13 +4,15 @@ Programul implementeaza un allocator de memorie care foloseste o lista de
 alocari libere pentru fiecare dimensiune de bloc.
 
 ## Comenzi
-### INIT_HEAP <adresa_start_heap> <numar_liste> <numar_bytes_per_lista> <tip_reconstituire>
+### INIT_HEAP <adresa_start_heap> <numar_liste> <numar_bytes_per_lista>
+<tip_reconstituire>
 
 Comanda initializeaza heap-ul
 
 - `adresa_start_heap` - adresa de start a heap-ului
 - `numar_liste` - numarul de liste de alocari libere
-- `numar_bytes_per_lista` - numarul de bytes pe care îl poate aloca fiecare lista
+- `numar_bytes_per_lista` - numarul de bytes pe care îl poate aloca fiecare
+lista
 - `tip_reconstituire` - tipul de reconstituire a listelor de alocari libere
   - `0` - nu se reconstituie
   - `1` - se reconstituie

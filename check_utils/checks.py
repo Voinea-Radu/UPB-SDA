@@ -184,7 +184,8 @@ def check_style(config):
 
     log('+++++ running check_style ({:g}p)...'.format(config.coding_style))
 
-    cmd = './cs/cs.sh . 2>&1'
+    # cmd = './cs/cs.sh . 2>&1'
+    cmd = './cs/cs.sh src 2>&1'
 
     try:
         child = subprocess.run(cmd, shell=True,

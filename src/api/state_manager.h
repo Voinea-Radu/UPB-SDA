@@ -25,7 +25,8 @@ u8 handle_init_heap(s64 args_size, string_t *args, heap_t *heap);
 
 u8 handle_malloc(s64 args_size, string_t *args, heap_t *heap);
 
-u8 handle_dump(s64 args_size, string_t *args, heap_t *heap);
+u8 handle_dump(__attribute__((unused)) s64 args_size,
+			   __attribute__((unused))string_t *args, heap_t *heap);
 
 u8 handle_free(s64 args_size, string_t *args, heap_t *heap);
 
@@ -33,7 +34,8 @@ u8 handle_write(s64 args_size, string_t *args, heap_t *heap);
 
 u8 handle_read(s64 args_size, string_t *args, heap_t *heap);
 
-u8 handle_destroy(s64 args_size, string_t *args, heap_t *heap);
+u8 handle_destroy(__attribute__((unused)) s64 args_size,
+				  __attribute__((unused)) string_t *args, heap_t *heap);
 
 void seg_fault(heap_t *heap);
 
