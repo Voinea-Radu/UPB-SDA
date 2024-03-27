@@ -18,7 +18,6 @@ linked_list_t *new_linked_list(s8 (*compare)(void *data1, void *data2))
 	list->compare = compare;
 
 	return list;
-
 }
 
 void add_node_at_tail(linked_list_t *list, void *data)
@@ -42,9 +41,9 @@ void add_node_sorted(linked_list_t *list, void *data)
 
 	node_t *current_node = list->head;
 
-	while (current_node != NULL) {
+	while (current_node) {
 		if (list->compare(current_node->data, data) > 0) {
-			if (current_node->prev == NULL) {
+			if (!current_node->prev) {
 				node->next = current_node;
 				node->prev = NULL;
 				current_node->prev = node;
@@ -61,7 +60,7 @@ void add_node_sorted(linked_list_t *list, void *data)
 			return;
 		}
 
-		if (current_node->next == NULL) {
+		if (!current_node->next) {
 			node->next = NULL;
 			node->prev = current_node;
 			current_node->next = node;
@@ -121,7 +120,6 @@ void add_node_at(linked_list_t *list, void *data, s64 index)
 	current_node->prev->next = node;
 	current_node->prev = node;
 	list->size++;
-
 }
 
 s64 get_node_index(linked_list_t *list, void *data)
@@ -129,16 +127,14 @@ s64 get_node_index(linked_list_t *list, void *data)
 	node_t *current_node = list->head;
 	s64 i = 0;
 
-	while (current_node != NULL) {
-		if (list->compare(current_node->data, data) == 0) {
+	while (current_node) {
+		if (list->compare(current_node->data, data) == 0)
 			return i;
-		}
 		current_node = current_node->next;
 		i++;
 	}
 
 	return -1;
-
 }
 
 node_t *get_node_at(linked_list_t *list, s64 index)
@@ -154,7 +150,6 @@ node_t *get_node_at(linked_list_t *list, s64 index)
 	}
 
 	return current_node;
-
 }
 
 node_t *remove_node(linked_list_t *list, void *data)
@@ -175,17 +170,15 @@ node_t *remove_node_at(linked_list_t *list, s64 index)
 		i++;
 	}
 
-	if (current_node->prev == NULL) {
+	if (!current_node->prev)
 		list->head = current_node->next;
-	} else {
+	else
 		current_node->prev->next = current_node->next;
-	}
 
-	if (current_node->next == NULL) {
+	if (!current_node->next)
 		list->tail = current_node->prev;
-	} else {
+	else
 		current_node->next->prev = current_node->prev;
-	}
 
 	list->size--;
 

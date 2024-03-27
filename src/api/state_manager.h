@@ -9,7 +9,7 @@ Grupa: 315 CA
 #include "string_utils.h"
 #include "heap.h"
 
-#define EXIT 0
+#define FINISH 0
 #define CONTINUE 1
 #define UNKNOWN_COMMAND 2
 

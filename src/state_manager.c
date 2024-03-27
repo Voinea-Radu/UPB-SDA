@@ -21,13 +21,13 @@ static string_to_handle command_table[] = {
 
 u8 process_command(string_t command)
 {
-	static heap_t *heap = NULL;
+	static heap_t *heap;
 
-	if (heap == NULL) {
+	if (!heap)
 		heap = safe_malloc(sizeof(heap_t));
-	}
 
-	static const size_t commands_size = sizeof(command_table) / sizeof(string_to_handle);
+	static const size_t commands_size = sizeof(command_table) /
+										sizeof(string_to_handle);
 
 	int output = UNKNOWN_COMMAND;
 
@@ -46,9 +46,9 @@ u8 process_command(string_t command)
 	if (UNKNOWN_COMMAND == output)
 		printf("Invalid command\n");
 
-	for (int i = 0; i < args_size; i++) {
+	for (int i = 0; i < args_size; i++)
 		free(args[i]);
-	}
+
 	free(args);
 
 	return output;
@@ -61,9 +61,8 @@ u8 handle_init_heap(s64 args_size, string_t *args, heap_t *heap)
 	s64 pool_total_size = strtol(args[3], NULL, 10);
 	s64 reconstruction_type = strtol(args[4], NULL, 10);
 
-	// TODO Free the old heap
-
-	*heap = create_heap(start_address, number_of_pools, pool_total_size, reconstruction_type);
+	*heap = create_heap(start_address, number_of_pools, pool_total_size,
+						reconstruction_type);
 
 	return CONTINUE;
 }
@@ -73,12 +72,9 @@ u8 handle_malloc(s64 args_size, string_t *args, heap_t *heap)
 	s64 size = strtol(args[1], NULL, 10);
 	s64 block_address = heap_malloc(heap, size);
 
-	if (block_address == 0xFFFFFFFFFFFFFFFF) { // Comparison with -1 is marked as a warning in CLion.
+	// Comparison with -1 is marked as a warning in CLion.
+	if (block_address == 0xFFFFFFFFFFFFFFFF)
 		printf("Out of memory\n");
-	}
-	//else {
-	//	printf("Allocated memory at address 0x%lx\n", block_address * 8);
-	//}
 
 	return CONTINUE;
 }
@@ -95,9 +91,8 @@ u8 handle_free(s64 args_size, string_t *args, heap_t *heap)
 
 	bool success = heap_free(heap, start_address);
 
-	if (!success) {
+	if (!success)
 		printf("Invalid free\n");
-	}
 
 	return CONTINUE;
 }
@@ -128,9 +123,8 @@ u8 handle_write(s64 args_size, string_t *args, heap_t *heap)
 		return CONTINUE;
 	}
 
-	for (int i = 0; i < strlen(value); i++) {
+	for (int i = 0; i < strlen(value); i++)
 		value[i] = value[i + 1];
-	}
 
 	value[strlen(value) - 1] = '\0';
 
@@ -139,7 +133,7 @@ u8 handle_write(s64 args_size, string_t *args, heap_t *heap)
 
 	if (!success) {
 		seg_fault(heap);
-		return EXIT;
+		return FINISH;
 	}
 
 	return CONTINUE;
@@ -159,10 +153,10 @@ u8 handle_read(s64 args_size, string_t *args, heap_t *heap)
 
 	string_t value = heap_read(heap, start_address, size);
 
-	if (value == NULL || strcmp(value, "") == 0) {
+	if (!value || strcmp(value, "") == 0) {
 		seg_fault(heap);
 		free(value);
-		return EXIT;
+		return FINISH;
 	}
 
 	printf("%s\n", value);
@@ -173,5 +167,5 @@ u8 handle_read(s64 args_size, string_t *args, heap_t *heap)
 u8 handle_destroy(s64 args_size, string_t *args, heap_t *heap)
 {
 	heap_destroy(heap);
-	return EXIT;
+	return FINISH;
 }

@@ -1939,7 +1939,7 @@ sub annotate_values {
 			$type = 'N';
 
 		} elsif ($cur =~/^(;|{|})/) {
-			print "END($1)\n" if ($dbg_values > 1);
+			print "FINISH($1)\n" if ($dbg_values > 1);
 			$type = 'E';
 			$av_pend_colon = 'O';
 

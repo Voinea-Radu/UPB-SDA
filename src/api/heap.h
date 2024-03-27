@@ -43,13 +43,10 @@ heap_block_t *new_heap_block(s64 start_address, s64 size);
 
 heap_byte_t *new_heap_byte(s64 holding_block_start_address);
 
-heap_byte_t **new_heap_bytes(heap_block_t *block);
-
 s8 compare_blocks(void *data1, void *data2);
 
-s8 compare_bytes(void *data1, void *data2);
-
-heap_t create_heap(s64 start_address, s64 number_of_pools, s64 pool_size, bool reconstruction_type);
+heap_t create_heap(s64 start_address, s64 number_of_pools, s64 pool_size,
+				   bool reconstruction_type);
 
 void heap_add_block(heap_t *heap, heap_block_t *block);
 

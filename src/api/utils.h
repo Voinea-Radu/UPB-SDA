@@ -15,7 +15,7 @@ Grupa: 315 CA
 
 typedef unsigned char u8;
 typedef signed char s8;
-typedef signed long int s64;
+typedef long s64;
 
 s64 min(s64 a, s64 b);
 

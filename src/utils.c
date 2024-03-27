@@ -45,7 +45,8 @@ void *safe_realloc(void *ptr, size_t size)
 }
 
 /**
- * This function exists for the sole reason that CLion debugger on windows is not printing any output unless fflush is called
+ * This function exists for the sole reason that CLion debugger on windows is
+ * not printing any output unless fflush is called
  */
 int printf(const char *format, ...)
 {
@@ -64,13 +65,11 @@ int printf(const char *format, ...)
 
 s64 clamp(s64 value, s64 min, s64 max)
 {
-	if (value < min) {
+	if (value < min)
 		return min;
-	}
 
-	if (value > max) {
+	if (value > max)
 		return max;
-	}
 
 	return value;
 }

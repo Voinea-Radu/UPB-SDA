@@ -1,1 +1,38 @@
 # Segregated Free Lists
+
+Programul implementeaza un allocator de memorie care foloseste o lista de
+alocari libere pentru fiecare dimensiune de bloc.
+
+## Comenzi
+### INIT_HEAP <adresa_start_heap> <numar_liste> <numar_bytes_per_lista> <tip_reconstituire>
+
+Comanda initializeaza heap-ul
+
+- `adresa_start_heap` - adresa de start a heap-ului
+- `numar_liste` - numarul de liste de alocari libere
+- `numar_bytes_per_lista` - numarul de bytes pe care îl poate aloca fiecare lista
+- `tip_reconstituire` - tipul de reconstituire a listelor de alocari libere
+  - `0` - nu se reconstituie
+  - `1` - se reconstituie
+
+
+### MALLOC <nr_bytes>
+
+Comanda aloca `nr_bytes` bytes de memorie
+
+### FREE <adresa_bloc>
+
+Comanda elibereaza blocul de memorie de la adresa `adresa_bloc`
+
+### READ <adresa> <nr_bytes>
+
+Comanda citeste `nr_bytes` bytes de la adresa `adresa`
+
+### WRITE <adresa> <nr_bytes> <valoare>
+
+Comanda scrie `nr_bytes` bytes la adresa `adresa` cu valoarea `valoare`
+
+### DUMP_MEMORY
+
+Comanda afiseaza continutul memoriei
+
