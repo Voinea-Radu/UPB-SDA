@@ -13,7 +13,7 @@ Grupa: 315 CA
  * @param data2 This should be of instance heap_block_t
  * @return -1 if data1 < data2, 0 if data1 == data2, 1 if data1 > data2
  */
-int8_t compare_blocks(void *data1, void *data2)
+s8 compare_blocks(void *data1, void *data2)
 {
 	heap_block_t *block1 = (heap_block_t *)data1;
 	heap_block_t *block2 = (heap_block_t *)data2;
@@ -27,7 +27,7 @@ int8_t compare_blocks(void *data1, void *data2)
 	return (_tmp) ? -1 : 1;
 }
 
-heap_byte_t *new_heap_byte(int64_t holding_block_start_address)
+heap_byte_t *new_heap_byte(s64 holding_block_start_address)
 {
 	heap_byte_t *byte = safe_malloc(sizeof(heap_byte_t));
 
@@ -41,14 +41,14 @@ heap_byte_t **new_heap_bytes(heap_block_t *block)
 {
 	heap_byte_t **bytes = safe_malloc(block->size * sizeof(heap_byte_t *));
 
-	for (int64_t i = 0; i < block->size; i++) {
+	for (s64 i = 0; i < block->size; i++) {
 		bytes[i] = new_heap_byte(block->start_address);
 	}
 
 	return bytes;
 }
 
-heap_t new_heap(int64_t start_address, int64_t number_of_pools, int64_t max_pool_size)
+heap_t new_heap(s64 start_address, s64 number_of_pools, s64 max_pool_size)
 {
 	heap_t heap;
 
@@ -57,7 +57,7 @@ heap_t new_heap(int64_t start_address, int64_t number_of_pools, int64_t max_pool
 	heap.pools_size = min(power_of_two(number_of_pools + 2), max_pool_size) + 1;
 	heap.pools = safe_malloc(heap.pools_size * sizeof(linked_list_t *));
 
-	for (int64_t i = 0; i < heap.pools_size; i++) {
+	for (s64 i = 0; i < heap.pools_size; i++) {
 		heap.pools[i] = new_linked_list(compare_blocks);
 	}
 
@@ -71,7 +71,7 @@ heap_t new_heap(int64_t start_address, int64_t number_of_pools, int64_t max_pool
 	return heap;
 }
 
-heap_block_t *new_heap_block(int64_t start_address, int64_t size)
+heap_block_t *new_heap_block(s64 start_address, s64 size)
 {
 	heap_block_t *block = safe_malloc(sizeof(heap_block_t));
 
@@ -81,17 +81,17 @@ heap_block_t *new_heap_block(int64_t start_address, int64_t size)
 	return block;
 }
 
-heap_t create_heap(int64_t start_address, int64_t number_of_pools, int64_t pool_total_size, bool reconstruction_type)
+heap_t create_heap(s64 start_address, s64 number_of_pools, s64 pool_total_size, bool reconstruction_type)
 {
 	heap_t heap = new_heap(start_address, number_of_pools, pool_total_size);
 
-	int64_t address = start_address;
-	int64_t pool_size = 8;
+	s64 address = start_address;
+	s64 pool_size = 8;
 
-	for (int64_t i = 0; i < number_of_pools; i++) {
-		int64_t blocks_size = pool_total_size / pool_size;
+	for (s64 i = 0; i < number_of_pools; i++) {
+		s64 blocks_size = pool_total_size / pool_size;
 
-		for (int64_t j = 0; j < blocks_size; j++) {
+		for (s64 j = 0; j < blocks_size; j++) {
 			heap_block_t *block = new_heap_block(address, pool_size);
 			add_node_at_tail(heap.pools[pool_size], block);
 
@@ -118,7 +118,7 @@ void heap_add_block(heap_t *heap, heap_block_t *block)
  * @param size The size of the block
  * @return The heap_block_t instance of the block or NULL if no block was found
  */
-heap_block_t *heap_get_block_of_size(heap_t *heap, int64_t size)
+heap_block_t *heap_get_block_of_size(heap_t *heap, s64 size)
 {
 	if (size >= heap->pools_size)
 		return NULL;
@@ -129,7 +129,7 @@ heap_block_t *heap_get_block_of_size(heap_t *heap, int64_t size)
 		return (heap_block_t *)exact_size_pool->head->data;
 	}
 
-	for (int64_t i = size + 1; i < heap->pools_size; i++) {
+	for (s64 i = size + 1; i < heap->pools_size; i++) {
 		linked_list_t *pool = heap->pools[i];
 
 		if (pool->size > 0) {
@@ -152,15 +152,15 @@ void heap_remove_block(heap_t *heap, heap_block_t *block)
 }
 
 
-int64_t heap_malloc(heap_t *heap, int64_t size)
+s64 heap_malloc(heap_t *heap, s64 size)
 {
 	heap_block_t *current_block = heap_get_block_of_size(heap, size);
 
 	if (current_block != NULL) {
 		if (current_block->size == size) {
-			int64_t address = current_block->start_address;
+			s64 address = current_block->start_address;
 
-			for (int64_t i = address; i < address + size; i++) {
+			for (s64 i = address; i < address + size; i++) {
 				heap->bytes[i] = new_heap_byte(current_block->start_address);
 			}
 
@@ -173,9 +173,9 @@ int64_t heap_malloc(heap_t *heap, int64_t size)
 		heap->fragmentation_count++;
 
 		heap_block_t *new_block = new_heap_block(current_block->start_address, size);
-		int64_t address = new_block->start_address;
+		s64 address = new_block->start_address;
 
-		for (int64_t i = address; i < address + size; i++) {
+		for (s64 i = address; i < address + size; i++) {
 			heap->bytes[i] = new_heap_byte(current_block->start_address);
 		}
 
@@ -193,9 +193,9 @@ int64_t heap_malloc(heap_t *heap, int64_t size)
 
 void dump_heap(heap_t *heap)
 {
-	int64_t free_memory = heap_get_free_size(heap);
-	int64_t used_memory = heap_get_used_size(heap);
-	int64_t total_memory = free_memory + used_memory;
+	s64 free_memory = heap_get_free_size(heap);
+	s64 used_memory = heap_get_used_size(heap);
+	s64 total_memory = free_memory + used_memory;
 
 	printf("+++++DUMP+++++\n");
 	printf("Total memory: %ld bytes\n", total_memory);
@@ -207,7 +207,7 @@ void dump_heap(heap_t *heap)
 	printf("Number of fragmentations: %ld\n", heap->fragmentation_count);
 	printf("Number of free calls: %ld\n", heap->free_calls_count);
 
-	for (int64_t i = 0; i < heap->pools_size; i++) {
+	for (s64 i = 0; i < heap->pools_size; i++) {
 		linked_list_t *pool = heap->pools[i];
 
 		if (pool->size == 0) {
@@ -229,8 +229,8 @@ void dump_heap(heap_t *heap)
 
 	printf("Allocated blocks :");
 
-	int64_t size = 1;
-	int64_t last_address = -1;
+	s64 size = 1;
+	s64 last_address = -1;
 
 	for (int i = 0; i < heap->bytes_size; i++) {
 		heap_byte_t *byte = heap->bytes[i];
@@ -255,9 +255,9 @@ void dump_heap(heap_t *heap)
 	printf("-----DUMP-----\n");
 }
 
-int64_t heap_get_free_size(heap_t *heap)
+s64 heap_get_free_size(heap_t *heap)
 {
-	int64_t size = 0;
+	s64 size = 0;
 
 	for (int i = 0; i < heap->pools_size; i++) {
 		linked_list_t *pool = heap->pools[i];
@@ -268,7 +268,7 @@ int64_t heap_get_free_size(heap_t *heap)
 
 }
 
-bool heap_free(heap_t *heap, int64_t start_address)
+bool heap_free(heap_t *heap, s64 start_address)
 {
 	if (start_address >= heap->bytes_size) {
 		return false;
@@ -282,7 +282,7 @@ bool heap_free(heap_t *heap, int64_t start_address)
 		return false;
 	}
 
-	while (byte != NULL && byte->holding_block_start_address == start_address){
+	while (byte != NULL && byte->holding_block_start_address == start_address) {
 		free(byte);
 		heap->bytes[start_address + size] = NULL;
 
@@ -298,7 +298,7 @@ bool heap_free(heap_t *heap, int64_t start_address)
 	return size != 0;
 }
 
-bool heap_write(heap_t *heap, int64_t start_address, int64_t size, string_t data)
+bool heap_write(heap_t *heap, s64 start_address, s64 size, string_t data)
 {
 	size = min(size, strlen(data));
 
@@ -306,7 +306,7 @@ bool heap_write(heap_t *heap, int64_t start_address, int64_t size, string_t data
 		return false;
 	}
 
-	for (int64_t index = 0; index < size; index++) {
+	for (s64 index = 0; index < size; index++) {
 		heap_byte_t *byte = heap->bytes[start_address + index];
 
 		if (byte == NULL) {
@@ -314,17 +314,17 @@ bool heap_write(heap_t *heap, int64_t start_address, int64_t size, string_t data
 		}
 
 		byte->data = data[index];
-		int a=1;
+		int a = 1;
 	}
 
 	return true;
 }
 
-string_t heap_read(heap_t *heap, int64_t start_address, int64_t size)
+string_t heap_read(heap_t *heap, s64 start_address, s64 size)
 {
 	string_t result = safe_malloc(size * sizeof(char) + 1);
 
-	for (int64_t i = 0; i < size; i++) {
+	for (s64 i = 0; i < size; i++) {
 		heap_byte_t *byte = heap->bytes[start_address + i];
 
 		if (byte == NULL) {
@@ -333,7 +333,7 @@ string_t heap_read(heap_t *heap, int64_t start_address, int64_t size)
 		}
 
 		result[i] = byte->data;
-		result[i+1] = '\0';
+		result[i + 1] = '\0';
 	}
 
 	//result[size] = '\0';
@@ -341,15 +341,15 @@ string_t heap_read(heap_t *heap, int64_t start_address, int64_t size)
 	return result;
 }
 
-int64_t heap_get_allocated_blocks_count(heap_t *heap)
+s64 heap_get_allocated_blocks_count(heap_t *heap)
 {
-	int64_t count = 0;
-	int64_t last_address = -1;
+	s64 count = 0;
+	s64 last_address = -1;
 
-	for (int i = 0; i < heap->bytes_size; i++){
+	for (int i = 0; i < heap->bytes_size; i++) {
 		heap_byte_t *pool = heap->bytes[i];
 
-		if(pool==NULL){
+		if (pool == NULL) {
 			continue;
 		}
 
@@ -362,9 +362,9 @@ int64_t heap_get_allocated_blocks_count(heap_t *heap)
 	return count;
 }
 
-int64_t heap_get_free_blocks_count(heap_t *heap)
+s64 heap_get_free_blocks_count(heap_t *heap)
 {
-	int64_t count = 0;
+	s64 count = 0;
 
 	for (int i = 0; i < heap->pools_size; i++) {
 		linked_list_t *pool = heap->pools[i];
@@ -394,7 +394,7 @@ void heap_destroy(heap_t *heap)
 		free(pool);
 	}
 
-	for (int i = 0; i < heap->bytes_size; i++){
+	for (int i = 0; i < heap->bytes_size; i++) {
 		heap_byte_t *byte = heap->bytes[i];
 
 		if (byte != NULL) {
@@ -408,9 +408,9 @@ void heap_destroy(heap_t *heap)
 	free(heap);
 }
 
-int64_t heap_get_used_size(heap_t *heap)
+s64 heap_get_used_size(heap_t *heap)
 {
-	int64_t size = 0;
+	s64 size = 0;
 
 	for (int i = 0; i < heap->bytes_size; i++) {
 		if (heap->bytes[i] != NULL) {

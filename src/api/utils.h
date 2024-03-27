@@ -11,18 +11,19 @@ Grupa: 315 CA
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "string_utils.h"
-#include "linked_list.h"
-
 // Math utils
 
-#define max(a, b) ((a) > (b) ? (a) : (b))
+typedef unsigned char u8;
+typedef signed char s8;
+typedef signed long int s64;
 
-#define min(a, b) ((a) < (b) ? (a) : (b))
+s64 min(s64 a, s64 b);
 
-int64_t clamp(int64_t value, int64_t min, int64_t max);
+s64 max(s64 a, s64 b);
 
-int64_t power_of_two(int64_t value);
+s64 clamp(s64 value, s64 min, s64 max);
+
+s64 power_of_two(s64 value);
 
 // Memory utils
 void *safe_malloc(size_t size);

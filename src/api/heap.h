@@ -9,67 +9,68 @@ Grupa: 315 CA
 #include <stdbool.h>
 #include "linked_list.h"
 #include "string_utils.h"
+#include "utils.h"
 
 typedef struct {
-	int64_t holding_block_start_address; // in bytes
+	s64 holding_block_start_address; // in bytes
 
-	int8_t data;
+	s8 data;
 } heap_byte_t;
 
 typedef struct {
-	int64_t start_address; // in bytes
-	int64_t size; // in bytes
+	s64 start_address; // in bytes
+	s64 size; // in bytes
 } heap_block_t;
 
 typedef struct {
-	int64_t start_address; // in bytes
+	s64 start_address; // in bytes
 
 	linked_list_t *(*pools); // array<linked_list_t*>
-	int64_t pools_size;
+	s64 pools_size;
 
 	heap_byte_t *(*bytes); // array<heap_byte_t*>
-	int64_t bytes_size;
+	s64 bytes_size;
 
 	// Statistics
-	int64_t malloc_calls_count;
-	int64_t free_calls_count;
-	int64_t fragmentation_count;
+	s64 malloc_calls_count;
+	s64 free_calls_count;
+	s64 fragmentation_count;
 } heap_t;
 
-heap_t new_heap(int64_t start_address, int64_t number_of_pools, int64_t max_pool_size);
+heap_t new_heap(s64 start_address, s64 number_of_pools, s64 max_pool_size);
 
-heap_block_t *new_heap_block(int64_t start_address, int64_t size);
+heap_block_t *new_heap_block(s64 start_address, s64 size);
 
-heap_byte_t *new_heap_byte(int64_t holding_block_start_address);
+heap_byte_t *new_heap_byte(s64 holding_block_start_address);
 
 heap_byte_t **new_heap_bytes(heap_block_t *block);
 
-int8_t compare_blocks(void *data1, void *data2);
+s8 compare_blocks(void *data1, void *data2);
 
-int8_t compare_bytes(void *data1, void *data2);
+s8 compare_bytes(void *data1, void *data2);
 
-heap_t create_heap(int64_t start_address, int64_t number_of_pools, int64_t pool_size, bool reconstruction_type);
+heap_t create_heap(s64 start_address, s64 number_of_pools, s64 pool_size, bool reconstruction_type);
 
 void heap_add_block(heap_t *heap, heap_block_t *block);
 
-int64_t heap_malloc(heap_t *heap, int64_t size);
+s64 heap_malloc(heap_t *heap, s64 size);
 
 void dump_heap(heap_t *heap);
 
-bool heap_free(heap_t *heap, int64_t start_address);
+bool heap_free(heap_t *heap, s64 start_address);
 
-bool heap_write(heap_t *heap, int64_t start_address, int64_t size, string_t data);
+bool heap_write(heap_t *heap, s64 start_address, s64 size, string_t data);
 
-string_t heap_read(heap_t *heap, int64_t start_address, int64_t size);
+string_t heap_read(heap_t *heap, s64 start_address, s64 size);
 
-int64_t heap_get_free_size(heap_t *heap);
+s64 heap_get_free_size(heap_t *heap);
 
-int64_t heap_get_allocated_blocks_count(heap_t *heap);
+s64 heap_get_allocated_blocks_count(heap_t *heap);
 
-int64_t heap_get_free_blocks_count(heap_t *heap);
+s64 heap_get_free_blocks_count(heap_t *heap);
 
 void heap_destroy(heap_t *heap);
 
-int64_t heap_get_used_size(heap_t *heap);
+s64 heap_get_used_size(heap_t *heap);
 
 #endif //TEMA1_HEAP_H

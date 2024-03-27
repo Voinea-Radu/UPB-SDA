@@ -19,7 +19,7 @@ static string_to_handle command_table[] = {
 		{"destroy_heap", handle_destroy},
 };
 
-uint8_t process_command(string_t command)
+u8 process_command(string_t command)
 {
 	static heap_t *heap = NULL;
 
@@ -54,12 +54,12 @@ uint8_t process_command(string_t command)
 	return output;
 }
 
-uint8_t handle_init_heap(int64_t args_size, string_t *args, heap_t *heap)
+u8 handle_init_heap(s64 args_size, string_t *args, heap_t *heap)
 {
-	int64_t start_address = strtol(args[1], NULL, 16);
-	int64_t number_of_pools = strtol(args[2], NULL, 10);
-	int64_t pool_total_size = strtol(args[3], NULL, 10);
-	int64_t reconstruction_type = strtol(args[4], NULL, 10);
+	s64 start_address = strtol(args[1], NULL, 16);
+	s64 number_of_pools = strtol(args[2], NULL, 10);
+	s64 pool_total_size = strtol(args[3], NULL, 10);
+	s64 reconstruction_type = strtol(args[4], NULL, 10);
 
 	// TODO Free the old heap
 
@@ -68,10 +68,10 @@ uint8_t handle_init_heap(int64_t args_size, string_t *args, heap_t *heap)
 	return CONTINUE;
 }
 
-uint8_t handle_malloc(int64_t args_size, string_t *args, heap_t *heap)
+u8 handle_malloc(s64 args_size, string_t *args, heap_t *heap)
 {
-	int64_t size = strtol(args[1], NULL, 10);
-	int64_t block_address = heap_malloc(heap, size);
+	s64 size = strtol(args[1], NULL, 10);
+	s64 block_address = heap_malloc(heap, size);
 
 	if (block_address == 0xFFFFFFFFFFFFFFFF) { // Comparison with -1 is marked as a warning in CLion.
 		printf("Out of memory\n");
@@ -83,15 +83,15 @@ uint8_t handle_malloc(int64_t args_size, string_t *args, heap_t *heap)
 	return CONTINUE;
 }
 
-uint8_t handle_dump(int64_t args_size, string_t *args, heap_t *heap)
+u8 handle_dump(s64 args_size, string_t *args, heap_t *heap)
 {
 	dump_heap(heap);
 	return CONTINUE;
 }
 
-uint8_t handle_free(int64_t args_size, string_t *args, heap_t *heap)
+u8 handle_free(s64 args_size, string_t *args, heap_t *heap)
 {
-	int64_t start_address = strtol(args[1], NULL, 16);
+	s64 start_address = strtol(args[1], NULL, 16);
 
 	bool success = heap_free(heap, start_address);
 
@@ -102,13 +102,13 @@ uint8_t handle_free(int64_t args_size, string_t *args, heap_t *heap)
 	return CONTINUE;
 }
 
-uint8_t handle_write(int64_t args_size, string_t *args, heap_t *heap)
+u8 handle_write(s64 args_size, string_t *args, heap_t *heap)
 {
-	int64_t start_address = strtol(args[1], NULL, 16);
+	s64 start_address = strtol(args[1], NULL, 16);
 
 	string_t value = malloc(sizeof(char));
 	value[0] = '\0';
-	int64_t value_size = 0;
+	s64 value_size = 0;
 
 	for (int i = 2; i < args_size - 1; i++) {
 		value_size += strlen(args[i]) + 1;
@@ -121,7 +121,7 @@ uint8_t handle_write(int64_t args_size, string_t *args, heap_t *heap)
 			strcat(value, " ");
 		}
 	}
-	int64_t write_size = strtol(args[args_size - 1], NULL, 10);
+	s64 write_size = strtol(args[args_size - 1], NULL, 10);
 
 	if (value[0] != '"' || value[strlen(value) - 1] != '"') {
 		printf("Invalid write\n");
@@ -152,10 +152,10 @@ void seg_fault(heap_t *heap)
 	handle_destroy(0, NULL, heap);
 }
 
-uint8_t handle_read(int64_t args_size, string_t *args, heap_t *heap)
+u8 handle_read(s64 args_size, string_t *args, heap_t *heap)
 {
-	int64_t start_address = strtol(args[1], NULL, 16);
-	int64_t size = strtol(args[2], NULL, 10);
+	s64 start_address = strtol(args[1], NULL, 16);
+	s64 size = strtol(args[2], NULL, 10);
 
 	string_t value = heap_read(heap, start_address, size);
 
@@ -170,7 +170,7 @@ uint8_t handle_read(int64_t args_size, string_t *args, heap_t *heap)
 	return CONTINUE;
 }
 
-uint8_t handle_destroy(int64_t args_size, string_t *args, heap_t *heap)
+u8 handle_destroy(s64 args_size, string_t *args, heap_t *heap)
 {
 	heap_destroy(heap);
 	return EXIT;

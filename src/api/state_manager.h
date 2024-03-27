@@ -16,25 +16,25 @@ Grupa: 315 CA
 typedef struct {
 	string_t key;
 
-	uint8_t (*handle)(int64_t args_size, string_t *args, heap_t *heap);
+	u8 (*handle)(s64 args_size, string_t *args, heap_t *heap);
 } string_to_handle;
 
-uint8_t process_command(string_t command);
+u8 process_command(string_t command);
 
-uint8_t handle_init_heap(int64_t args_size, string_t *args, heap_t *heap);
+u8 handle_init_heap(s64 args_size, string_t *args, heap_t *heap);
 
-uint8_t handle_malloc(int64_t args_size, string_t *args, heap_t *heap);
+u8 handle_malloc(s64 args_size, string_t *args, heap_t *heap);
 
-uint8_t handle_dump(int64_t args_size, string_t *args, heap_t *heap);
+u8 handle_dump(s64 args_size, string_t *args, heap_t *heap);
 
-uint8_t handle_free(int64_t args_size, string_t *args, heap_t *heap);
+u8 handle_free(s64 args_size, string_t *args, heap_t *heap);
 
-uint8_t handle_write(int64_t args_size, string_t *args, heap_t *heap);
+u8 handle_write(s64 args_size, string_t *args, heap_t *heap);
 
-uint8_t handle_read(int64_t args_size, string_t *args, heap_t *heap);
+u8 handle_read(s64 args_size, string_t *args, heap_t *heap);
 
-uint8_t handle_destroy(int64_t args_size, string_t *args, heap_t *heap);
+u8 handle_destroy(s64 args_size, string_t *args, heap_t *heap);
 
-void seg_fault(heap_t*heap);
+void seg_fault(heap_t *heap);
 
 #endif //TEMA1_STATE_MANAGER_H

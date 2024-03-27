@@ -6,7 +6,7 @@ Grupa: 315 CA
 #include "api/linked_list.h"
 #include "api/utils.h"
 
-linked_list_t *new_linked_list(int8_t (*compare)(void *data1, void *data2))
+linked_list_t *new_linked_list(s8 (*compare)(void *data1, void *data2))
 {
 	linked_list_t *list = safe_malloc(sizeof(linked_list_t));
 
@@ -26,7 +26,8 @@ void add_node_at_tail(linked_list_t *list, void *data)
 	add_node_at(list, data, list->size);
 }
 
-void add_node_sorted(linked_list_t*list, void*data){
+void add_node_sorted(linked_list_t *list, void *data)
+{
 	node_t *node = safe_malloc(sizeof(node_t));
 	node->data = data;
 
@@ -73,7 +74,7 @@ void add_node_sorted(linked_list_t*list, void*data){
 	}
 }
 
-void add_node_at(linked_list_t *list, void *data, int64_t index)
+void add_node_at(linked_list_t *list, void *data, s64 index)
 {
 	index = clamp(index, 0, list->size);
 	node_t *node = safe_malloc(sizeof(node_t));
@@ -108,7 +109,7 @@ void add_node_at(linked_list_t *list, void *data, int64_t index)
 	}
 
 	node_t *current_node = list->head;
-	int64_t i = 0;
+	s64 i = 0;
 
 	while (i < index) {
 		current_node = current_node->next;
@@ -123,9 +124,10 @@ void add_node_at(linked_list_t *list, void *data, int64_t index)
 
 }
 
-int64_t get_node_index(linked_list_t *list, void *data){
+s64 get_node_index(linked_list_t *list, void *data)
+{
 	node_t *current_node = list->head;
-	int64_t i = 0;
+	s64 i = 0;
 
 	while (current_node != NULL) {
 		if (list->compare(current_node->data, data) == 0) {
@@ -139,11 +141,12 @@ int64_t get_node_index(linked_list_t *list, void *data){
 
 }
 
-node_t *get_node_at(linked_list_t *list, int64_t index){
+node_t *get_node_at(linked_list_t *list, s64 index)
+{
 	index = clamp(index, 0, list->size);
 
 	node_t *current_node = list->head;
-	int64_t i = 0;
+	s64 i = 0;
 
 	while (i < index) {
 		current_node = current_node->next;
@@ -154,16 +157,18 @@ node_t *get_node_at(linked_list_t *list, int64_t index){
 
 }
 
-node_t *remove_node(linked_list_t *list, void *data){
-	int64_t index = get_node_index(list, data);
+node_t *remove_node(linked_list_t *list, void *data)
+{
+	s64 index = get_node_index(list, data);
 	return remove_node_at(list, index);
 }
 
-node_t *remove_node_at(linked_list_t *list, int64_t index){
+node_t *remove_node_at(linked_list_t *list, s64 index)
+{
 	index = clamp(index, 0, list->size);
 
 	node_t *current_node = list->head;
-	int64_t i = 0;
+	s64 i = 0;
 
 	while (i < index) {
 		current_node = current_node->next;

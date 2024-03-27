@@ -62,7 +62,7 @@ int printf(const char *format, ...)
 	return output;
 }
 
-int64_t clamp(int64_t value, int64_t min, int64_t max)
+s64 clamp(s64 value, s64 min, s64 max)
 {
 	if (value < min) {
 		return min;
@@ -75,9 +75,18 @@ int64_t clamp(int64_t value, int64_t min, int64_t max)
 	return value;
 }
 
-int64_t power_of_two(int64_t value)
+s64 power_of_two(s64 value)
 {
 	return 1 << value;
 }
 
+s64 min(s64 a, s64 b)
+{
+	return a < b ? a : b;
+}
+
+s64 max(s64 a, s64 b)
+{
+	return a > b ? a : b;
+}
 
