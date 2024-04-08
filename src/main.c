@@ -142,7 +142,9 @@ int main(int argc, string_t *argv)
 	input = fopen(argv[1], "rt");
 	check_or_exit(input == NULL, "Missing input file");
 
-	check_or_exit(fgets(buffer, REQUEST_LENGTH + 1, input) == 0, "Empty input file");
+	string_t line = fgets(buffer, REQUEST_LENGTH + 1, input);
+
+	check_or_exit(line == NULL, "Empty input file");
 	requests_num = atoi(buffer);
 	enable_vnodes = strstr(buffer, "ENABLE_VNODES");
 

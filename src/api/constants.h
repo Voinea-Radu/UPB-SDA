@@ -7,6 +7,8 @@
 
 typedef char *string_t;
 
+#define DEBUG 1
+
 #define REQUEST_TYPE_LENGTH     64
 #define DOC_NAME_LENGTH         64
 #define DOC_CONTENT_LENGTH      4096
