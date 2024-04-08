@@ -10,7 +10,7 @@
 #define MAX_SERVERS             99999
 
 typedef struct load_balancer {
-	unsigned int (*hash_server)(server_t* server);
+	unsigned int (*hash_server)(server_t *server);
 
 	unsigned int (*hash_document)(void *); // TODO make more specific
 

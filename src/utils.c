@@ -89,7 +89,6 @@ void *safe_realloc(void *ptr, size_t size)
 void exit_with_error(string_t message)
 {
 	fprintf(stderr, "(%s, %d): ", __FILE__, __LINE__);
-	fprintf(stderr, "%s\n", message);
 	perror(message);
 	exit(errno);
 }
