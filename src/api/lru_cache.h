@@ -6,19 +6,20 @@
 #define LRU_CACHE_H
 
 #include <stdbool.h>
+#include <sys/types.h>
 
 typedef struct lru_cache {
-    /* TODO */
-} lru_cache;
+	// TODO
+} cache_t;
 
-lru_cache *init_lru_cache(unsigned int cache_capacity);
+cache_t *cache_init(uint cache_capacity);
 
-bool lru_cache_is_full(lru_cache *cache);
+bool cache_is_full(cache_t *cache);
 
-void free_lru_cache(lru_cache **cache);
+void cache_free(cache_t **cache);
 
 /**
- * lru_cache_put() - Adds a new pair in our cache.
+ * cache_put() - Adds a new pair in our cache.
  * 
  * @param cache: Cache where the key-value pair will be stored.
  * @param key: Key of the pair.
@@ -29,11 +30,10 @@ void free_lru_cache(lru_cache **cache);
  * @return - true if the key was added to the cache,
  *      false if the key already existed.
  */
-bool lru_cache_put(lru_cache *cache, void *key, void *value,
-                   void **evicted_key);
+bool cache_put(cache_t *cache, void *key, void *value, void **evicted_key);
 
 /**
- * lru_cache_get() - Retrieves the value associated with a key.
+ * cache_get() - Retrieves the value associated with a key.
  * 
  * @param cache: Cache where the key-value pair is stored.
  * @param key: Key of the pair.
@@ -41,14 +41,14 @@ bool lru_cache_put(lru_cache *cache, void *key, void *value,
  * @return - The value associated with the key,
  *      or NULL if the key is not found.
  */
-void *lru_cache_get(lru_cache *cache, void *key);
+void *cache_get(cache_t *cache, void *key);
 
 /**
- * lru_cache_remove() - Removes a key-value pair from the cache.
+ * cache_remove() - Removes a key-value pair from the cache.
  * 
  * @param cache: Cache where the key-value pair is stored.
  * @param key: Key of the pair.
 */
-void lru_cache_remove(lru_cache *cache, void *key);
+void cache_remove(cache_t *cache, void *key);
 
-#endif /* LRU_CACHE_H */
+#endif // LRU_CACHE_H

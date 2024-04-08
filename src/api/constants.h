@@ -5,6 +5,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+typedef char *string_t;
+
 #define REQUEST_TYPE_LENGTH     64
 #define DOC_NAME_LENGTH         64
 #define DOC_CONTENT_LENGTH      4096
@@ -16,7 +18,9 @@
 #define ADD_SERVER_REQUEST      "ADD_SERVER"
 #define REMOVE_SERVER_REQUEST   "REMOVE_SERVER"
 
-#define GENERIC_MSG     "[Server %d]-Response: %s\n[Server %d]-Log: %s\n\n"
+#define MEMORY_ERROR "There was an error while allocating memory!\nExiting...\n"
+
+#define LOG_RESPONSE     "[Server %d]-Response: %s\n[Server %d]-Log: %s\n\n"
 
 #define MSG_A           "Request- %s %s - has been added to queue"
 #define MSG_B           "Document %s has been overridden"
@@ -31,11 +35,11 @@
 
 
 typedef enum request_type {
-    EDIT_DOCUMENT,
-    GET_DOCUMENT,
+	EDIT_DOCUMENT,
+	GET_DOCUMENT,
 
-    ADD_SERVER,
-    REMOVE_SERVER
-} request_type;
+	ADD_SERVER,
+	REMOVE_SERVER
+} request_type_t;
 
-#endif  /* CONSTANTS_H */
+#endif  // CONSTANTS_H

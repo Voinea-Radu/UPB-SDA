@@ -9,42 +9,53 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "constants.h"
 
-#define DIE(assertion, call_description)                                      \
-    do {                                                                      \
-        if (assertion) {                                                      \
-            fprintf(stderr, "(%s, %d): ", __FILE__, __LINE__);                \
-            perror(call_description);                                         \
-            exit(errno);                                                      \
-        }                                                                     \
-    } while (0)
+void check_or_exit(bool condition, string_t message);
 
-#define PRINT_RESPONSE(response_ptr) ({                                       \
-    if (response_ptr) {                                                       \
-        printf(GENERIC_MSG, response_ptr->server_id,                          \
-            response_ptr->server_response, response_ptr->server_id,           \
-            response_ptr->server_log);                                        \
-        free(response_ptr->server_response);                                  \
-        free(response_ptr->server_log);                                       \
-        free(response_ptr);}                                                  \
-    })
-    
+void exit_with_error(string_t message);
 
 /**
- * @brief Should be used as hash function for server IDs,
- *      to find server's position on the hash ring
+ * @brief Should be used as hash function for server_t IDs,
+ *      to find server_t's position on the hash ring
  */
-unsigned int hash_uint(void *key);
+unsigned int hash_uint(uint key);
 
 /**
  * @brief Should be used as hash function for document names,
- *      to find the proper server on the hash ring
+ *      to find the proper server_t on the hash ring
 */
-unsigned int hash_string(void *key);
+unsigned int hash_string(string_t key);
 
-char *get_request_type_str(request_type req_type);
-request_type get_request_type(char *request_type_str);
+string_t get_request_type_str(request_type_t request_type);
+
+request_type_t get_request_type(string_t request_type_str);
+
+/**
+ * @brief Allocates memory for a buffer of size `size`. If the allocation fails,
+ * 	the program exits with an error message.
+ * @param size - size of the buffer
+ * @return void* - pointer to the allocated memory
+ */
+void *safe_malloc(size_t size);
+
+/**
+ * @brief Reallocates memory for a buffer of size `size`. If the reallocation fails,
+ * 	the program exits with an error message.
+ * @param ptr - pointer to the buffer to be reallocated
+ * @param size - size of the buffer
+ * @return void* - pointer to the reallocated memory
+ */
+void *safe_realloc(void *ptr, size_t size);
+
+/**
+ * @brief Allocates memory for a buffer of size `size` and sets all the bytes to 0.
+ * 	If the allocation fails, the program exits with an error message.
+ * @param size - size of the buffer
+ * @return void* - pointer to the allocated memory
+ */
+void *safe_calloc(size_t size);
 
 #endif /* UTILS_H */

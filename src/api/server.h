@@ -14,48 +14,50 @@
 #define MAX_RESPONSE_LENGTH     4096
 
 typedef struct server {
-    lru_cache *cache;
+	cache_t *cache;
 
-    /* TODO: add needed fields */
-} server;
+	// TODO: add needed fields
+} server_t;
 
 typedef struct request {
-    request_type type;
-    char *doc_name;
-    char *doc_content;
-} request;
+	request_type_t type;
+	char *document_name;
+	char *document_content;
+} request_t;
 
 typedef struct response {
-    char *server_log;
-    char *server_response;
-    int server_id;
-} response;
+	char *server_log;
+	char *server_response;
+	int server_id;
+} response_t;
 
 
-server *init_server(unsigned int cache_size);
+server_t *server_init(uint cache_size);
 
 /**
- * @brief Should deallocate completely the memory used by server,
+ * @brief Should deallocate completely the memory used by server_t,
  *     taking care of deallocating the elements in the queue, if any,
  *     without executing the tasks
  */
-void free_server(server **s);
+void server_free(server_t **server);
 
 /**
- * server_handle_request() - Receives a request from the load balancer
- *      and processes it according to the request type
+ * server_handle_request() - Receives a request_t from the load balancer
+ *      and processes it according to the request_t type
  * 
- * @param s: Server which processes the request.
+ * @param server: Server which processes the request_t.
  * @param req: Request to be processed.
  * 
- * @return response*: Response of the requested operation, which will
+ * @return response_t*: Response of the requested operation, which will
  *      then be printed in main.
  * 
- * @brief Based on the type of request, should call the appropriate
+ * @brief Based on the type of request_t, should call the appropriate
  *     solver, and should execute the tasks from queue if needed (in
  *     this case, after executing each task, PRINT_RESPONSE should
  *     be called).
  */
-response *server_handle_request(server *s, request *req);
+response_t *server_handle_request(server_t *server, request_t *req);
 
-#endif  /* SERVER_H */
+void response_print(response_t *response);
+
+#endif  // SERVER_H

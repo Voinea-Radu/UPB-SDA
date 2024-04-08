@@ -7,31 +7,37 @@
 #include "api/lru_cache.h"
 #include "api/utils.h"
 
-lru_cache *init_lru_cache(unsigned int cache_capacity) {
-    /* TODO */
-    return NULL;
+cache_t *cache_init(unsigned int cache_capacity)
+{
+	/* TODO */
+	return NULL;
 }
 
-bool lru_cache_is_full(lru_cache *cache) {
-    /* TODO */
-    return false;
+bool cache_is_full(cache_t *cache)
+{
+	/* TODO */
+	return false;
 }
 
-void free_lru_cache(lru_cache **cache) {
-    /* TODO */
+void cache_free(cache_t **cache)
+{
+	/* TODO */
 }
 
-bool lru_cache_put(lru_cache *cache, void *key, void *value,
-                   void **evicted_key) {
-    /* TODO */
-    return false;
+bool cache_put(cache_t *cache, void *key, void *value,
+			   void **evicted_key)
+{
+	/* TODO */
+	return false;
 }
 
-void *lru_cache_get(lru_cache *cache, void *key) {
-    /* TODO */
-    return NULL;
+void *cache_get(cache_t *cache, void *key)
+{
+	/* TODO */
+	return NULL;
 }
 
-void lru_cache_remove(lru_cache *cache, void *key) {
-    /* TODO */
+void cache_remove(cache_t *cache, void *key)
+{
+	/* TODO */
 }

@@ -5,31 +5,36 @@
 #include "api/load_balancer.h"
 #include "api/server.h"
 
-load_balancer *init_load_balancer(bool enable_vnodes) {
+load_balancer_t *load_balancer_init(bool enable_vnodes)
+{
 	/* TODO */
-    return NULL;
+	return NULL;
 }
 
-void loader_add_server(load_balancer* main, int server_id, int cache_size) {
-    /* TODO: Remove test_server after checking the server implementation */
-    // main->test_server = init_server(cache_size);
+void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int cache_size)
+{
+	/* TODO: Remove test_server after checking the server_t implementation */
+	// load_balancer->test_server = server_init(cache_size);
 }
 
-void loader_remove_server(load_balancer* main, int server_id) {
-    /* TODO */
+void load_balancer_remove_server(load_balancer_t *load_balancer, int server_id)
+{
+	/* TODO */
 }
 
-response *loader_forward_request(load_balancer* main, request *req) {
-    /* TODO */
-    return NULL;
+response_t *load_balancer_forward_request(load_balancer_t *load_balancer, request_t *request)
+{
+	/* TODO */
+	return NULL;
 }
 
-void free_load_balancer(load_balancer** main) {
-    /* TODO: get rid of test_server after testing the server implementation */
-    // free_server(&(*main)->test_server);
-    free(*main);
+void load_balancer_free(load_balancer_t **load_balancer)
+{
+	/* TODO: get rid of test_server after testing the server_t implementation */
+	// server_free(&(*load_balancer)->test_server);
+	free(*load_balancer);
 
-    *main = NULL;
+	*load_balancer = NULL;
 }
 
 
