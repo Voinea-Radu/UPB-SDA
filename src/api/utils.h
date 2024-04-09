@@ -58,4 +58,8 @@ void *safe_realloc(void *ptr, size_t size);
  */
 void *safe_calloc(size_t size);
 
+int str_to_int(string_t str);
+
+void read_quoted_string(string_t buffer, int buffer_len, int *start, int *end);
+
 #endif /* UTILS_H */

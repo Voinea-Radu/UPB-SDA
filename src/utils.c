@@ -98,3 +98,25 @@ void check_or_exit(bool condition, string_t message)
 	if (condition)
 		exit_with_error(message);
 }
+
+int str_to_int(string_t str)
+{
+	return strtol(str, NULL, 10); // NOLINT(*-narrowing-conversions)
+}
+
+void read_quoted_string(string_t buffer, int buffer_len, int *start, int *end)
+{
+	*end = -1;
+
+	for (int i = 0; i < buffer_len && buffer[i] != '\0'; ++i) {
+		if (buffer[i] != '"')
+			continue;
+
+		if (*start == -1) {
+			*start = i;
+		} else {
+			*end = i;
+			break;
+		}
+	}
+}

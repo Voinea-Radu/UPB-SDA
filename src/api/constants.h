@@ -36,11 +36,11 @@ typedef char *string_t;
 #define LOG_LAZY_EXEC   "Task queue size is %d"
 
 typedef enum request_type {
-	EDIT_DOCUMENT,
-	GET_DOCUMENT,
-
 	ADD_SERVER,
-	REMOVE_SERVER
+	REMOVE_SERVER,
+
+	EDIT_DOCUMENT,
+	GET_DOCUMENT
 } request_type_t;
 
 #endif  // CONSTANTS_H

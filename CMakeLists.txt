@@ -17,4 +17,6 @@ add_executable(tema2
         src/api/replication.h
         src/api/server.h
         src/api/utils.h
+        src/state_manager.c
+        src/api/state_manager.h
 )
