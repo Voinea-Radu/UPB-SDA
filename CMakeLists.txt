@@ -5,7 +5,7 @@ set(CMAKE_C_STANDARD 11)
 
 add_executable(tema2
         src/load_balancer.c
-        src/lru_cache.c
+        src/cache.c
         src/main.c
         src/replication.c
         src/server.c
@@ -13,7 +13,7 @@ add_executable(tema2
 
         src/api/constants.h
         src/api/load_balancer.h
-        src/api/lru_cache.h
+        src/api/cache.h
         src/api/replication.h
         src/api/server.h
         src/api/utils.h

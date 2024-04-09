@@ -24,17 +24,16 @@ typedef char *string_t;
 
 #define LOG_RESPONSE     "[Server %d]-Response: %s\n[Server %d]-Log: %s\n\n"
 
+#define LOG_CACHE_HIT     "[DEBUG] Cache HIT for %s"
+#define LOG_CACHE_MISS    "[DEBUG] Cache MISS for %s"
+#define LOG_CACHE_EVICT   "[DEBUG] Cache MISS for %s - cache entry for %s has been evicted"
+
 #define MSG_A           "Request- %s %s - has been added to queue"
 #define MSG_B           "Document %s has been overridden"
 #define MSG_C           "Document %s has been created"
 
-#define LOG_HIT     "Cache HIT for %s"
-#define LOG_MISS    "Cache MISS for %s"
-#define LOG_EVICT   "Cache MISS for %s - cache entry for %s has been evicted"
-
 #define LOG_FAULT       "Document %s doesn't exist"
 #define LOG_LAZY_EXEC   "Task queue size is %d"
-
 
 typedef enum request_type {
 	EDIT_DOCUMENT,

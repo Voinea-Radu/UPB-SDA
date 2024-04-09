@@ -9,7 +9,7 @@
 #include <string.h>
 
 #include "api/load_balancer.h"
-#include "api/lru_cache.h"
+#include "api/cache.h"
 #include "api/utils.h"
 #include "api/constants.h"
 

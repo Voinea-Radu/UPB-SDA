@@ -7,8 +7,9 @@
 
 #include <stdbool.h>
 #include <sys/types.h>
+#include "constants.h"
 
-typedef struct lru_cache {
+typedef struct cache {
 	// TODO
 } cache_t;
 
@@ -50,5 +51,11 @@ void *cache_get(cache_t *cache, void *key);
  * @param key: Key of the pair.
 */
 void cache_remove(cache_t *cache, void *key);
+
+void cache_log_miss(string_t key);
+
+void cache_log_hit(string_t key);
+
+void cache_log_miss_with_eviction(string_t key, string_t evicted_key);
 
 #endif // LRU_CACHE_H

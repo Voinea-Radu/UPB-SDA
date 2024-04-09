@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "api/lru_cache.h"
+#include "api/cache.h"
 #include "api/utils.h"
 
 cache_t *cache_init(unsigned int cache_capacity)
@@ -41,3 +41,25 @@ void cache_remove(cache_t *cache, void *key)
 {
 	/* TODO */
 }
+
+void cache_log_miss(string_t key)
+{
+#if DEBUG
+	printf(LOG_CACHE_MISS, key);
+#endif // DEBUG
+}
+
+void cache_log_hit(string_t key)
+{
+#if DEBUG
+	printf(LOG_CACHE_HIT, key);
+#endif // DEBUG
+}
+
+void cache_log_miss_with_eviction(string_t key, string_t evicted_key)
+{
+#if DEBUG
+	printf(LOG_CACHE_EVICT, key, evicted_key);
+#endif // DEBUG
+}
+

@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include "api/server.h"
-#include "api/lru_cache.h"
+#include "api/cache.h"
 
 #include "api/utils.h"
 
@@ -41,11 +41,16 @@ void server_free(server_t **server)
 
 void response_print(response_t *response)
 {
-	if (response) {
+	if (!response) {
+		return;
+
+	}
+
+#if DEBUG
 		printf(LOG_RESPONSE, response->server_id, response->server_response,
 			   response->server_id, response->server_log);
 		free(response->server_response);
 		free(response->server_log);
 		free(response);
-	}
+#endif // DEBUG
 }

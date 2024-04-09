@@ -7,7 +7,7 @@
 
 #include "utils.h"
 #include "constants.h"
-#include "lru_cache.h"
+#include "cache.h"
 
 #define TASK_QUEUE_SIZE         1000
 #define MAX_LOG_LENGTH          100
