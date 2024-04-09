@@ -12,7 +12,6 @@
 #include "hash_map.h"
 
 
-
 typedef struct {
 	uint server_id;
 

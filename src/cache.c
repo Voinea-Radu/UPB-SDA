@@ -38,7 +38,7 @@ bool cache_put(cache_t *cache, void *key, void *value, void **evicted_key)
 		return false;
 	}
 
-	if(cache_is_full(cache)) {
+	if (cache_is_full(cache)) {
 		*evicted_key = queue_dequeue(cache->queue);
 		hash_map_remove(cache->map, *evicted_key);
 	}
