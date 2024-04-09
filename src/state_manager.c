@@ -8,7 +8,8 @@
 #include "api/utils.h"
 #include "api/load_balancer.h"
 
-void init(FILE* input){
+void init(FILE *input)
+{
 	char buffer[REQUEST_LENGTH + 1];
 
 	string_t line = fgets(buffer, REQUEST_LENGTH + 1, input);
@@ -27,7 +28,8 @@ void init(FILE* input){
 	load_balancer_free(&load_balancer);
 }
 
-void process_next_request(FILE* input, load_balancer_t *load_balancer){
+void process_next_request(FILE *input, load_balancer_t *load_balancer)
+{
 	char buffer[REQUEST_LENGTH + 1];
 
 	string_t line = fgets(buffer, REQUEST_LENGTH + 1, input);
@@ -37,26 +39,27 @@ void process_next_request(FILE* input, load_balancer_t *load_balancer){
 	request_type_t request_type = get_request_type(buffer);
 
 	switch (request_type) {
-		case ADD_SERVER: {
-			handle_add_server(input, load_balancer);
-			break;
-		}
-		case REMOVE_SERVER: {
-			handle_remove_server(input, load_balancer);
-			break;
-		}
-		case EDIT_DOCUMENT: {
-			handle_edit_document(input, load_balancer);
-			break;
-		}
-		case GET_DOCUMENT: {
-			handle_get_document(input, load_balancer);
-			break;
-		}
+	case ADD_SERVER: {
+		handle_add_server(input, load_balancer);
+		break;
+	}
+	case REMOVE_SERVER: {
+		handle_remove_server(input, load_balancer);
+		break;
+	}
+	case EDIT_DOCUMENT: {
+		handle_edit_document(input, load_balancer);
+		break;
+	}
+	case GET_DOCUMENT: {
+		handle_get_document(input, load_balancer);
+		break;
+	}
 	}
 }
 
-void handle_add_server(FILE* input, load_balancer_t *load_balancer){
+void handle_add_server(FILE *input, load_balancer_t *load_balancer)
+{
 	char buffer[REQUEST_LENGTH + 1];
 	string_t line = fgets(buffer, REQUEST_LENGTH + 1, input);
 
@@ -70,7 +73,8 @@ void handle_add_server(FILE* input, load_balancer_t *load_balancer){
 	load_balancer_add_server(load_balancer, server_id, cache_size);
 }
 
-void handle_remove_server(FILE* input, load_balancer_t *load_balancer){
+void handle_remove_server(FILE *input, load_balancer_t *load_balancer)
+{
 	char buffer[REQUEST_LENGTH + 1];
 	string_t line = fgets(buffer, REQUEST_LENGTH + 1, input);
 
@@ -81,7 +85,8 @@ void handle_remove_server(FILE* input, load_balancer_t *load_balancer){
 	load_balancer_remove_server(load_balancer, server_id);
 }
 
-void handle_edit_document(FILE* input, load_balancer_t *load_balancer){
+void handle_edit_document(FILE *input, load_balancer_t *load_balancer)
+{
 	char buffer[REQUEST_LENGTH + 1];
 	string_t line = fgets(buffer, REQUEST_LENGTH + 1, input);
 
@@ -111,19 +116,22 @@ void handle_edit_document(FILE* input, load_balancer_t *load_balancer){
 
 	request_t server_request = {
 			.type = EDIT_DOCUMENT,
-			.document_name = document_name,
-			.document_content = document_content,
+			.document={
+					.name = document_name,
+					.content = document_content
+			}
 	};
 
 	response_t *response = load_balancer_forward_request(load_balancer, &server_request);
 
-	free(server_request.document_name);
-	free(server_request.document_content);
+	free(server_request.document.name);
+	free(server_request.document.content);
 
 	response_print(response);
 }
 
-void handle_get_document(FILE* input, load_balancer_t *load_balancer){
+void handle_get_document(FILE *input, load_balancer_t *load_balancer)
+{
 	char buffer[REQUEST_LENGTH + 1];
 	string_t line = fgets(buffer, REQUEST_LENGTH + 1, input);
 
@@ -139,12 +147,14 @@ void handle_get_document(FILE* input, load_balancer_t *load_balancer){
 
 	request_t server_request = {
 			.type = GET_DOCUMENT,
-			.document_name = document_name,
+			.document = {
+					.name = document_name
+			}
 	};
 
 	response_t *response = load_balancer_forward_request(load_balancer, &server_request);
 
-	free(server_request.document_name);
+	free(server_request.document.name);
 
 	response_print(response);
 }

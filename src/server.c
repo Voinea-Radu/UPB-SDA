@@ -28,7 +28,7 @@ server_t *server_init(unsigned int cache_size)
 	return NULL;
 }
 
-response_t *server_handle_request(server_t *server, request_t *req)
+response_t *server_handle_request(server_t *server, request_t *request)
 {
 	/* TODO */
 	return NULL;
@@ -36,14 +36,13 @@ response_t *server_handle_request(server_t *server, request_t *req)
 
 void server_free(server_t **server)
 {
-	/* TODO */
+
 }
 
 void response_print(response_t *response)
 {
 	if (!response) {
 		return;
-
 	}
 
 #if DEBUG

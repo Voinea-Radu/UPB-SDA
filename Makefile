@@ -16,7 +16,7 @@ build: tema2
 tema2: main.o $(LOAD).o $(SERVER).o $(CACHE).o $(UTILS).o # $(EXTRA).o
 	$(CC) $^ -o $@
 
-main.o: src/main.c
+main.o: src/main.c src/state_manager.c src/api/state_manager.h
 	$(CC) $(CFLAGS) $^ -c
 
 $(LOAD).o: src/$(LOAD).c src/api/$(LOAD).h

@@ -10,14 +10,12 @@
 #define MAX_SERVERS             99999
 
 typedef struct load_balancer {
-	unsigned int (*hash_server)(server_t *server);
+	uint (*hash_document)(document_t *document);
 
-	unsigned int (*hash_document)(void *); // TODO make more specific
+	server_t *servers[MAX_SERVERS];
+	uint servers_count;
 
-	// TODO: remove test_server after testing the functionality for a single server_t
-	server_t *test_server;
-
-	// TODO: add fields needed for a hashing with multiple server_t
+	bool enable_vnodes;
 } load_balancer_t;
 
 
@@ -71,5 +69,6 @@ void load_balancer_remove_server(load_balancer_t *load_balancer, int server_id);
  */
 response_t *load_balancer_forward_request(load_balancer_t *load_balancer, request_t *request);
 
+uint hash_document(document_t *document);
 
 #endif // LOAD_BALANCER_H
