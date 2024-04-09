@@ -8,9 +8,14 @@
 #include <stdbool.h>
 #include <sys/types.h>
 #include "constants.h"
+#include "hash_map.h"
+#include "queue.h"
 
 typedef struct cache {
-	// TODO
+	hash_map_t *map;
+	queue_t *queue;
+
+	uint capacity;
 } cache_t;
 
 cache_t *cache_init(uint cache_capacity);
@@ -43,19 +48,5 @@ bool cache_put(cache_t *cache, void *key, void *value, void **evicted_key);
  *      or NULL if the key is not found.
  */
 void *cache_get(cache_t *cache, void *key);
-
-/**
- * cache_remove() - Removes a key-value pair from the cache.
- * 
- * @param cache: Cache where the key-value pair is stored.
- * @param key: Key of the pair.
-*/
-void cache_remove(cache_t *cache, void *key);
-
-void cache_log_miss(string_t key);
-
-void cache_log_hit(string_t key);
-
-void cache_log_miss_with_eviction(string_t key, string_t evicted_key);
 
 #endif // LRU_CACHE_H

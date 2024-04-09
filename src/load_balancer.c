@@ -18,7 +18,7 @@ load_balancer_t *load_balancer_init(bool enable_vnodes)
 
 void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int cache_size)
 {
-	load_balancer->servers[server_id] = server_init(cache_size);
+	load_balancer->servers[server_id] = server_init(cache_size, server_id);
 	load_balancer->servers_count++;
 }
 

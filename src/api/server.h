@@ -8,15 +8,17 @@
 #include "utils.h"
 #include "constants.h"
 #include "cache.h"
+#include "queue.h"
+#include "hash_map.h"
 
-#define TASK_QUEUE_SIZE         1000
-#define MAX_LOG_LENGTH          100
-#define MAX_RESPONSE_LENGTH     4096
+
 
 typedef struct {
-	cache_t *cache;
+	uint server_id;
 
-	// TODO: add needed fields
+	queue_t *task_queue;
+	hash_map_t *database;
+	cache_t *cache;
 } server_t;
 
 typedef struct {
@@ -30,13 +32,14 @@ typedef struct {
 } request_t;
 
 typedef struct {
+	int server_id;
+
 	string_t server_log;
 	string_t server_response;
-	int server_id;
 } response_t;
 
 
-server_t *server_init(uint cache_size);
+server_t *server_init(uint cache_size, uint server_id);
 
 /**
  * @brief Should deallocate completely the memory used by server_t,

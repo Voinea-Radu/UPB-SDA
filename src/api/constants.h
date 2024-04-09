@@ -9,6 +9,11 @@ typedef char *string_t;
 
 #define DEBUG 1
 
+#define TASK_QUEUE_SIZE          1000
+#define DATABASE_HASH_TABLE_SIZE 1000
+#define MAX_LOG_LENGTH           100
+#define MAX_RESPONSE_LENGTH      4096
+
 #define REQUEST_TYPE_LENGTH     64
 #define DOC_NAME_LENGTH         64
 #define DOC_CONTENT_LENGTH      4096

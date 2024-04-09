@@ -7,59 +7,55 @@
 #include "api/cache.h"
 #include "api/utils.h"
 
-cache_t *cache_init(unsigned int cache_capacity)
+cache_t *cache_init(uint cache_capacity)
 {
-	/* TODO */
-	return NULL;
+	cache_t *cache = safe_malloc(sizeof(cache_t));
+
+	cache->map = hash_map_init(cache_capacity);
+	cache->queue = queue_init();
+	cache->capacity = cache_capacity;
+
+	return cache;
 }
 
 bool cache_is_full(cache_t *cache)
 {
-	/* TODO */
-	return false;
+	return cache->map->size == cache->capacity;
 }
 
 void cache_free(cache_t **cache)
 {
-	/* TODO */
+	hash_map_free(&(*cache)->map);
+	queue_free(&(*cache)->queue);
+
+	free(*cache);
+	*cache = NULL;
 }
 
-bool cache_put(cache_t *cache, void *key, void *value,
-			   void **evicted_key)
+bool cache_put(cache_t *cache, void *key, void *value, void **evicted_key)
 {
-	/* TODO */
-	return false;
+	if (!hash_map_put(cache->map, key, value)) {
+		return false;
+	}
+
+	if(cache_is_full(cache)) {
+		*evicted_key = queue_dequeue(cache->queue);
+		hash_map_remove(cache->map, *evicted_key);
+	}
+
+	queue_enqueue(cache->queue, key);
+	hash_map_put(cache->map, key, value);
+
+	return true;
 }
 
 void *cache_get(cache_t *cache, void *key)
 {
-	/* TODO */
-	return NULL;
-}
+	void *value = hash_map_get(cache->map, key);
 
-void cache_remove(cache_t *cache, void *key)
-{
-	/* TODO */
-}
+	if (value == NULL) {
+		return NULL;
+	}
 
-void cache_log_miss(string_t key)
-{
-#if DEBUG
-	printf(LOG_CACHE_MISS, key);
-#endif // DEBUG
+	return value;
 }
-
-void cache_log_hit(string_t key)
-{
-#if DEBUG
-	printf(LOG_CACHE_HIT, key);
-#endif // DEBUG
-}
-
-void cache_log_miss_with_eviction(string_t key, string_t evicted_key)
-{
-#if DEBUG
-	printf(LOG_CACHE_EVICT, key, evicted_key);
-#endif // DEBUG
-}
-

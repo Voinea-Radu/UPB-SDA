@@ -5,13 +5,9 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-#include "api/load_balancer.h"
-#include "api/cache.h"
 #include "api/utils.h"
-#include "api/constants.h"
 #include "api/state_manager.h"
 
 int main(int argc, string_t *argv)
