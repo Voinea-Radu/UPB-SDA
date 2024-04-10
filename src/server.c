@@ -8,16 +8,62 @@
 
 #include "api/utils.h"
 
-static response_t *server_edit_document(server_t *server, document_t document)
+static response_t *server_edit_document(server_t *server, document_t document, bool execute_imeediately)
 {
-	/* TODO */
-	return NULL;
+	if (execute_imeediately) {
+		document_t *output = hash_map_get(server->database, document.name);
+
+		if (output == NULL) {
+			hash_map_put(server->database, document.name, &document);
+		} else {
+			output->content = document.content;
+		}
+
+		return NULL;
+	}
+
+	request_t *request = safe_malloc(sizeof(request_t));
+	request->type = EDIT_DOCUMENT;
+	request->document = document;
+
+	queue_enqueue(server->task_queue, request);
+
+	response_t *response = malloc(sizeof(response_t));
+
+	response->server_id = server->server_id;
+	response->server_response = SERVER_QUEUED;
+	response->server_log = LOG_LAZY_EXEC;
+
+	return response;
 }
 
 static response_t *server_get_document(server_t *server, document_t document)
 {
-	/* TODO */
-	return NULL;
+	execute_task_queue(server);
+
+	response_t *response = safe_malloc(sizeof(response_t));
+	document_t *output = hash_map_get(server->cache->map, document.name);
+
+	if (output != NULL) {
+		response->server_response = output->content;
+		response->server_log = LOG_CACHE_HIT;
+
+		return response;
+	}
+
+	output = hash_map_get(server->database, document.name);
+
+	if (output == NULL) {
+		response->server_response = NULL;
+		response->server_log = LOG_FAULT;
+
+		return response;
+	}
+
+	response->server_response = output->content;
+	response->server_log = LOG_CACHE_MISS;
+
+	return response;
 }
 
 server_t *server_init(uint cache_size, uint server_id)
@@ -33,11 +79,11 @@ server_t *server_init(uint cache_size, uint server_id)
 	return server;
 }
 
-response_t *server_handle_request(server_t *server, request_t *request)
+response_t *server_handle_request(server_t *server, request_t *request, bool execute_immediately)
 {
 	switch (request->type) {
 	case EDIT_DOCUMENT: {
-		return server_edit_document(server, request->document);
+		return server_edit_document(server, request->document, execute_immediately);
 	}
 	case GET_DOCUMENT: {
 		return server_get_document(server, request->document);
@@ -66,4 +112,14 @@ void response_print(response_t *response)
 	free(response->server_response);
 	free(response->server_log);
 	free(response);
+}
+
+void execute_task_queue(server_t *server)
+{
+	while (!queue_is_empty(server->task_queue)) {
+		request_t *request = queue_dequeue(server->task_queue);
+		response_t *response = server_handle_request(server, request, true);
+
+		response_print(response);
+	}
 }

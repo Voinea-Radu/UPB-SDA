@@ -52,3 +52,8 @@ void *queue_dequeue(queue_t *queue)
 	return data;
 }
 
+bool queue_is_empty(queue_t *queue)
+{
+	return queue->size == 0;
+}
+

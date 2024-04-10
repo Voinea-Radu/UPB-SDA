@@ -30,7 +30,7 @@ void load_balancer_remove_server(load_balancer_t *load_balancer, int server_id)
 response_t *load_balancer_forward_request(load_balancer_t *load_balancer, request_t *request)
 {
 	uint index = load_balancer->hash_document(&request->document) % load_balancer->servers_count;
-	return server_handle_request(load_balancer->servers[index], request);
+	return server_handle_request(load_balancer->servers[index], request, false);
 }
 
 void load_balancer_free(load_balancer_t **load_balancer)

@@ -26,4 +26,6 @@ void *queue_dequeue(queue_t *queue);
 
 void queue_free(queue_t **queue);
 
+bool queue_is_empty(queue_t *queue);
+
 #endif //QUEUE_H

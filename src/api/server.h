@@ -31,7 +31,7 @@ typedef struct {
 } request_t;
 
 typedef struct {
-	int server_id;
+	uint server_id;
 
 	string_t server_log;
 	string_t server_response;
@@ -62,8 +62,10 @@ void server_free(server_t **server);
  *     this case, after executing each task, PRINT_RESPONSE should
  *     be called).
  */
-response_t *server_handle_request(server_t *server, request_t *request);
+response_t *server_handle_request(server_t *server, request_t *request, bool execute_immediately);
 
 void response_print(response_t *response);
+
+void execute_task_queue(server_t *server);
 
 #endif  // SERVER_H
