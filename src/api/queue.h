@@ -6,6 +6,7 @@
 #define QUEUE_H
 
 #include <stdbool.h>
+#include "constants.h"
 
 typedef struct queue_node {
 	void *data;
@@ -27,5 +28,7 @@ void *queue_dequeue(queue_t *queue);
 void queue_free(queue_t **queue);
 
 bool queue_is_empty(queue_t *queue);
+
+void queue_print(queue_t *queue, string_t prefix);
 
 #endif //QUEUE_H

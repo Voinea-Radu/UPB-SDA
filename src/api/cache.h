@@ -49,4 +49,6 @@ bool cache_put(cache_t *cache, void *key, void *value, void **evicted_key);
  */
 void *cache_get(cache_t *cache, void *key);
 
+void cache_print(cache_t *cache, string_t prefix);
+
 #endif // LRU_CACHE_H

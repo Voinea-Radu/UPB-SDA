@@ -123,3 +123,20 @@ void execute_task_queue(server_t *server)
 		response_print(response);
 	}
 }
+
+void server_print(server_t *server, string_t prefix)
+{
+	string_t new_prefix = increase_prefix(prefix);
+	new_prefix = increase_prefix(new_prefix);
+
+	printf("%sServer with id %d:\n",prefix, server->server_id);
+
+	printf("\t%sDatabase:\n", prefix);
+	hash_map_print(server->database, new_prefix);
+
+	printf("\t%sCache:\n", prefix);
+	cache_print(server->cache, new_prefix);
+
+	printf("\t%sTask queue:\n", prefix);
+	queue_print(server->task_queue, new_prefix);
+}

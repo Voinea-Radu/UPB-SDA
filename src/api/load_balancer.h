@@ -71,4 +71,6 @@ response_t *load_balancer_forward_request(load_balancer_t *load_balancer, reques
 
 uint hash_document(document_t *document);
 
+void load_balancer_print(load_balancer_t *load_balancer);
+
 #endif // LOAD_BALANCER_H

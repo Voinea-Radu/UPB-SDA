@@ -62,4 +62,6 @@ int str_to_int(string_t str);
 
 void read_quoted_string(string_t buffer, int buffer_len, int *start, int *end);
 
+string_t increase_prefix(string_t prefix);
+
 #endif /* UTILS_H */

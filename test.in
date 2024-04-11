@@ -1,3 +1,2 @@
-1 # number of requests (lines)
-ADD_SERVER <server_id> <number_of_cached_documents>
-REMOVE_SERVER <server_id>
+1
+ADD_SERVER 1 2

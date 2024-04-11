@@ -120,3 +120,35 @@ void read_quoted_string(string_t buffer, int buffer_len, int *start, int *end)
 		}
 	}
 }
+
+string_t increase_prefix(string_t prefix)
+{
+	int prefix_len = strlen(prefix);
+	string_t new_prefix = safe_malloc(prefix_len + 2);
+
+	strcat(new_prefix, "\t");
+	strcat(new_prefix, prefix);
+
+	return new_prefix;
+}
+
+#if DEBUG
+/**
+ * This function exists for the sole reason that CLion debugger on windows is
+ * not printing any output unless fflush is called
+ */
+int printf(const char *format, ...)
+{
+	int output;
+
+	__builtin_va_list argv;
+	__builtin_va_start(argv, format);
+
+	output = vfprintf(stdout, format, argv);
+
+	__builtin_va_end(argv);
+	fflush(stdout);
+
+	return output;
+}
+#endif // DEBUG

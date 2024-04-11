@@ -3,6 +3,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "api/hash_map.h"
 
 hash_map_t *hash_map_init(unsigned int capacity)
@@ -66,4 +67,57 @@ void *hash_map_get(hash_map_t *map, void *key)
 	}
 
 	return NULL;
+}
+
+void hash_map_remove(hash_map_t *map, void *key)
+{
+	unsigned int index = map->hash(key) % map->capacity;
+	hash_map_entry_t *entry = map->entries[index];
+	hash_map_entry_t *prev = NULL;
+
+	while (entry) {
+		if (entry->key == key) {
+			if (prev)
+				prev->next = entry->next;
+			else
+				map->entries[index] = entry->next;
+
+			free(entry);
+			--map->size;
+			return;
+		}
+
+		prev = entry;
+		entry = entry->next;
+	}
+
+}
+
+void hash_map_free(hash_map_t **map)
+{
+	for (unsigned int i = 0; i < (*map)->capacity; ++i) {
+		hash_map_entry_t *entry = (*map)->entries[i];
+
+		while (entry) {
+			hash_map_entry_t *next = entry->next;
+			free(entry);
+			entry = next;
+		}
+	}
+
+	free((*map)->entries);
+	free(*map);
+	*map = NULL;
+}
+
+void hash_map_print(hash_map_t *map, string_t prefix)
+{
+	for (unsigned int i = 0; i < map->capacity; ++i) {
+		hash_map_entry_t *entry = map->entries[i];
+
+		while (entry) {
+			printf("%sKey: %p, Value: %p\n", prefix, entry->key, entry->value);
+			entry = entry->next;
+		}
+	}
 }

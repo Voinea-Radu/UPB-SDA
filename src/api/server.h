@@ -68,4 +68,6 @@ void response_print(response_t *response);
 
 void execute_task_queue(server_t *server);
 
+void server_print(server_t *server, string_t prefix);
+
 #endif  // SERVER_H

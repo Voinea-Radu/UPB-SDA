@@ -57,3 +57,28 @@ bool queue_is_empty(queue_t *queue)
 	return queue->size == 0;
 }
 
+void queue_free(queue_t **queue)
+{
+	queue_node_t *node = (*queue)->head;
+	queue_node_t *next;
+
+	while (node) {
+		next = node->next;
+		free(node);
+		node = next;
+	}
+
+	free(*queue);
+	*queue = NULL;
+}
+
+void queue_print(queue_t *queue, string_t prefix)
+{
+	queue_node_t *node = queue->head;
+
+	while (node) {
+		printf("%s%p\n", prefix, node->data);
+		node = node->next;
+	}
+}
+

@@ -6,6 +6,7 @@
 #define HASH_MAP_H
 
 #include <stdbool.h>
+#include "constants.h"
 
 typedef struct hash_map_entry {
 	void *key;
@@ -30,5 +31,7 @@ void *hash_map_get(hash_map_t *map, void *key);
 void hash_map_remove(hash_map_t *map, void *key);
 
 void hash_map_free(hash_map_t **map);
+
+void hash_map_print(hash_map_t *map, string_t prefix);
 
 #endif //HASH_MAP_H

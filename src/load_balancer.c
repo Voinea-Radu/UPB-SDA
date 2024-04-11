@@ -18,8 +18,10 @@ load_balancer_t *load_balancer_init(bool enable_vnodes)
 
 void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int cache_size)
 {
-	load_balancer->servers[server_id] = server_init(cache_size, server_id);
 	load_balancer->servers_count++;
+	uint index = hash_uint(server_id) % load_balancer->servers_count;
+
+	load_balancer->servers[index] = server_init(cache_size, server_id);
 }
 
 void load_balancer_remove_server(load_balancer_t *load_balancer, int server_id)
@@ -48,6 +50,14 @@ void load_balancer_free(load_balancer_t **load_balancer)
 uint hash_document(document_t *document)
 {
 	return hash_string(document->name);
+}
+
+void load_balancer_print(load_balancer_t *load_balancer)
+{
+	printf("Servers count: %d\n", load_balancer->servers_count);
+	for (int i = 0; i < load_balancer->servers_count; i++){
+		server_print(load_balancer->servers[i], "");
+	}
 }
 
 
