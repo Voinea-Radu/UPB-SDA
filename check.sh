@@ -18,8 +18,8 @@ TWO=2
 MESSAGE_SIZE=12
 PASSED_TESTS_GRADE=0
 
-cd skel && make build && mv $EXEC ../
-make clean &> /dev/null && cd ../
+make build
+make clean
 mkdir "out"
 
 function timeout_test() {
@@ -178,4 +178,4 @@ checkBonus
 printBonus
 
 rm -rf out
-rm -rf tema2
+rm -f tema2

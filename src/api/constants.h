@@ -6,6 +6,7 @@
 #define CONSTANTS_H
 
 typedef char *string_t;
+typedef unsigned int uint;
 
 #define DEBUG 1
 

@@ -1,38 +1,23 @@
+# Copyright 2023 Echipa PCLP1
+
+# compiler setup
 CC=gcc
-CFLAGS=-Wall -Wextra
+CFLAGS=-Wall -Wextra -pedantic -std=c99 -g3 -O3
 
-LOAD=load_balancer
-SERVER=server
-CACHE=lru_cache
-UTILS=utils
+# targets
+TARGETS=tema2
 
-# Add new source file names here:
-EXTRA=replication
+all: $(TARGETS)
 
-.PHONY: build clean
+build: $(TARGETS)
 
-build: tema2
+tema2: src/main.c
+	$(CC) $(CFLAGS) src/api/*.h src/*.c -lm -o tema2
 
-tema2: main.o $(LOAD).o $(SERVER).o $(CACHE).o $(UTILS).o # $(EXTRA).o
-	$(CC) $^ -o $@
-
-main.o: src/main.c src/state_manager.c src/api/state_manager.h
-	$(CC) $(CFLAGS) $^ -c
-
-$(LOAD).o: src/$(LOAD).c src/api/$(LOAD).h
-	$(CC) $(CFLAGS) $^ -c
-
-$(SERVER).o: src/$(SERVER).c src/api/$(SERVER).h
-	$(CC) $(CFLAGS) $^ -c
-
-$(CACHE).o: src/$(CACHE).c src/api/$(CACHE).h
-	$(CC) $(CFLAGS) $^ -c
-
-$(UTILS).o: src/$(UTILS).c src/api$(UTILS).h
-	$(CC) $(CFLAGS) $^ -c
-
-$(EXTRA).o: src/$(EXTRA).c src/api/$(EXTRA).h
-	$(CC) $(CFLAGS) $^ -c
+pack:
+	zip -FSr 315CA_VoineaRadu_TEMA1.zip README Makefile src/
 
 clean:
-	rm -f *.o tema2 *.h.gch
+	rm -f $(TARGETS)
+
+.PHONY: all clean run build pack
