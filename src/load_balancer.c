@@ -47,10 +47,7 @@ void load_balancer_free(load_balancer_t **load_balancer)
 	*load_balancer = NULL;
 }
 
-uint hash_document(document_t *document)
-{
-	return hash_string(document->name);
-}
+
 
 void load_balancer_print(load_balancer_t *load_balancer)
 {

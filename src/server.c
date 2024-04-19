@@ -8,9 +8,9 @@
 
 #include "api/utils.h"
 
-static response_t *server_edit_document(server_t *server, document_t document, bool execute_imeediately)
+static response_t *server_edit_document(server_t *server, document_t document, bool execute_immediately)
 {
-	if (execute_imeediately) {
+	if (execute_immediately) {
 		document_t *output = hash_map_get(server->database, document.name);
 
 		if (output == NULL) {
@@ -31,8 +31,8 @@ static response_t *server_edit_document(server_t *server, document_t document, b
 	response_t *response = malloc(sizeof(response_t));
 
 	response->server_id = server->server_id;
-	response->server_response = SERVER_QUEUED;
-	response->server_log = LOG_LAZY_EXEC;
+	response->server_response = server_queued(request->type, request->document.name);
+	response->server_log = log_lazy_exec(server->task_queue->size);
 
 	return response;
 }
@@ -46,7 +46,7 @@ static response_t *server_get_document(server_t *server, document_t document)
 
 	if (output != NULL) {
 		response->server_response = output->content;
-		response->server_log = LOG_CACHE_HIT;
+		response->server_log = log_cache_hit(document.name);
 
 		return response;
 	}
@@ -55,13 +55,13 @@ static response_t *server_get_document(server_t *server, document_t document)
 
 	if (output == NULL) {
 		response->server_response = NULL;
-		response->server_log = LOG_FAULT;
+		response->server_log = log_fault(document.name);
 
 		return response;
 	}
 
 	response->server_response = output->content;
-	response->server_log = LOG_CACHE_MISS;
+	response->server_log = log_cache_miss(document.name);
 
 	return response;
 }
@@ -72,8 +72,8 @@ server_t *server_init(uint cache_size, uint server_id)
 
 	server->server_id = server_id;
 
-	server->database = hash_map_init(DATABASE_HASH_TABLE_SIZE);
-	server->cache = cache_init(cache_size);
+	server->database = hash_map_init(DATABASE_HASH_TABLE_SIZE, (uint (*)(void *))hash_document);
+	server->cache = cache_init(cache_size, (uint (*)(void *))hash_document);
 	server->task_queue = queue_init();
 
 	return server;
@@ -124,7 +124,8 @@ void execute_task_queue(server_t *server)
 	}
 }
 
-string_t queued_task_to_string(request_t *request){
+string_t queued_task_to_string(request_t *request)
+{
 	string_t output = safe_malloc(sizeof(char) * 10000);
 	sprintf(output, "Request type: %s, Document name: %s, Document content: %s", get_request_type_str(request->type),
 			request->document.name, request->document.content);
@@ -137,7 +138,7 @@ void server_print(server_t *server, string_t prefix)
 	string_t new_prefix = increase_prefix(prefix);
 	new_prefix = increase_prefix(new_prefix);
 
-	printf("%sServer with id %d:\n",prefix, server->server_id);
+	printf("%sServer with id %d:\n", prefix, server->server_id);
 
 	printf("\t%sDatabase:\n", prefix);
 	hash_map_print(server->database, new_prefix);
@@ -147,4 +148,9 @@ void server_print(server_t *server, string_t prefix)
 
 	printf("\t%sTask queue:\n", prefix);
 	queue_print(server->task_queue, (string_t (*)(void *))queued_task_to_string, new_prefix);
+}
+
+uint hash_document(document_t *document)
+{
+	return hash_string(document->name);
 }

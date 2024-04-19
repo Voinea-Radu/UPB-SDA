@@ -18,7 +18,7 @@ typedef struct cache {
 	uint capacity;
 } cache_t;
 
-cache_t *cache_init(uint cache_capacity);
+cache_t *cache_init(uint cache_capacity, uint (*hash)(void *key));
 
 bool cache_is_full(cache_t *cache);
 

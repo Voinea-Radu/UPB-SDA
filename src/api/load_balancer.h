@@ -69,8 +69,6 @@ void load_balancer_remove_server(load_balancer_t *load_balancer, int server_id);
  */
 response_t *load_balancer_forward_request(load_balancer_t *load_balancer, request_t *request);
 
-uint hash_document(document_t *document);
-
 void load_balancer_print(load_balancer_t *load_balancer);
 
 #endif // LOAD_BALANCER_H

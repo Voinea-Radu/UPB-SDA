@@ -7,11 +7,11 @@
 #include "api/cache.h"
 #include "api/utils.h"
 
-cache_t *cache_init(uint cache_capacity)
+cache_t *cache_init(uint cache_capacity, uint (*hash)(void *key))
 {
 	cache_t *cache = safe_malloc(sizeof(cache_t));
 
-	cache->map = hash_map_init(cache_capacity);
+	cache->map = hash_map_init(cache_capacity, hash);
 	cache->queue = queue_init();
 	cache->capacity = cache_capacity;
 

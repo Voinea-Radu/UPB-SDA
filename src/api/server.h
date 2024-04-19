@@ -70,4 +70,6 @@ void execute_task_queue(server_t *server);
 
 void server_print(server_t *server, string_t prefix);
 
+uint hash_document(document_t *document);
+
 #endif  // SERVER_H

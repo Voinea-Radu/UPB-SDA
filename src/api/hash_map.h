@@ -22,7 +22,7 @@ typedef struct {
 	uint (*hash)(void *key);
 } hash_map_t;
 
-hash_map_t *hash_map_init(unsigned int capacity);
+hash_map_t *hash_map_init(unsigned int capacity, uint (*hash)(void *key));
 
 bool hash_map_put(hash_map_t *map, void *key, void *value);
 

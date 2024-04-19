@@ -156,4 +156,62 @@ int printf(const char *format, ...)
 	return output;
 }
 
+string_t server_queued(request_type_t request_type, string_t document_name)
+{
+	string_t request_type_str = get_request_type_str(request_type);
+	string_t output = malloc(strlen(SERVER_QUEUED) + strlen(request_type_str) + strlen(document_name) + 1);
+	sprintf(output, SERVER_QUEUED, request_type_str, document_name);
+	return output;
+}
+
+string_t database_entry_edited(string_t document_name)
+{
+	string_t output = malloc(strlen(DATABASE_ENTRY_EDITED) + strlen(document_name) + 1);
+	sprintf(output, DATABASE_ENTRY_EDITED, document_name);
+	return output;
+}
+
+string_t database_entry_created(string_t document_name)
+{
+	string_t output = malloc(strlen(DATABASE_ENTRY_CREATED) + strlen(document_name) + 1);
+	sprintf(output, DATABASE_ENTRY_CREATED, document_name);
+	return output;
+}
+
+string_t log_lazy_exec(uint task_queue_size)
+{
+	string_t output = malloc(strlen(LOG_LAZY_EXEC) + 10);
+	sprintf(output, LOG_LAZY_EXEC, task_queue_size);
+	return output;
+}
+
+string_t log_cache_hit(string_t document_name)
+{
+	string_t output = malloc(strlen(LOG_CACHE_HIT) + strlen(document_name) + 1);
+	sprintf(output, LOG_CACHE_HIT, document_name);
+	return output;
+
+}
+
+string_t log_cache_miss(string_t document_name)
+{
+	string_t output = malloc(strlen(LOG_CACHE_MISS) + strlen(document_name) + 1);
+	sprintf(output, LOG_CACHE_MISS, document_name);
+	return output;
+}
+
+string_t log_cache_evict(string_t document_name, string_t evicted_document_name)
+{
+	string_t output = malloc(strlen(LOG_CACHE_EVICT) + strlen(document_name) + strlen(evicted_document_name) + 1);
+	sprintf(output, LOG_CACHE_EVICT, document_name, evicted_document_name);
+	return output;
+}
+
+string_t log_fault(string_t document_name)
+{
+	string_t output = malloc(strlen(LOG_FAULT) + strlen(document_name) + 1);
+	sprintf(output, LOG_FAULT, document_name);
+	return output;
+}
+
 #endif // DEBUG

@@ -64,4 +64,20 @@ void read_quoted_string(string_t buffer, int buffer_len, int *start, int *end);
 
 string_t increase_prefix(string_t prefix);
 
+string_t server_queued(request_type_t request_type, string_t document_name);
+
+string_t database_entry_edited(string_t document_name);
+
+string_t database_entry_created(string_t document_name);
+
+string_t log_lazy_exec(uint task_queue_size);
+
+string_t log_cache_hit(string_t document_name);
+
+string_t log_cache_miss(string_t document_name);
+
+string_t log_cache_evict(string_t document_name, string_t evicted_document_name);
+
+string_t log_fault(string_t document_name);
+
 #endif /* UTILS_H */

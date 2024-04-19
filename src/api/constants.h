@@ -5,6 +5,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#include <malloc.h>
+
 typedef char *string_t;
 typedef unsigned int uint;
 
@@ -12,7 +14,7 @@ typedef unsigned int uint;
 
 #define TASK_QUEUE_SIZE          1000
 #define DATABASE_HASH_TABLE_SIZE 1000
-#define MAX_LOG_LENGTH           100
+#define MAX_LOG_LENGTH           1000
 #define MAX_RESPONSE_LENGTH      4096
 
 #define REQUEST_TYPE_LENGTH     64

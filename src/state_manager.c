@@ -73,7 +73,7 @@ void handle_add_server(string_t buffer, load_balancer_t *load_balancer)
 	load_balancer_add_server(load_balancer, server_id, cache_size);
 
 #if DEBUG
-	printf("Added server %d with cache size %d\n", server_id, cache_size);
+	printf("[DEBUG] Added server %d with cache size %d\n", server_id, cache_size);
 #endif // DEBUG
 }
 
@@ -125,7 +125,7 @@ void handle_edit_document(string_t buffer, load_balancer_t *load_balancer)
 	response_print(response);
 
 #if DEBUG
-	printf("Edited document %s with content %s\n", document_name, document_content);
+	printf("[DEBUG] Edited document %s with content %s\n", document_name, document_content);
 #endif // DEBUG
 }
 

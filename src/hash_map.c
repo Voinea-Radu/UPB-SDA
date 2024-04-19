@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include "api/hash_map.h"
 
-hash_map_t *hash_map_init(unsigned int capacity)
+hash_map_t *hash_map_init(unsigned int capacity, uint (*hash)(void *key))
 {
 	hash_map_t *map = malloc(sizeof(hash_map_t));
 
@@ -22,6 +22,7 @@ hash_map_t *hash_map_init(unsigned int capacity)
 
 	map->capacity = capacity;
 	map->size = 0;
+	map->hash = hash;
 
 	return map;
 }
