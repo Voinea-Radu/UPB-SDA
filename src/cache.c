@@ -60,16 +60,22 @@ void *cache_get(cache_t *cache, void *key)
 	return value;
 }
 
-void cache_print(cache_t *cache, string_t prefix){
+string_t key_to_string(void *key)
+{
+	return (string_t)key;
+}
+
+void cache_print(cache_t *cache, string_t prefix)
+{
 	string_t new_prefix = increase_prefix(prefix);
 
-	printf("%sCache capacity: %d\n", prefix,cache->capacity);
-	printf("%sCache size: %d\n",prefix, cache->map->size);
+	printf("%sCache capacity: %d\n", prefix, cache->capacity);
+	printf("%sCache size: %d\n", prefix, cache->map->size);
 
 	printf("%sCache entries:\n", prefix);
 
 	hash_map_print(cache->map, new_prefix);
 
 	printf("%sCache history:\n", prefix);
-	queue_print(cache->queue, new_prefix);
+	queue_print(cache->queue, key_to_string, new_prefix);
 }

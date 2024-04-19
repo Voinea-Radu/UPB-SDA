@@ -61,8 +61,11 @@ request_type_t get_request_type(string_t request_type_str)
 
 void *safe_malloc(size_t size)
 {
+#if DEBUG
+	void *result = safe_calloc(size);
+#else // DEBUG
 	void *result = malloc(size);
-
+#endif // DEBUG
 	check_or_exit(!result, MEMORY_ERROR);
 
 	return result;
@@ -133,8 +136,9 @@ string_t increase_prefix(string_t prefix)
 }
 
 #if DEBUG
+
 /**
- * This function exists for the sole reason that CLion debugger on windows is
+ * This function exists for the sole reason that CLion debugger on windows igit pus
  * not printing any output unless fflush is called
  */
 int printf(const char *format, ...)
@@ -151,4 +155,5 @@ int printf(const char *format, ...)
 
 	return output;
 }
+
 #endif // DEBUG

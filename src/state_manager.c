@@ -25,7 +25,12 @@ void init(FILE *input)
 		process_next_request(input, load_balancer);
 	}
 
+#if DEBUG
+	load_balancer_print(load_balancer);
+#endif // DEBUG
+
 	load_balancer_free(&load_balancer);
+
 }
 
 void process_next_request(FILE *input, load_balancer_t *load_balancer)
@@ -69,7 +74,6 @@ void handle_add_server(string_t buffer, load_balancer_t *load_balancer)
 
 #if DEBUG
 	printf("Added server %d with cache size %d\n", server_id, cache_size);
-	load_balancer_print(load_balancer);
 #endif // DEBUG
 }
 
@@ -78,6 +82,9 @@ void handle_remove_server(string_t buffer, load_balancer_t *load_balancer)
 	int server_id = str_to_int(buffer + strlen(REMOVE_SERVER_REQUEST) + 1);
 
 	load_balancer_remove_server(load_balancer, server_id);
+#if DEBUG
+	printf("Deleted server %d", server_id);
+#endif // DEBUG
 }
 
 void handle_edit_document(string_t buffer, load_balancer_t *load_balancer)
@@ -112,10 +119,14 @@ void handle_edit_document(string_t buffer, load_balancer_t *load_balancer)
 
 	response_t *response = load_balancer_forward_request(load_balancer, &server_request);
 
-	free(server_request.document.name);
-	free(server_request.document.content);
+	//free(server_request.document.name);
+	//free(server_request.document.content);
 
 	response_print(response);
+
+#if DEBUG
+	printf("Edited document %s with content %s\n", document_name, document_content);
+#endif // DEBUG
 }
 
 void handle_get_document(string_t buffer, load_balancer_t *load_balancer)
@@ -140,4 +151,7 @@ void handle_get_document(string_t buffer, load_balancer_t *load_balancer)
 	free(server_request.document.name);
 
 	response_print(response);
+#if DEBUG
+	printf("Got document %s\n", document_name);
+#endif // DEBUG
 }

@@ -109,9 +109,9 @@ void response_print(response_t *response)
 
 	printf(LOG_RESPONSE, response->server_id, response->server_response,
 		   response->server_id, response->server_log);
-	free(response->server_response);
-	free(response->server_log);
-	free(response);
+	//free(response->server_response);
+	//free(response->server_log);
+	//free(response);
 }
 
 void execute_task_queue(server_t *server)
@@ -122,6 +122,14 @@ void execute_task_queue(server_t *server)
 
 		response_print(response);
 	}
+}
+
+string_t queued_task_to_string(request_t *request){
+	string_t output = safe_malloc(sizeof(char) * 10000);
+	sprintf(output, "Request type: %s, Document name: %s, Document content: %s", get_request_type_str(request->type),
+			request->document.name, request->document.content);
+	return output;
+
 }
 
 void server_print(server_t *server, string_t prefix)
@@ -138,5 +146,5 @@ void server_print(server_t *server, string_t prefix)
 	cache_print(server->cache, new_prefix);
 
 	printf("\t%sTask queue:\n", prefix);
-	queue_print(server->task_queue, new_prefix);
+	queue_print(server->task_queue, (string_t (*)(void *))queued_task_to_string, new_prefix);
 }

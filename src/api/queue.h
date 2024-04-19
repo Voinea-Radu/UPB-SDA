@@ -29,6 +29,6 @@ void queue_free(queue_t **queue);
 
 bool queue_is_empty(queue_t *queue);
 
-void queue_print(queue_t *queue, string_t prefix);
+void queue_print(queue_t *queue, string_t (*to_string_function)(void*),string_t prefix);
 
 #endif //QUEUE_H

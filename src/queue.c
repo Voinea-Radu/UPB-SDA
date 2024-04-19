@@ -72,12 +72,12 @@ void queue_free(queue_t **queue)
 	*queue = NULL;
 }
 
-void queue_print(queue_t *queue, string_t prefix)
+void queue_print(queue_t *queue, string_t (*to_string_function)(void *), string_t prefix)
 {
 	queue_node_t *node = queue->head;
 
 	while (node) {
-		printf("%s%p\n", prefix, node->data);
+		printf("%s%s\n", prefix, to_string_function(node->data));
 		node = node->next;
 	}
 }
