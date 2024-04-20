@@ -19,8 +19,9 @@ unsigned int hash_string(string_t key)
 	unsigned int hash = 5381;
 	int c;
 
-	while ((c = *key_string++))
+	while ((c = *(key_string++))){
 		hash = ((hash << 5u) + hash) + c;
+	}
 
 	return hash;
 }

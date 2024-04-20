@@ -125,7 +125,7 @@ void handle_edit_document(string_t buffer, load_balancer_t *load_balancer)
 	response_print(response);
 
 #if DEBUG
-	printf("[DEBUG] Edited document %s with content %s\n", document_name, document_content);
+	printf("[DEBUG] Edited document %s with content %s\n\n", document_name, document_content);
 #endif // DEBUG
 }
 
@@ -152,6 +152,6 @@ void handle_get_document(string_t buffer, load_balancer_t *load_balancer)
 
 	response_print(response);
 #if DEBUG
-	printf("Got document %s\n", document_name);
+	printf("Got document %s\n\n", document_name);
 #endif // DEBUG
 }

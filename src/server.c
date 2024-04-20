@@ -72,8 +72,8 @@ server_t *server_init(uint cache_size, uint server_id)
 
 	server->server_id = server_id;
 
-	server->database = hash_map_init(DATABASE_HASH_TABLE_SIZE, (uint (*)(void *))hash_document);
-	server->cache = cache_init(cache_size, (uint (*)(void *))hash_document);
+	server->database = hash_map_init(DATABASE_HASH_TABLE_SIZE, (uint (*)(void *))hash_string);
+	server->cache = cache_init(cache_size, (uint (*)(void *))hash_string);
 	server->task_queue = queue_init();
 
 	return server;

@@ -37,7 +37,7 @@ response_t *load_balancer_forward_request(load_balancer_t *load_balancer, reques
 
 void load_balancer_free(load_balancer_t **load_balancer)
 {
-	for (int i = 0; i < (*load_balancer)->servers_count; i++) {
+	for (uint i = 0; i < (*load_balancer)->servers_count; i++) {
 		if ((*load_balancer)->servers[i]) {
 			server_free(&(*load_balancer)->servers[i]);
 		}
