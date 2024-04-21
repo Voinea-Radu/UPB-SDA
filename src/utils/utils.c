@@ -1,8 +1,8 @@
-/*
- * Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
- */
+//
+// Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
+//
 
-#include "api/utils.h"
+#include "utils.h"
 
 unsigned int hash_uint(uint key)
 {

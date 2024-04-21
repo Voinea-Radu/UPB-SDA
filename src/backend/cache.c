@@ -1,17 +1,18 @@
-/*
- * Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
- */
+//
+// Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
+//
 
 #include <stdio.h>
 #include <string.h>
-#include "api/cache.h"
-#include "api/utils.h"
 
-cache_t *cache_init(uint cache_capacity, uint (*hash)(void *key))
+#include "cache.h"
+#include "../utils/utils.h"
+
+cache_t *cache_init(uint cache_capacity)
 {
 	cache_t *cache = safe_malloc(sizeof(cache_t));
 
-	cache->map = hash_map_init(cache_capacity, hash);
+	cache->map = hash_map_init(cache_capacity, (uint (*)(void *))hash_string);
 	cache->queue = queue_init();
 	cache->capacity = cache_capacity;
 
@@ -32,7 +33,7 @@ void cache_free(cache_t **cache)
 	*cache = NULL;
 }
 
-bool cache_put(cache_t *cache, void *key, void *value, void **evicted_key)
+bool cache_put(cache_t *cache, string_t key, string_t value, string_t* evicted_key)
 {
 	if (!hash_map_put(cache->map, key, value)) {
 		return false;
@@ -49,7 +50,7 @@ bool cache_put(cache_t *cache, void *key, void *value, void **evicted_key)
 	return true;
 }
 
-void *cache_get(cache_t *cache, void *key)
+string_t cache_get(cache_t *cache, string_t key)
 {
 	void *value = hash_map_get(cache->map, key);
 
@@ -59,6 +60,8 @@ void *cache_get(cache_t *cache, void *key)
 
 	return value;
 }
+
+#if DEBUG
 
 string_t key_to_string(void *key)
 {
@@ -79,3 +82,5 @@ void cache_print(cache_t *cache, string_t prefix)
 	printf("%sCache history:\n", prefix);
 	queue_print(cache->queue, key_to_string, new_prefix);
 }
+
+#endif

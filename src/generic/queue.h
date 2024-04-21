@@ -1,12 +1,12 @@
-/*
- * Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
- */
+//
+// Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
+//
 
 #ifndef QUEUE_H
 #define QUEUE_H
 
 #include <stdbool.h>
-#include "constants.h"
+#include "../utils/constants.h"
 
 typedef struct queue_node {
 	void *data;

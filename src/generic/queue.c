@@ -1,9 +1,9 @@
-/*
- * Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
- */
+//
+// Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
+//
 
-#include "api/queue.h"
-#include "api/utils.h"
+#include "../generic/queue.h"
+#include "../utils/utils.h"
 
 queue_t *queue_init()
 {

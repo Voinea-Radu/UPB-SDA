@@ -1,69 +1,93 @@
-/*
- * Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
- */
+//
+// Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
+//
 
 #include <stdio.h>
-#include "api/server.h"
-#include "api/cache.h"
+#include "server.h"
+#include "cache.h"
 
-#include "api/utils.h"
+#include "../utils/utils.h"
+
+request_t *request_init(request_type_t type, document_t document)
+{
+	request_t *request = safe_malloc(sizeof(request_t));
+	request->type = type;
+	request->document = document;
+	return request;
+}
+
+response_t *response_init(uint server_id, string_t server_log, string_t server_response)
+{
+	response_t *response = safe_malloc(sizeof(response_t));
+	response->server_id = server_id;
+	response->server_log = server_log;
+	response->server_response = server_response;
+	return response;
+}
 
 static response_t *server_edit_document(server_t *server, document_t document, bool execute_immediately)
 {
 	if (execute_immediately) {
-		document_t *output = hash_map_get(server->database, document.name);
+		document_t *output = cache_get(server->cache, document.name);
 
 		if (output == NULL) {
-			hash_map_put(server->database, document.name, &document);
-		} else {
-			output->content = document.content;
+			output = database_get(server->database, document.name);
+
+			if (output == NULL) {
+				void* evicted_key = malloc(sizeof(void*));
+				cache_put(server->cache, document.name, document.content, &evicted_key);
+
+				// TODO handle evicted key
+
+				return response_init(server->server_id,
+									 log_cache_miss(document.name),
+									 database_entry_created(document.name));
+			}
+
+			void* evicted_key = malloc(sizeof(void*));
+			cache_put(server->cache, document.name, output, &evicted_key);
+			// TODO handle evicted key
+
+			return response_init(server->server_id,
+								 log_cache_miss(document.name),
+								 database_entry_edited(document.name));
+
 		}
 
-		return NULL;
+		void* evicted_key = malloc(sizeof(void*));
+		cache_put(server->cache, document.name, output, &evicted_key);
+		// TODO handle evicted key
+
+		return response_init(server->server_id,
+							 log_cache_hit(document.name),
+							 database_entry_edited(document.name));
 	}
 
-	request_t *request = safe_malloc(sizeof(request_t));
-	request->type = EDIT_DOCUMENT;
-	request->document = document;
-
+	request_t *request = request_init(EDIT_DOCUMENT, document);
 	queue_enqueue(server->task_queue, request);
 
-	response_t *response = malloc(sizeof(response_t));
-
-	response->server_id = server->server_id;
-	response->server_response = server_queued(request->type, request->document.name);
-	response->server_log = log_lazy_exec(server->task_queue->size);
-
-	return response;
+	return response_init(server->server_id,
+						 log_lazy_exec(server->task_queue->size),
+						 server_queued(EDIT_DOCUMENT, document.name));
 }
 
 static response_t *server_get_document(server_t *server, document_t document)
 {
 	execute_task_queue(server);
 
-	response_t *response = safe_malloc(sizeof(response_t));
 	document_t *output = hash_map_get(server->cache->map, document.name);
 
 	if (output != NULL) {
-		response->server_response = output->content;
-		response->server_log = log_cache_hit(document.name);
-
-		return response;
+		return response_init(server->server_id, log_cache_hit(document.name), output->content);
 	}
 
 	output = hash_map_get(server->database, document.name);
 
 	if (output == NULL) {
-		response->server_response = NULL;
-		response->server_log = log_fault(document.name);
-
-		return response;
+		return response_init(server->server_id, log_fault(document.name), NULL);
 	}
 
-	response->server_response = output->content;
-	response->server_log = log_cache_miss(document.name);
-
-	return response;
+	return response_init(server->server_id, log_cache_miss(document.name), output->content);
 }
 
 server_t *server_init(uint cache_size, uint server_id)
@@ -109,9 +133,6 @@ void response_print(response_t *response)
 
 	printf(LOG_RESPONSE, response->server_id, response->server_response,
 		   response->server_id, response->server_log);
-	//free(response->server_response);
-	//free(response->server_log);
-	//free(response);
 }
 
 void execute_task_queue(server_t *server)
@@ -141,7 +162,7 @@ void server_print(server_t *server, string_t prefix)
 	printf("%sServer with id %d:\n", prefix, server->server_id);
 
 	printf("\t%sDatabase:\n", prefix);
-	hash_map_print(server->database, new_prefix);
+	database_print(server->database, new_prefix);
 
 	printf("\t%sCache:\n", prefix);
 	cache_print(server->cache, new_prefix);

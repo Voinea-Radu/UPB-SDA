@@ -1,10 +1,10 @@
-/*
- * Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
- */
+//
+// Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
+//
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "api/hash_map.h"
+#include "hash_map.h"
 
 hash_map_t *hash_map_init(unsigned int capacity, uint (*hash)(void *key))
 {

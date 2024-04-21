@@ -1,9 +1,10 @@
-/*
- * Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
- */
+//
+// Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
+//
 
-#include "api/load_balancer.h"
-#include "api/server.h"
+#include "load_balancer.h"
+#include "server.h"
+#include "../utils/utils.h"
 
 load_balancer_t *load_balancer_init(bool enable_vnodes)
 {

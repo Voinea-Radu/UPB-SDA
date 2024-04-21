@@ -1,14 +1,14 @@
-/*
- * Copyright (c) 2024, Andrei Otetea <andreiotetea23@gmail.com>
- * Copyright (c) 2024, Eduard Marin <marin.eduard.c@gmail.com>
- * Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
- */
+//
+// Copyright (c) 2024, Andrei Otetea <andreiotetea23@gmail.com>
+// Copyright (c) 2024, Eduard Marin <marin.eduard.c@gmail.com>
+// Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
+//
 
 #include <stdio.h>
 #include <string.h>
 
-#include "api/utils.h"
-#include "api/state_manager.h"
+#include "utils/utils.h"
+#include "state_manager.h"
 
 int main(int argc, string_t *argv)
 {

@@ -1,12 +1,12 @@
-/*
- * Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
- */
+//
+// Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
+//
 
 #include <stdio.h>
-#include "api/state_manager.h"
-#include "api/constants.h"
-#include "api/utils.h"
-#include "api/load_balancer.h"
+#include "state_manager.h"
+#include "utils/constants.h"
+#include "utils/utils.h"
+#include "backend/load_balancer.h"
 
 void init(FILE *input)
 {
@@ -125,7 +125,7 @@ void handle_edit_document(string_t buffer, load_balancer_t *load_balancer)
 	response_print(response);
 
 #if DEBUG
-	printf("[DEBUG] Edited document %s with content %s\n\n", document_name, document_content);
+	printf("[DEBUG] Edited document %s with content \"%s\"\n\n", document_name, document_content);
 #endif // DEBUG
 }
 

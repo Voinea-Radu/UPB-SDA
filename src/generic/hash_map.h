@@ -1,12 +1,12 @@
-/*
- * Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
- */
+//
+// Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
+//
 
 #ifndef HASH_MAP_H
 #define HASH_MAP_H
 
 #include <stdbool.h>
-#include "constants.h"
+#include "../utils/constants.h"
 
 typedef struct hash_map_entry {
 	void *key;

@@ -1,6 +1,6 @@
-/*
- * Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
- */
+//
+// Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
+//
 
 #ifndef LOAD_BALANCER_H
 #define LOAD_BALANCER_H

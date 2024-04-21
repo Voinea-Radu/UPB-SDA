@@ -1,22 +1,19 @@
-/*
- * Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
- */
+//
+// Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
+//
 
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "utils.h"
-#include "constants.h"
 #include "cache.h"
-#include "queue.h"
-#include "hash_map.h"
+#include "database.h"
 
 
 typedef struct {
 	uint server_id;
 
 	queue_t *task_queue;
-	hash_map_t *database;
+	database_t *database;
 	cache_t *cache;
 } server_t;
 
@@ -37,8 +34,15 @@ typedef struct {
 	string_t server_response;
 } response_t;
 
+// ================== Init Functions ==================
+
+request_t *request_init(request_type_t type, document_t document);
 
 server_t *server_init(uint cache_size, uint server_id);
+
+response_t *response_init(uint server_id, string_t server_log, string_t server_response);
+
+// ================== Memory Functions ==================
 
 /**
  * @brief Should deallocate completely the memory used by server_t,
@@ -46,6 +50,8 @@ server_t *server_init(uint cache_size, uint server_id);
  *     without executing the tasks
  */
 void server_free(server_t **server);
+
+// ================== Functional Functions ==================
 
 /**
  * server_handle_request() - Receives a request_t from the load balancer
@@ -68,8 +74,11 @@ void response_print(response_t *response);
 
 void execute_task_queue(server_t *server);
 
+uint hash_document(document_t *document);
+
+// ================== Debug Functions ==================
+
 void server_print(server_t *server, string_t prefix);
 
-uint hash_document(document_t *document);
 
 #endif  // SERVER_H
