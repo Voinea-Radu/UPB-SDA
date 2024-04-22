@@ -7,6 +7,7 @@
 
 #include "cache.h"
 #include "database.h"
+#include "document.h"
 
 
 typedef struct {
@@ -16,11 +17,6 @@ typedef struct {
 	database_t *database;
 	cache_t *cache;
 } server_t;
-
-typedef struct {
-	string_t name;
-	string_t content;
-} document_t;
 
 typedef struct {
 	request_type_t type;

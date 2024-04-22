@@ -2,3 +2,7 @@
 cmake-build-debug-wsl
 *.gch
 /tema2
+*.out
+*.diff
+out.log
+time.err

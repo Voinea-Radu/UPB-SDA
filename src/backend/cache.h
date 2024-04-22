@@ -10,6 +10,7 @@
 #include "../utils/constants.h"
 #include "../generic/hash_map.h"
 #include "../generic/queue.h"
+#include "document.h"
 
 typedef struct cache {
 	hash_map_t *map;
@@ -24,7 +25,7 @@ bool cache_is_full(cache_t *cache);
 
 void cache_free(cache_t **cache);
 
-bool cache_put(cache_t *cache, string_t key, string_t value, string_t* evicted_key);
+document_t* cache_put(cache_t *cache, document_t document);
 
 string_t cache_get(cache_t *cache, string_t key);
 

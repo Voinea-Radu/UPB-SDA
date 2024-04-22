@@ -4,7 +4,12 @@ project(tema2)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -g3")
 
-file(GLOB SOURCES "src/*.c")
+file(GLOB SOURCES
+        "src/**/*.c"
+        "src/*.c"
+        "src/**/*.h"
+        "src/*.h"
+)
 
 add_executable(tema2 ${SOURCES})
 

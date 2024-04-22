@@ -6,16 +6,17 @@
 #define DATABASE_H
 
 #include "../generic/hash_map.h"
+#include "document.h"
 
 typedef struct {
 	hash_map_t *data;
 } database_t;
 
-database_t* database_init(unsigned int capacity);
+database_t* database_init(uint capacity);
 
 void database_free(database_t **database);
 
-void database_put(database_t *database, string_t key, string_t value);
+void database_put(database_t *database, document_t document);
 
 string_t database_get(database_t *database, string_t key);
 

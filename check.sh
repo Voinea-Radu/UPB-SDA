@@ -17,9 +17,11 @@ ONE=1
 TWO=2
 MESSAGE_SIZE=12
 PASSED_TESTS_GRADE=0
+CHECK_WITH_VALGRIND=0
 
-make build
 make clean
+make build
+rm -rf out
 mkdir "out"
 
 function timeout_test() {
@@ -71,11 +73,32 @@ function check_valgrind_test() {
 # Check a single test and add the result to the total score. This function
 # should _always_ receive a test number as the first and only argument
 function check_test() {
-    test_no=$1
+  test_no=$1
 
-    # check valgrind first
-    check_valgrind_test $1
+  # check valgrind first
+  check_valgrind_test $1
 
+	out_path="out/test"$test_no".out"
+	ref_path="ref/test"$test_no".ref"
+
+	echo -n "Test: $test_no ...................... "
+
+	# Check the result
+	diff -bB -i $ref_path $out_path 2>&1 1> "tmp.diff"
+
+	if test $? -eq 0; then
+	    echo "PASS [${TEST_POINTS[$test_no]}p]"
+	    TOTAL=$(expr $TOTAL + ${TEST_POINTS[$test_no]})
+	    PASSED_TESTS_GRADE=$(($PASSED_TESTS_GRADE+1));
+	else
+	    echo "FAILED "
+	    #echo "Diff result(s):"
+	    #cat out/test"$test_no".diff | tail -n 10
+	fi
+
+	rm tmp.diff
+
+  if [ "$CHECK_WITH_VALGRIND" != "1" ]; then
     if [ "$TEST_RESULT" != "0" ]; then
         echo "Test: $test_no ...................... FAILED BECAUSE OF VALGRIND"
         rm -f time.err
@@ -87,30 +110,12 @@ function check_test() {
     if [ "$TEST_RESULT" != "0" ]; then
         echo "TIMEOUT [$timeout s]"
         rm -f time.err
-		return
-	fi
+    return
+    fi
+  fi
 
-	out_path="out/test"$test_no".out"
-	ref_path="ref/test"$test_no".ref"
-
-	echo -n "Test: $test_no ...................... "
-
-	# Check the result
-	diff -bB -i $ref_path $out_path 2>&1 1> my_diff
-
-	if test $? -eq 0; then
-	    echo "PASS [${TEST_POINTS[$test_no]}p]"
-	    TOTAL=$(expr $TOTAL + ${TEST_POINTS[$test_no]})
-	    PASSED_TESTS_GRADE=$(($PASSED_TESTS_GRADE+1));
-	else
-	    echo "FAILED"
-	    echo "Diff result:"
-	    cat my_diff | tail -n 10
-	fi
-
-    # Clean up
-    rm -f my_diff
-    rm -f time.err
+  # Clean up
+  rm -f time.err
 }
 
 function checkBonus {
@@ -177,5 +182,4 @@ echo ""
 checkBonus
 printBonus
 
-rm -rf out
 rm -f tema2

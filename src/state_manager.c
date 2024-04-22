@@ -73,7 +73,7 @@ void handle_add_server(string_t buffer, load_balancer_t *load_balancer)
 	load_balancer_add_server(load_balancer, server_id, cache_size);
 
 #if DEBUG
-	printf("[DEBUG] Added server %d with cache size %d\n", server_id, cache_size);
+	printf("[DEBUG] Added server %d with cache size %d\n\n", server_id, cache_size);
 #endif // DEBUG
 }
 
@@ -153,5 +153,5 @@ void handle_get_document(string_t buffer, load_balancer_t *load_balancer)
 	response_print(response);
 #if DEBUG
 	printf("Got document %s\n\n", document_name);
-#endif // DEBUG
+#endif
 }

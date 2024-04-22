@@ -28,25 +28,36 @@ response_t *response_init(uint server_id, string_t server_log, string_t server_r
 static response_t *server_edit_document(server_t *server, document_t document, bool execute_immediately)
 {
 	if (execute_immediately) {
-		document_t *output = cache_get(server->cache, document.name);
+		string_t output = cache_get(server->cache, document.name);
 
 		if (output == NULL) {
 			output = database_get(server->database, document.name);
 
 			if (output == NULL) {
-				void* evicted_key = malloc(sizeof(void*));
-				cache_put(server->cache, document.name, document.content, &evicted_key);
+				document_t *evicted_document = cache_put(server->cache, document);
 
-				// TODO handle evicted key
+				if (evicted_document != NULL) {
+					database_put(server->database, document);
+
+					return response_init(server->server_id,
+										 log_cache_miss_with_evict(document.name, evicted_document->name),
+										 database_entry_created(document.name));
+				}
 
 				return response_init(server->server_id,
 									 log_cache_miss(document.name),
 									 database_entry_created(document.name));
 			}
 
-			void* evicted_key = malloc(sizeof(void*));
-			cache_put(server->cache, document.name, output, &evicted_key);
-			// TODO handle evicted key
+			document_t *evicted_document = cache_put(server->cache, document);
+
+			if (evicted_document != NULL) {
+				database_put(server->database, document);
+
+				return response_init(server->server_id,
+									 log_cache_miss_with_evict(document.name, evicted_document->name),
+									 database_entry_edited(document.name));
+			}
 
 			return response_init(server->server_id,
 								 log_cache_miss(document.name),
@@ -54,9 +65,7 @@ static response_t *server_edit_document(server_t *server, document_t document, b
 
 		}
 
-		void* evicted_key = malloc(sizeof(void*));
-		cache_put(server->cache, document.name, output, &evicted_key);
-		// TODO handle evicted key
+		cache_put(server->cache, document);
 
 		return response_init(server->server_id,
 							 log_cache_hit(document.name),
@@ -75,19 +84,23 @@ static response_t *server_get_document(server_t *server, document_t document)
 {
 	execute_task_queue(server);
 
-	document_t *output = hash_map_get(server->cache->map, document.name);
+#if DEBUG
+	server_print(server, "");
+	printf("Getting document with name: %s\n", document.name);
+#endif
+	string_t output = cache_get(server->cache, document.name);
 
 	if (output != NULL) {
-		return response_init(server->server_id, log_cache_hit(document.name), output->content);
+		return response_init(server->server_id, log_cache_hit(document.name), output);
 	}
 
-	output = hash_map_get(server->database, document.name);
+	output = database_get(server->database, document.name);
 
 	if (output == NULL) {
 		return response_init(server->server_id, log_fault(document.name), NULL);
 	}
 
-	return response_init(server->server_id, log_cache_miss(document.name), output->content);
+	return response_init(server->server_id, log_cache_miss(document.name), output);
 }
 
 server_t *server_init(uint cache_size, uint server_id)
@@ -96,8 +109,8 @@ server_t *server_init(uint cache_size, uint server_id)
 
 	server->server_id = server_id;
 
-	server->database = hash_map_init(DATABASE_HASH_TABLE_SIZE, (uint (*)(void *))hash_string);
-	server->cache = cache_init(cache_size, (uint (*)(void *))hash_string);
+	server->database = database_init(DATABASE_HASH_TABLE_SIZE);
+	server->cache = cache_init(cache_size);
 	server->task_queue = queue_init();
 
 	return server;
@@ -154,6 +167,7 @@ string_t queued_task_to_string(request_t *request)
 
 }
 
+#if DEBUG
 void server_print(server_t *server, string_t prefix)
 {
 	string_t new_prefix = increase_prefix(prefix);
@@ -170,6 +184,7 @@ void server_print(server_t *server, string_t prefix)
 	printf("\t%sTask queue:\n", prefix);
 	queue_print(server->task_queue, (string_t (*)(void *))queued_task_to_string, new_prefix);
 }
+#endif // DEBUG
 
 uint hash_document(document_t *document)
 {

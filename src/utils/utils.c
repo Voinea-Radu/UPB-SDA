@@ -4,7 +4,7 @@
 
 #include "utils.h"
 
-unsigned int hash_uint(uint key)
+uint hash_uint(uint key)
 {
 	key = ((key >> 16u) ^ key) * 0x45d9f3b;
 	key = ((key >> 16u) ^ key) * 0x45d9f3b;
@@ -13,10 +13,15 @@ unsigned int hash_uint(uint key)
 	return key;
 }
 
-unsigned int hash_string(string_t key)
+bool compare_strings(string_t string1, string_t string2)
+{
+	return strcmp(string1, string2) == 0;
+}
+
+uint hash_string(string_t key)
 {
 	unsigned char *key_string = (unsigned char *)key;
-	unsigned int hash = 5381;
+	uint hash = 5381;
 	int c;
 
 	while ((c = *(key_string++))){
@@ -157,6 +162,8 @@ int printf(const char *format, ...)
 	return output;
 }
 
+#endif // DEBUG
+
 string_t server_queued(request_type_t request_type, string_t document_name)
 {
 	string_t request_type_str = get_request_type_str(request_type);
@@ -201,10 +208,10 @@ string_t log_cache_miss(string_t document_name)
 	return output;
 }
 
-string_t log_cache_evict(string_t document_name, string_t evicted_document_name)
+string_t log_cache_miss_with_evict(string_t document_name, string_t evicted_document_name)
 {
-	string_t output = malloc(strlen(LOG_CACHE_EVICT) + strlen(document_name) + strlen(evicted_document_name) + 1);
-	sprintf(output, LOG_CACHE_EVICT, document_name, evicted_document_name);
+	string_t output = malloc(strlen(LOG_CACHE_MISS_WITH_EVICT) + strlen(document_name) + strlen(evicted_document_name) + 1);
+	sprintf(output, LOG_CACHE_MISS_WITH_EVICT, document_name, evicted_document_name);
 	return output;
 }
 
@@ -215,4 +222,3 @@ string_t log_fault(string_t document_name)
 	return output;
 }
 
-#endif // DEBUG

@@ -16,7 +16,7 @@ typedef struct queue_node {
 typedef struct {
 	queue_node_t *head;
 	queue_node_t *tail;
-	unsigned int size;
+	uint size;
 } queue_t;
 
 queue_t *queue_init();

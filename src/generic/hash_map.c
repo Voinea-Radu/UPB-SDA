@@ -4,9 +4,10 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "hash_map.h"
 
-hash_map_t *hash_map_init(unsigned int capacity, uint (*hash)(void *key))
+hash_map_t *hash_map_init(uint capacity, uint (*hash)(void *key), bool (*compare_keys)(void *key1, void *key2))
 {
 	hash_map_t *map = malloc(sizeof(hash_map_t));
 
@@ -23,17 +24,26 @@ hash_map_t *hash_map_init(unsigned int capacity, uint (*hash)(void *key))
 	map->capacity = capacity;
 	map->size = 0;
 	map->hash = hash;
+	map->compare_keys = compare_keys;
 
 	return map;
 }
 
 bool hash_map_put(hash_map_t *map, void *key, void *value)
 {
-	unsigned int index = map->hash(key) % map->capacity;
+#if DEBUG
+	printf("hash_map_put\n");
+	printf("hashing key: %s\n", (string_t)key);
+	printf("hash %u\n", map->hash(key));
+	printf("capacity %u\n", map->capacity);
+	printf("index %u\n", map->hash(key) % map->capacity);
+#endif
+
+	uint index = map->hash(key) % map->capacity;
 	hash_map_entry_t *entry = map->entries[index];
 
 	while (entry) {
-		if (entry->key == key) {
+		if (map->compare_keys(entry->key, key)) {
 			entry->value = value;
 			return true;
 		}
@@ -50,18 +60,25 @@ bool hash_map_put(hash_map_t *map, void *key, void *value)
 	entry->value = value;
 	entry->next = map->entries[index];
 	map->entries[index] = entry;
-	++map->size;
+	map->size++;
 
 	return true;
 }
 
 void *hash_map_get(hash_map_t *map, void *key)
 {
-	unsigned int index = map->hash(key) % map->capacity;
+#if DEBUG
+	printf("hash_map_get\n");
+	printf("hashing key: %s\n", (string_t)key);
+	printf("hash %u\n", map->hash(key));
+	printf("capacity %u\n", map->capacity);
+	printf("index %u\n", map->hash(key) % map->capacity);
+#endif
+	uint index = map->hash(key) % map->capacity;
 	hash_map_entry_t *entry = map->entries[index];
 
 	while (entry) {
-		if (entry->key == key)
+		if (map->compare_keys(entry->key, key))
 			return entry->value;
 
 		entry = entry->next;
@@ -72,12 +89,12 @@ void *hash_map_get(hash_map_t *map, void *key)
 
 void hash_map_remove(hash_map_t *map, void *key)
 {
-	unsigned int index = map->hash(key) % map->capacity;
+	uint index = map->hash(key) % map->capacity;
 	hash_map_entry_t *entry = map->entries[index];
 	hash_map_entry_t *prev = NULL;
 
 	while (entry) {
-		if (entry->key == key) {
+		if (map->compare_keys(entry->key, key)) {
 			if (prev)
 				prev->next = entry->next;
 			else
@@ -96,7 +113,7 @@ void hash_map_remove(hash_map_t *map, void *key)
 
 void hash_map_free(hash_map_t **map)
 {
-	for (unsigned int i = 0; i < (*map)->capacity; ++i) {
+	for (uint i = 0; i < (*map)->capacity; ++i) {
 		hash_map_entry_t *entry = (*map)->entries[i];
 
 		while (entry) {
@@ -111,13 +128,13 @@ void hash_map_free(hash_map_t **map)
 	*map = NULL;
 }
 
-void hash_map_print(hash_map_t *map, string_t prefix)
+void hash_map_print(hash_map_t *map, string_t prefix, void (*print_entry)(string_t, void *, void *))
 {
-	for (unsigned int i = 0; i < map->capacity; ++i) {
+	for (uint i = 0; i < map->capacity; ++i) {
 		hash_map_entry_t *entry = map->entries[i];
 
 		while (entry) {
-			printf("%sKey: %p, Value: %p\n", prefix, entry->key, entry->value);
+			print_entry(prefix, entry->key, entry->value);
 			entry = entry->next;
 		}
 	}

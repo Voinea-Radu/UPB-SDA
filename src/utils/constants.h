@@ -10,7 +10,7 @@
 typedef char *string_t;
 typedef unsigned int uint;
 
-#define DEBUG 1
+#define DEBUG 0
 
 #define TASK_QUEUE_SIZE          1000
 #define DATABASE_HASH_TABLE_SIZE 1000
@@ -34,7 +34,7 @@ typedef unsigned int uint;
 
 #define LOG_CACHE_HIT     "Cache HIT for %s"
 #define LOG_CACHE_MISS    "Cache MISS for %s"
-#define LOG_CACHE_EVICT   "Cache MISS for %s - cache entry for %s has been evicted"
+#define LOG_CACHE_MISS_WITH_EVICT   "Cache MISS for %s - cache entry for %s has been evicted"
 #define LOG_FAULT         "Document %s doesn't exist"
 #define LOG_LAZY_EXEC     "Task queue size is %d"
 
