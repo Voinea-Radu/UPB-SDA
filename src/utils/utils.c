@@ -149,17 +149,65 @@ string_t increase_prefix(string_t prefix)
  */
 int printf(const char *format, ...)
 {
-	int output;
-
 	__builtin_va_list argv;
 	__builtin_va_start(argv, format);
 
-	output = vfprintf(stdout, format, argv);
+	string_t output = safe_malloc(10000);
+
+	vsprintf(output, format, argv);
+	fprintf(stdout, "%s", output);
 
 	__builtin_va_end(argv);
 	fflush(stdout);
 
-	return output;
+	debug_log_no_prefix("%s", output);
+
+	return 0;
+}
+
+void debug_init(void){
+	FILE* file = fopen("debug.log", "w");
+	fprintf(file, "");
+	fclose(file);
+}
+
+int debug_log(const char *format, ...)
+{
+	__builtin_va_list argv;
+	__builtin_va_start(argv, format);
+
+	string_t output_1 = safe_malloc(10000);
+	string_t output_2 = safe_malloc(10000);
+
+	vsprintf(output_1, format, argv);
+	sprintf(output_2, "[DEBUG] %s", output_1);
+
+	debug_log_no_prefix("%s", output_2);
+
+	__builtin_va_end(argv);
+	fflush(stdout);
+
+	return 0;
+}
+
+int debug_log_no_prefix(const char *format, ...)
+{
+	FILE* file = fopen("debug.log", "a");
+
+	__builtin_va_list argv;
+	__builtin_va_start(argv, format);
+
+	string_t output = safe_malloc(10000);
+
+	vsprintf(output, format, argv);
+
+	fprintf(file, "%s", output);
+
+	__builtin_va_end(argv);
+	fflush(stdout);
+	fclose(file);
+
+	return 0;
 }
 
 #endif // DEBUG

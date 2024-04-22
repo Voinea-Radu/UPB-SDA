@@ -33,21 +33,21 @@ void cache_free(cache_t **cache)
 	*cache = NULL;
 }
 
-document_t* cache_put(cache_t *cache, document_t document)
+document_t *cache_put(cache_t *cache, document_t document)
 {
+	document_t *evicted_document = NULL;
+
 	if (cache_is_full(cache)) {
 		string_t evicted_key = queue_dequeue(cache->queue);
-		string_t evicted_content = hash_map_get(cache->map, evicted_key);
+		string_t evicted_content = hash_map_remove(cache->map, evicted_key);
 
-		hash_map_remove(cache->map, evicted_key);
-
-		return document_init(evicted_key, evicted_content);
+		evicted_document = document_init(evicted_key, evicted_content);
 	}
 
 	queue_enqueue(cache->queue, document.name);
 	hash_map_put(cache->map, document.name, document.content);
 
-	return NULL;
+	return evicted_document;
 }
 
 string_t cache_get(cache_t *cache, string_t key)
@@ -64,21 +64,21 @@ string_t key_to_string(void *key)
 
 void cache_print_entry(string_t prefix, string_t key, string_t value)
 {
-	printf("%s- Key: %s, Value: %s\n", prefix, key, value);
+	debug_log("%s- Key: %s, Value: %s\n", prefix, key, value);
 }
 
 void cache_print(cache_t *cache, string_t prefix)
 {
 	string_t new_prefix = increase_prefix(prefix);
 
-	printf("%sCache capacity: %d\n", prefix, cache->capacity);
-	printf("%sCache size: %d\n", prefix, cache->map->size);
+	debug_log("%sCache capacity: %d\n", prefix, cache->capacity);
+	debug_log("%sCache size: %d\n", prefix, cache->map->size);
 
-	printf("%sCache entries:\n", prefix);
+	debug_log("%sCache entries:\n", prefix);
 
 	hash_map_print(cache->map, new_prefix, (void (*)(string_t, void *, void *))cache_print_entry);
 
-	printf("%sCache history:\n", prefix);
+	debug_log("%sCache history:\n", prefix);
 	queue_print(cache->queue, key_to_string, new_prefix);
 }
 

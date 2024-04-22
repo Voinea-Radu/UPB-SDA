@@ -12,7 +12,7 @@ typedef struct {
 	hash_map_t *data;
 } database_t;
 
-database_t* database_init(uint capacity);
+database_t *database_init(uint capacity);
 
 void database_free(database_t **database);
 
@@ -22,6 +22,10 @@ string_t database_get(database_t *database, string_t key);
 
 void database_remove(database_t *database, string_t key);
 
+#if DEBUG
+
 void database_print(database_t *database, string_t prefix);
+
+#endif //DEBUG
 
 #endif //DATABASE_H

@@ -19,7 +19,7 @@ typedef struct {
 	uint size;
 } queue_t;
 
-queue_t *queue_init();
+queue_t *queue_init(void);
 
 bool queue_enqueue(queue_t *queue, void *data);
 
@@ -29,6 +29,10 @@ void queue_free(queue_t **queue);
 
 bool queue_is_empty(queue_t *queue);
 
+#if DEBUG
+
 void queue_print(queue_t *queue, string_t (*to_string_function)(void*),string_t prefix);
+
+#endif //DEBUG
 
 #endif //QUEUE_H

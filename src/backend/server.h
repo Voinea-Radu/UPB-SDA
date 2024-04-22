@@ -72,9 +72,10 @@ void execute_task_queue(server_t *server);
 
 uint hash_document(document_t *document);
 
-// ================== Debug Functions ==================
+#if DEBUG
+string_t queued_task_to_string(request_t *request);
 
 void server_print(server_t *server, string_t prefix);
+#endif // DEBUG
 
-
-#endif  // SERVER_H
+#endif // SERVER_H

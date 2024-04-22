@@ -52,7 +52,7 @@ void load_balancer_free(load_balancer_t **load_balancer)
 #if DEBUG
 void load_balancer_print(load_balancer_t *load_balancer)
 {
-	printf("Servers count: %d\n", load_balancer->servers_count);
+	debug_log("Servers count: %d\n", load_balancer->servers_count);
 	for (uint i = 0; i < load_balancer->servers_count; i++){
 		server_print(load_balancer->servers[i], "");
 	}

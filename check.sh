@@ -53,17 +53,17 @@ function valgrind_test() {
 function check_valgrind_test() {
     test_no=$1
 
-    echo -n "Test: $test_no ...................... "
+    #echo -n "Test: $test_no ...................... "
 
     valgrind_test $test_no
 
     if [ "$TEST_RESULT" != "0" ]; then
-        echo "DETECTED MEMORY LEAKS"
+        #echo "DETECTED MEMORY LEAKS"
        	#tail -n 10 time.err
         rm -f time.err
         return
     else
-        echo "NO MEMORY LEAKS"
+        #echo "NO MEMORY LEAKS"
         rm -f time.err
         BONUS=$(expr $BONUS + ${BONUS_POINTS[$test_no]})
         return
@@ -83,12 +83,15 @@ function check_test() {
 
 	echo -n "Test: $test_no ...................... "
 
+	potential_points=0
+
 	# Check the result
 	diff -bB -i $ref_path $out_path 2>&1 1> "tmp.diff"
 
 	if test $? -eq 0; then
 	    echo "PASS [${TEST_POINTS[$test_no]}p]"
-	    TOTAL=$(expr $TOTAL + ${TEST_POINTS[$test_no]})
+	    potential_points=${TEST_POINTS[$test_no]}
+	    #TOTAL=$(expr $TOTAL + ${TEST_POINTS[$test_no]})
 	    PASSED_TESTS_GRADE=$(($PASSED_TESTS_GRADE+1));
 	else
 	    echo "FAILED "
@@ -98,7 +101,7 @@ function check_test() {
 
 	rm tmp.diff
 
-  if [ "$CHECK_WITH_VALGRIND" != "1" ]; then
+  if [ "$CHECK_WITH_VALGRIND" == "1" ]; then
     if [ "$TEST_RESULT" != "0" ]; then
         echo "Test: $test_no ...................... FAILED BECAUSE OF VALGRIND"
         rm -f time.err
@@ -112,6 +115,8 @@ function check_test() {
         rm -f time.err
     return
     fi
+  else
+    TOTAL=$(expr $TOTAL + $potential_points)
   fi
 
   # Clean up

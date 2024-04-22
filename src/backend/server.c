@@ -28,6 +28,10 @@ response_t *response_init(uint server_id, string_t server_log, string_t server_r
 static response_t *server_edit_document(server_t *server, document_t document, bool execute_immediately)
 {
 	if (execute_immediately) {
+#if DEBUG
+		debug_log("Editing document %s\n", document.name);
+#endif // DEBUG
+
 		string_t output = cache_get(server->cache, document.name);
 
 		if (output == NULL) {
@@ -37,7 +41,7 @@ static response_t *server_edit_document(server_t *server, document_t document, b
 				document_t *evicted_document = cache_put(server->cache, document);
 
 				if (evicted_document != NULL) {
-					database_put(server->database, document);
+					database_put(server->database, *evicted_document);
 
 					return response_init(server->server_id,
 										 log_cache_miss_with_evict(document.name, evicted_document->name),
@@ -52,7 +56,7 @@ static response_t *server_edit_document(server_t *server, document_t document, b
 			document_t *evicted_document = cache_put(server->cache, document);
 
 			if (evicted_document != NULL) {
-				database_put(server->database, document);
+				database_put(server->database, *evicted_document);
 
 				return response_init(server->server_id,
 									 log_cache_miss_with_evict(document.name, evicted_document->name),
@@ -85,9 +89,9 @@ static response_t *server_get_document(server_t *server, document_t document)
 	execute_task_queue(server);
 
 #if DEBUG
-	server_print(server, "");
-	printf("Getting document with name: %s\n", document.name);
-#endif
+	debug_log("Getting document %s\n", document.name);
+#endif // DEBUG
+
 	string_t output = cache_get(server->cache, document.name);
 
 	if (output != NULL) {
@@ -98,6 +102,15 @@ static response_t *server_get_document(server_t *server, document_t document)
 
 	if (output == NULL) {
 		return response_init(server->server_id, log_fault(document.name), NULL);
+	}
+
+	document.content = output;
+
+	document_t *evicted_document = cache_put(server->cache, document);
+
+	if (evicted_document != NULL) {
+		database_put(server->database, *evicted_document);
+		return response_init(server->server_id, log_cache_miss_with_evict(document.name, evicted_document->name), output);
 	}
 
 	return response_init(server->server_id, log_cache_miss(document.name), output);
@@ -118,16 +131,27 @@ server_t *server_init(uint cache_size, uint server_id)
 
 response_t *server_handle_request(server_t *server, request_t *request, bool execute_immediately)
 {
+	response_t *output = NULL;
+
 	switch (request->type) {
 	case EDIT_DOCUMENT: {
-		return server_edit_document(server, request->document, execute_immediately);
+		output = server_edit_document(server, request->document, execute_immediately);
+#if DEBUG
+		server_print(server, "");
+#endif // DEBUG
+		break;
 	}
 	case GET_DOCUMENT: {
-		return server_get_document(server, request->document);
+		output = server_get_document(server, request->document);
+#if DEBUG
+		server_print(server, "");
+#endif // DEBUG
+		break;
 	}
 	default:
 		return NULL;
 	}
+	return output;
 }
 
 void server_free(server_t **server)
@@ -150,6 +174,11 @@ void response_print(response_t *response)
 
 void execute_task_queue(server_t *server)
 {
+#if DEBUG
+	debug_log("Executing task queue:\n");
+	queue_print(server->task_queue, (string_t (*)(void *))queued_task_to_string, "\t");
+#endif // DEBUG
+
 	while (!queue_is_empty(server->task_queue)) {
 		request_t *request = queue_dequeue(server->task_queue);
 		response_t *response = server_handle_request(server, request, true);
@@ -158,32 +187,33 @@ void execute_task_queue(server_t *server)
 	}
 }
 
+#if DEBUG
+
 string_t queued_task_to_string(request_t *request)
 {
 	string_t output = safe_malloc(sizeof(char) * 10000);
 	sprintf(output, "Request type: %s, Document name: %s, Document content: %s", get_request_type_str(request->type),
 			request->document.name, request->document.content);
 	return output;
-
 }
 
-#if DEBUG
 void server_print(server_t *server, string_t prefix)
 {
 	string_t new_prefix = increase_prefix(prefix);
 	new_prefix = increase_prefix(new_prefix);
 
-	printf("%sServer with id %d:\n", prefix, server->server_id);
+	debug_log("%sServer with id %d:\n", prefix, server->server_id);
 
-	printf("\t%sDatabase:\n", prefix);
+	debug_log("\t%sDatabase:\n", prefix);
 	database_print(server->database, new_prefix);
 
-	printf("\t%sCache:\n", prefix);
+	debug_log("\t%sCache:\n", prefix);
 	cache_print(server->cache, new_prefix);
 
-	printf("\t%sTask queue:\n", prefix);
+	debug_log("\t%sTask queue:\n", prefix);
 	queue_print(server->task_queue, (string_t (*)(void *))queued_task_to_string, new_prefix);
 }
+
 #endif // DEBUG
 
 uint hash_document(document_t *document)

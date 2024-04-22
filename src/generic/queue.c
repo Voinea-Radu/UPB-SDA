@@ -5,7 +5,7 @@
 #include "../generic/queue.h"
 #include "../utils/utils.h"
 
-queue_t *queue_init()
+queue_t *queue_init(void)
 {
 	queue_t *queue = safe_malloc(sizeof(queue_t));
 
@@ -47,6 +47,10 @@ void *queue_dequeue(queue_t *queue)
 	queue->head = node->next;
 	queue->size--;
 
+	if (queue->size == 0) {
+		queue->tail = NULL;
+	}
+
 	free(node);
 
 	return data;
@@ -71,14 +75,15 @@ void queue_free(queue_t **queue)
 	free(*queue);
 	*queue = NULL;
 }
-
+#if DEBUG
 void queue_print(queue_t *queue, string_t (*to_string_function)(void *), string_t prefix)
 {
 	queue_node_t *node = queue->head;
 
 	while (node) {
-		printf("%s%s\n", prefix, to_string_function(node->data));
+		debug_log("%s%s\n", prefix, to_string_function(node->data));
 		node = node->next;
 	}
 }
+#endif // DEBUG
 

@@ -82,4 +82,14 @@ string_t log_cache_miss_with_evict(string_t document_name, string_t evicted_docu
 
 string_t log_fault(string_t document_name);
 
+#if DEBUG
+
+void debug_init(void);
+
+int debug_log(const char *format, ...);
+
+int debug_log_no_prefix(const char *format, ...);
+
+#endif // DEBUG
+
 #endif // UTILS_H

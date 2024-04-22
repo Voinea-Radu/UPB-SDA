@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "hash_map.h"
+#include "../utils/utils.h"
 
 hash_map_t *hash_map_init(uint capacity, uint (*hash)(void *key), bool (*compare_keys)(void *key1, void *key2))
 {
@@ -31,14 +32,6 @@ hash_map_t *hash_map_init(uint capacity, uint (*hash)(void *key), bool (*compare
 
 bool hash_map_put(hash_map_t *map, void *key, void *value)
 {
-#if DEBUG
-	printf("hash_map_put\n");
-	printf("hashing key: %s\n", (string_t)key);
-	printf("hash %u\n", map->hash(key));
-	printf("capacity %u\n", map->capacity);
-	printf("index %u\n", map->hash(key) % map->capacity);
-#endif
-
 	uint index = map->hash(key) % map->capacity;
 	hash_map_entry_t *entry = map->entries[index];
 
@@ -67,13 +60,6 @@ bool hash_map_put(hash_map_t *map, void *key, void *value)
 
 void *hash_map_get(hash_map_t *map, void *key)
 {
-#if DEBUG
-	printf("hash_map_get\n");
-	printf("hashing key: %s\n", (string_t)key);
-	printf("hash %u\n", map->hash(key));
-	printf("capacity %u\n", map->capacity);
-	printf("index %u\n", map->hash(key) % map->capacity);
-#endif
 	uint index = map->hash(key) % map->capacity;
 	hash_map_entry_t *entry = map->entries[index];
 
@@ -87,7 +73,7 @@ void *hash_map_get(hash_map_t *map, void *key)
 	return NULL;
 }
 
-void hash_map_remove(hash_map_t *map, void *key)
+void* hash_map_remove(hash_map_t *map, void *key)
 {
 	uint index = map->hash(key) % map->capacity;
 	hash_map_entry_t *entry = map->entries[index];
@@ -100,9 +86,11 @@ void hash_map_remove(hash_map_t *map, void *key)
 			else
 				map->entries[index] = entry->next;
 
+			void* output = entry->value;
+
 			free(entry);
 			--map->size;
-			return;
+			return output;
 		}
 
 		prev = entry;

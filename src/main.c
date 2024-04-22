@@ -12,6 +12,10 @@
 
 int main(int argc, string_t *argv)
 {
+#if DEBUG
+	debug_init();
+#endif // DEBUG
+
 	FILE *input;
 
 	if (argc < 2) {

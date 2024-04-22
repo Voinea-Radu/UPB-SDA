@@ -25,10 +25,6 @@ void init(FILE *input)
 		process_next_request(input, load_balancer);
 	}
 
-#if DEBUG
-	load_balancer_print(load_balancer);
-#endif // DEBUG
-
 	load_balancer_free(&load_balancer);
 
 }
@@ -40,6 +36,10 @@ void process_next_request(FILE *input, load_balancer_t *load_balancer)
 	string_t line = fgets(buffer, REQUEST_LENGTH + 1, input);
 
 	check_or_exit(line == NULL, "Insufficient requests");
+
+#if DEBUG
+	debug_log("Command: %s", buffer);
+#endif // DEBUG
 
 	request_type_t request_type = get_request_type(buffer);
 
@@ -71,10 +71,6 @@ void handle_add_server(string_t buffer, load_balancer_t *load_balancer)
 	check_or_exit(cache_size < 0, "Cache size must be positive.");
 
 	load_balancer_add_server(load_balancer, server_id, cache_size);
-
-#if DEBUG
-	printf("[DEBUG] Added server %d with cache size %d\n\n", server_id, cache_size);
-#endif // DEBUG
 }
 
 void handle_remove_server(string_t buffer, load_balancer_t *load_balancer)
@@ -83,7 +79,7 @@ void handle_remove_server(string_t buffer, load_balancer_t *load_balancer)
 
 	load_balancer_remove_server(load_balancer, server_id);
 #if DEBUG
-	printf("Deleted server %d", server_id);
+	debug_log("Deleted server %d", server_id);
 #endif // DEBUG
 }
 
@@ -123,10 +119,6 @@ void handle_edit_document(string_t buffer, load_balancer_t *load_balancer)
 	//free(server_request.document.content);
 
 	response_print(response);
-
-#if DEBUG
-	printf("[DEBUG] Edited document %s with content \"%s\"\n\n", document_name, document_content);
-#endif // DEBUG
 }
 
 void handle_get_document(string_t buffer, load_balancer_t *load_balancer)
@@ -148,10 +140,5 @@ void handle_get_document(string_t buffer, load_balancer_t *load_balancer)
 
 	response_t *response = load_balancer_forward_request(load_balancer, &server_request);
 
-	free(server_request.document.name);
-
 	response_print(response);
-#if DEBUG
-	printf("Got document %s\n\n", document_name);
-#endif
 }
