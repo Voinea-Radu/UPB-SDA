@@ -11,7 +11,7 @@ load_balancer_t *load_balancer_init(bool enable_vnodes)
 	load_balancer_t *load_balancer = safe_malloc(sizeof(load_balancer_t));
 
 	load_balancer->enable_vnodes = enable_vnodes;
-	load_balancer->hash_document = hash_document;
+	load_balancer->hash_document = document_hash;
 	load_balancer->servers_count = 0;
 
 	return load_balancer;

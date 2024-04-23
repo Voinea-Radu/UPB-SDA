@@ -105,7 +105,7 @@ void handle_edit_document(string_t buffer, load_balancer_t *load_balancer)
 		memcpy(document_content + strlen(document_content), buffer, word_end == -1 ? strlen(buffer) : (unsigned)word_end);
 	}
 
-	request_t server_request = {
+	request_t request = {
 			.type = EDIT_DOCUMENT,
 			.document={
 					.name = document_name,
@@ -113,12 +113,14 @@ void handle_edit_document(string_t buffer, load_balancer_t *load_balancer)
 			}
 	};
 
-	response_t *response = load_balancer_forward_request(load_balancer, &server_request);
+	response_t *response = load_balancer_forward_request(load_balancer, &request);
 
-	//free(server_request.document.name);
-	//free(server_request.document.content);
+	free(request.document.name);
+	free(request.document.content);
 
 	response_print(response);
+
+	response_free(&response);
 }
 
 void handle_get_document(string_t buffer, load_balancer_t *load_balancer)
@@ -131,14 +133,16 @@ void handle_get_document(string_t buffer, load_balancer_t *load_balancer)
 	read_quoted_string(buffer, REQUEST_LENGTH, &word_start, &word_end);
 	memcpy(document_name, buffer + word_start + 1, word_end - word_start - 1);
 
-	request_t server_request = {
+	request_t request = {
 			.type = GET_DOCUMENT,
 			.document = {
 					.name = document_name
 			}
 	};
 
-	response_t *response = load_balancer_forward_request(load_balancer, &server_request);
+	response_t *response = load_balancer_forward_request(load_balancer, &request);
 
 	response_print(response);
+
+	response_free(&response);
 }

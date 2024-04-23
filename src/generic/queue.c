@@ -4,8 +4,7 @@
 
 #include "../generic/queue.h"
 #include "../utils/utils.h"
-
-queue_t *queue_init(bool (*compare_keys)(void *key1, void *key2))
+queue_t *queue_init(bool (*data_compare)(void *key1, void *key2), uint (*data_get_size)(void *data), void (*data_free)(void **data))
 {
 	queue_t *queue = safe_malloc(sizeof(queue_t));
 
@@ -13,7 +12,9 @@ queue_t *queue_init(bool (*compare_keys)(void *key1, void *key2))
 	queue->tail = NULL;
 	queue->size = 0;
 
-	queue->compare_keys = compare_keys;
+	queue->data_compare = data_compare;
+	queue->data_get_size = data_get_size;
+	queue->data_free = data_free;
 
 	return queue;
 }
@@ -21,7 +22,7 @@ queue_t *queue_init(bool (*compare_keys)(void *key1, void *key2))
 bool queue_enqueue(queue_t *queue, void *data)
 {
 	queue_node_t *node = safe_malloc(sizeof(queue_node_t));
-	node->data = data;
+	node->data = create_and_copy(data, queue->data_get_size);
 	node->next = NULL;
 
 	if (queue->size == 0) {
@@ -63,6 +64,15 @@ bool queue_is_empty(queue_t *queue)
 	return queue->size == 0;
 }
 
+void queue_node_free(queue_node_t **node, void (*data_free)(void **data)){
+	if(*node){
+		data_free(&(*node)->data);
+		free(*node);
+		*node = NULL;
+	}
+}
+
+
 void queue_free(queue_t **queue)
 {
 	queue_node_t *node = (*queue)->head;
@@ -70,7 +80,7 @@ void queue_free(queue_t **queue)
 
 	while (node) {
 		next = node->next;
-		free(node);
+		queue_node_free(&node, (*queue)->data_free);
 		node = next;
 	}
 
@@ -84,7 +94,7 @@ bool queue_remove(queue_t *queue, void *data)
 	queue_node_t *prev = NULL;
 
 	while (node) {
-		if (queue->compare_keys(node->data, data)) {
+		if (queue->data_compare(node->data, data)) {
 			if (prev) {
 				prev->next = node->next;
 			} else {
@@ -95,7 +105,7 @@ bool queue_remove(queue_t *queue, void *data)
 				queue->tail = prev;
 			}
 
-			free(node);
+			queue_node_free(&node, queue->data_free);
 			queue->size--;
 
 			if(queue->size == 0){

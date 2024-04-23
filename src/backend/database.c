@@ -8,7 +8,8 @@
 database_t *database_init(uint capacity)
 {
 	database_t *database = (database_t *)malloc(sizeof(database_t));
-	database->data = hash_map_init(capacity, (uint (*)(void *))hash_string, (bool (*)(void *, void *))compare_strings);
+	database->data = hash_map_init(capacity, (uint (*)(void *))hash_string, (bool (*)(void *, void *))string_equals,
+								   (uint (*)(void *))string_data_size, (uint (*)(void *))string_data_size);
 	return database;
 }
 

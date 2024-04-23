@@ -32,9 +32,9 @@ typedef struct {
 
 // ================== Init Functions ==================
 
-request_t *request_init(request_type_t type, document_t document);
-
 server_t *server_init(uint cache_size, uint server_id);
+
+request_t *request_init(request_type_t type, document_t document);
 
 response_t *response_init(uint server_id, string_t server_log, string_t server_response);
 
@@ -46,6 +46,10 @@ response_t *response_init(uint server_id, string_t server_log, string_t server_r
  *     without executing the tasks
  */
 void server_free(server_t **server);
+
+void response_free(response_t **response);
+
+void request_free(request_t **request);
 
 // ================== Functional Functions ==================
 
@@ -70,7 +74,11 @@ void response_print(response_t *response);
 
 void execute_task_queue(server_t *server);
 
-uint hash_document(document_t *document);
+uint document_hash(document_t *document);
+
+bool request_equal(request_t *request1, request_t *request2);
+
+uint request_size(request_t *request);
 
 #if DEBUG
 string_t queued_task_to_string(request_t *request);

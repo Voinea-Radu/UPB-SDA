@@ -18,16 +18,16 @@ void check_or_exit(bool condition, string_t message);
 void exit_with_error(string_t message);
 
 /**
- * @brief Should be used as hash function for server_t IDs,
- *      to find server_t's position on the hash ring
+ * @brief Should be used as hash_key function for server_t IDs,
+ *      to find server_t's position on the hash_key ring
  */
 uint hash_uint(uint key);
 
-bool compare_strings(string_t string1, string_t string2);
+bool string_equals(string_t string1, string_t string2);
 
 /**
- * @brief Should be used as hash function for document names,
- *      to find the proper server_t on the hash ring
+ * @brief Should be used as hash_key function for document names,
+ *      to find the proper server_t on the hash_key ring
 */
 uint hash_string(string_t key);
 
@@ -81,6 +81,14 @@ string_t log_cache_miss(string_t document_name);
 string_t log_cache_miss_with_evict(string_t document_name, string_t evicted_document_name);
 
 string_t log_fault(string_t document_name);
+
+void *create_and_copy_explicit(void *src, uint size);
+
+void *create_and_copy(void *src, uint (*get_size)(void* data));
+
+uint string_data_size(string_t data);
+
+void string_free(string_t *data);
 
 #if DEBUG
 

@@ -19,11 +19,17 @@ typedef struct {
 	uint capacity;
 	uint size;
 
-	uint (*hash)(void *key);
-	bool (*compare_keys)(void *key1, void *key2);
+	// Key functions
+	uint (*hash_key)(void *key);
+	bool (*key_compare)(void *key1, void *key2);
+	uint (*key_get_size)(void *key);
+
+	// Value functions
+	uint (*value_get_size)(void *value);
 } hash_map_t;
 
-hash_map_t *hash_map_init(uint capacity, uint (*hash)(void *key), bool (*compare_keys)(void *key1, void *key2));
+hash_map_t *hash_map_init(uint capacity, uint (*key_hash)(void *key), bool (*key_compare)(void *key1, void *key2),
+						  uint (*key_get_size)(void *key), uint (*value_get_size)(void *value));
 
 bool hash_map_put(hash_map_t *map, void *key, void *value);
 

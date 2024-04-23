@@ -13,7 +13,7 @@ uint hash_uint(uint key)
 	return key;
 }
 
-bool compare_strings(string_t string1, string_t string2)
+bool string_equals(string_t string1, string_t string2)
 {
 	return strcmp(string1, string2) == 0;
 }
@@ -24,7 +24,7 @@ uint hash_string(string_t key)
 	uint hash = 5381;
 	int c;
 
-	while ((c = *(key_string++))){
+	while ((c = *(key_string++))) {
 		hash = ((hash << 5u) + hash) + c;
 	}
 
@@ -141,6 +141,30 @@ string_t increase_prefix(string_t prefix)
 	return new_prefix;
 }
 
+void *create_and_copy_explicit(void *src, uint size)
+{
+	void *dest = safe_malloc(size);
+	memcpy(dest, src, size);
+	return dest;
+}
+
+void *create_and_copy(void *src, uint (*get_size)(void *data))
+{
+	return create_and_copy_explicit(src, get_size(src));
+}
+
+uint string_data_size(string_t data)
+{
+	return strlen(data) + 1;
+}
+
+void string_free(string_t *data)
+{
+	free(*data);
+	*data = NULL;
+}
+
+
 #if DEBUG
 
 /**
@@ -167,8 +191,9 @@ int printf(const char *format, ...)
 	return 0;
 }
 
-void debug_init(void){
-	FILE* file = fopen("debug.log", "w");
+void debug_init(void)
+{
+	FILE *file = fopen("debug.log", "w");
 	fprintf(file, "");
 	fclose(file);
 }
@@ -197,7 +222,7 @@ int debug_log(const char *format, ...)
 
 int debug_log_no_prefix(const char *format, ...)
 {
-	FILE* file = fopen("debug.log", "a");
+	FILE *file = fopen("debug.log", "a");
 
 	__builtin_va_list argv;
 	__builtin_va_start(argv, format);

@@ -12,6 +12,9 @@ typedef struct {
 	string_t content;
 } document_t;
 
-#endif //DOCUMENT_H
-
 document_t *document_init(string_t name, string_t content);
+
+document_t document_copy(document_t document);
+
+
+#endif //DOCUMENT_H

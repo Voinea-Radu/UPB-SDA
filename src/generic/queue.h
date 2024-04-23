@@ -18,14 +18,19 @@ typedef struct {
 	queue_node_t *tail;
 	uint size;
 
-	bool (*compare_keys)(void *key1, void *key2);
+	// Data functions
+	bool (*data_compare)(void *data1, void *data2);
+	uint (*data_get_size)(void *data);
+	void (*data_free)(void **data);
 } queue_t;
 
-queue_t *queue_init(bool (*compare_keys)(void *key1, void *key2));
+queue_t *queue_init(bool (*data_compare)(void *key1, void *key2), uint (*data_get_size)(void *data), void (*data_free)(void **data));
 
 bool queue_enqueue(queue_t *queue, void *data);
 
 void *queue_dequeue(queue_t *queue);
+
+void queue_node_free(queue_node_t **node, void (*data_free)(void **data));
 
 void queue_free(queue_t **queue);
 

@@ -2,13 +2,12 @@
 // Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
 //
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include "hash_map.h"
 #include "../utils/utils.h"
 
-hash_map_t *hash_map_init(uint capacity, uint (*hash)(void *key), bool (*compare_keys)(void *key1, void *key2))
+hash_map_t *hash_map_init(uint capacity, uint (*key_hash)(void *key), bool (*key_compare)(void *key1, void *key2),
+						  uint (*key_get_size)(void *key), uint (*value_get_size)(void *value))
 {
 	hash_map_t *map = malloc(sizeof(hash_map_t));
 
@@ -24,20 +23,24 @@ hash_map_t *hash_map_init(uint capacity, uint (*hash)(void *key), bool (*compare
 
 	map->capacity = capacity;
 	map->size = 0;
-	map->hash = hash;
-	map->compare_keys = compare_keys;
+
+	map->hash_key = key_hash;
+	map->key_compare = key_compare;
+	map->key_get_size = key_get_size;
+
+	map->value_get_size = value_get_size;
 
 	return map;
 }
 
 bool hash_map_put(hash_map_t *map, void *key, void *value)
 {
-	uint index = map->hash(key) % map->capacity;
+	uint index = map->hash_key(key) % map->capacity;
 	hash_map_entry_t *entry = map->entries[index];
 
 	while (entry) {
-		if (map->compare_keys(entry->key, key)) {
-			entry->value = value;
+		if (map->key_compare(entry->key, key)) {
+			entry->value = create_and_copy(entry->value, map->value_get_size);
 			return true;
 		}
 
@@ -49,8 +52,8 @@ bool hash_map_put(hash_map_t *map, void *key, void *value)
 	if (!entry)
 		return false;
 
-	entry->key = key;
-	entry->value = value;
+	entry->key = create_and_copy(key, map->key_get_size);
+	entry->value = create_and_copy(value, map->value_get_size);
 	entry->next = map->entries[index];
 	map->entries[index] = entry;
 	map->size++;
@@ -60,11 +63,11 @@ bool hash_map_put(hash_map_t *map, void *key, void *value)
 
 void *hash_map_get(hash_map_t *map, void *key)
 {
-	uint index = map->hash(key) % map->capacity;
+	uint index = map->hash_key(key) % map->capacity;
 	hash_map_entry_t *entry = map->entries[index];
 
 	while (entry) {
-		if (map->compare_keys(entry->key, key))
+		if (map->key_compare(entry->key, key))
 			return entry->value;
 
 		entry = entry->next;
@@ -75,12 +78,12 @@ void *hash_map_get(hash_map_t *map, void *key)
 
 void *hash_map_remove(hash_map_t *map, void *key)
 {
-	uint index = map->hash(key) % map->capacity;
+	uint index = map->hash_key(key) % map->capacity;
 	hash_map_entry_t *entry = map->entries[index];
 	hash_map_entry_t *prev = NULL;
 
 	while (entry) {
-		if (map->compare_keys(entry->key, key)) {
+		if (map->key_compare(entry->key, key)) {
 			if (prev)
 				prev->next = entry->next;
 			else
