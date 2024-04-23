@@ -13,23 +13,31 @@
 
 #include "constants.h"
 
+// ==================== Hashing ====================
+/**
+ * @brief Hashes a string using the djb2 algorithm
+ *
+ * @param value	The string to be hashed
+ * @return uint The hash value
+*/
+uint string_hash(string_t value);
+
+/**
+ * @brief Hashes an unsigned integer
+ *
+ * @param value	The integer to be hashed
+ * @return uint The hash value
+*/
+uint uint_hash(uint value);
+
+// ==================== Other ====================
+
 void check_or_exit(bool condition, string_t message);
 
 void exit_with_error(string_t message);
 
-/**
- * @brief Should be used as hash_key function for server_t IDs,
- *      to find server_t's position on the hash_key ring
- */
-uint hash_uint(uint key);
-
 bool string_equals(string_t string1, string_t string2);
 
-/**
- * @brief Should be used as hash_key function for document names,
- *      to find the proper server_t on the hash_key ring
-*/
-uint hash_string(string_t key);
 
 string_t get_request_type_str(request_type_t request_type);
 
@@ -84,7 +92,7 @@ string_t log_fault(string_t document_name);
 
 void *create_and_copy_explicit(void *src, uint size);
 
-void *create_and_copy(void *src, uint (*get_size)(void* data));
+void *create_and_copy(void *src, uint (*get_size)(void *data));
 
 uint string_data_size(string_t data);
 

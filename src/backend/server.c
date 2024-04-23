@@ -238,7 +238,7 @@ void server_print(server_t *server, string_t prefix)
 
 uint document_hash(document_t *document)
 {
-	return hash_string(document->name);
+	return string_hash(document->name);
 }
 
 bool request_equal(request_t *request1, request_t *request2)

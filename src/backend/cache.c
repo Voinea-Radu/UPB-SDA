@@ -11,10 +11,16 @@ cache_t *cache_init(uint cache_capacity)
 {
 	cache_t *cache = safe_malloc(sizeof(cache_t));
 
-	cache->map = hash_map_init(cache_capacity, (uint (*)(void *))hash_string, (bool (*)(void *, void *))string_equals,
-							   (uint (*)(void *))string_data_size, (uint (*)(void *))string_data_size,
-							   (void (*)(void **))string_free, (void (*)(void **))string_free);
-	cache->queue = queue_init((bool (*)(void *, void *))string_equals, (uint (*)(void *))string_data_size, (void (*)(void **))string_free);
+	cache->map = hash_map_init(cache_capacity,
+							   (uint (*)(void *))string_hash,
+							   (bool (*)(void *, void *))string_equals,
+							   (uint (*)(void *))string_data_size,
+							   (uint (*)(void *))string_data_size,
+							   (void (*)(void **))string_free,
+							   (void (*)(void **))string_free);
+	cache->queue = queue_init((bool (*)(void *, void *))string_equals,
+							  (uint (*)(void *))string_data_size,
+							  (void (*)(void **))string_free);
 	cache->capacity = cache_capacity;
 
 	return cache;
@@ -35,7 +41,7 @@ void cache_free(cache_t **cache)
 
 }
 
-document_t *cache_put(cache_t *cache, document_t* document)
+document_t *cache_put(cache_t *cache, document_t *document)
 {
 	document_t *evicted_document = NULL;
 
@@ -56,7 +62,7 @@ string_t cache_get(cache_t *cache, string_t key)
 {
 	string_t output = hash_map_get(cache->map, key);
 
-	if(queue_remove(cache->queue, key)){
+	if (queue_remove(cache->queue, key)) {
 		queue_enqueue(cache->queue, key);
 	}
 
@@ -84,7 +90,8 @@ void cache_print(cache_t *cache, string_t prefix)
 
 	debug_log("%sCache entries:\n", prefix);
 
-	hash_map_print(cache->map, new_prefix, (void (*)(string_t, void *, void *))cache_print_entry);
+	hash_map_print(cache->map, new_prefix,
+				   (void (*)(string_t, void *, void *))cache_print_entry);
 
 	debug_log("%sCache history:\n", prefix);
 	queue_print(cache->queue, key_to_string, new_prefix, false);

@@ -4,13 +4,13 @@
 
 #include "utils.h"
 
-uint hash_uint(uint key)
+uint uint_hash(uint value)
 {
-	key = ((key >> 16u) ^ key) * 0x45d9f3b;
-	key = ((key >> 16u) ^ key) * 0x45d9f3b;
-	key = (key >> 16u) ^ key;
+	value = ((value >> 16u) ^ value) * 0x45d9f3b;
+	value = ((value >> 16u) ^ value) * 0x45d9f3b;
+	value = (value >> 16u) ^ value;
 
-	return key;
+	return value;
 }
 
 bool string_equals(string_t string1, string_t string2)
@@ -18,9 +18,9 @@ bool string_equals(string_t string1, string_t string2)
 	return strcmp(string1, string2) == 0;
 }
 
-uint hash_string(string_t key)
+uint string_hash(string_t value)
 {
-	unsigned char *key_string = (unsigned char *)key;
+	unsigned char *key_string = (unsigned char *)value;
 	uint hash = 5381;
 	int c;
 
