@@ -28,7 +28,9 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 	debug_log("Editing document %s\n", document->name);
 #endif // DEBUG
 
-	if (cache_get(server->cache, document->name) == NULL) {
+	string_t output = cache_get(server->cache, document->name);
+
+	if (output == NULL) {
 		if (database_get(server->database, document->name) == NULL) {
 			document_t *evicted_document = cache_put(server->cache, document);
 
@@ -61,6 +63,8 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 
 	}
 
+	string_free(&output);
+
 	cache_put(server->cache, document);
 
 	return response_init(server->server_id,
@@ -76,6 +80,8 @@ static response_t *server_edit_document(server_t *server, document_t *document, 
 
 	request_t *request = request_init(EDIT_DOCUMENT, document_init(document->name, document->content));
 	queue_enqueue(server->task_queue, request);
+
+	free(request);
 
 	return response_init(server->server_id,
 						 log_lazy_exec(server->task_queue->size),
@@ -161,6 +167,8 @@ void execute_task_queue(server_t *server)
 		response_t *response = server_handle_request(server, request, true);
 
 		response_print(response);
+
 		request_free(&request);
+		response_free(&response);
 	}
 }

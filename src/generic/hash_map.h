@@ -42,7 +42,7 @@ void hash_map_free(hash_map_t **map);
 
 // ==================== Functional ====================
 
-bool hash_map_put(hash_map_t *map, void *key, void *value);
+void hash_map_put(hash_map_t *map, void *key, void *value);
 
 void *hash_map_get(hash_map_t *map, void *key);
 
