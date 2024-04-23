@@ -37,6 +37,7 @@ void database_remove(database_t *database, string_t key)
 }
 
 #if DEBUG
+
 void database_print_entry(string_t prefix, string_t key, string_t value)
 {
 	debug_log("%s- Key: %s, Value: %s\n", prefix, key, value);
@@ -46,4 +47,5 @@ void database_print(database_t *database, string_t prefix)
 {
 	hash_map_print(database->data, prefix, (void (*)(string_t, void *, void *))database_print_entry);
 }
+
 #endif //DEBUG

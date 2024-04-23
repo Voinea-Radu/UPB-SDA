@@ -17,7 +17,7 @@ document_t *document_init(string_t name, string_t content)
 
 void document_free(document_t **document)
 {
-	if(*document == NULL)
+	if (*document == NULL)
 		return;
 
 	string_free(&(*document)->name);

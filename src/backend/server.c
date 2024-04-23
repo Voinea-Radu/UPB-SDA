@@ -25,7 +25,8 @@ response_t *response_init(uint server_id, string_t server_log, string_t server_r
 	return response;
 }
 
-static response_t *server_edit_document_immediate(server_t *server, document_t* document){
+static response_t *server_edit_document_immediate(server_t *server, document_t *document)
+{
 #if DEBUG
 	debug_log("Editing document %s\n", document->name);
 #endif // DEBUG
@@ -74,7 +75,7 @@ static response_t *server_edit_document_immediate(server_t *server, document_t* 
 						 database_entry_edited(document->name));
 }
 
-static response_t *server_edit_document(server_t *server, document_t* document, bool execute_immediately)
+static response_t *server_edit_document(server_t *server, document_t *document, bool execute_immediately)
 {
 	if (execute_immediately) {
 		return server_edit_document_immediate(server, document);
@@ -88,7 +89,7 @@ static response_t *server_edit_document(server_t *server, document_t* document, 
 						 server_queued(EDIT_DOCUMENT, document->name));
 }
 
-static response_t *server_get_document(server_t *server, document_t* document)
+static response_t *server_get_document(server_t *server, document_t *document)
 {
 	execute_task_queue(server);
 
@@ -168,7 +169,8 @@ void server_free(server_t **server)
 	*server = NULL;
 }
 
-void response_free(response_t **response){
+void response_free(response_t **response)
+{
 	free((*response)->server_log);
 	free((*response)->server_response);
 	free(*response);
@@ -239,15 +241,18 @@ uint document_hash(document_t *document)
 	return hash_string(document->name);
 }
 
-bool request_equal(request_t *request1, request_t *request2){
+bool request_equal(request_t *request1, request_t *request2)
+{
 	return request1->type == request2->type && strcmp(request1->document->name, request2->document->name) == 0;
 }
 
-uint request_size(request_t *request){
-	return sizeof (request_t);
+uint request_size(request_t *request)
+{
+	return sizeof(request_t);
 }
 
-void request_free(request_t **request){
+void request_free(request_t **request)
+{
 	document_free(&(*request)->document);
 
 	free(*request);

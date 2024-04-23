@@ -4,6 +4,7 @@
 
 #include "../generic/queue.h"
 #include "../utils/utils.h"
+
 queue_t *queue_init(bool (*data_compare)(void *key1, void *key2), uint (*data_get_size)(void *data), void (*data_free)(void **data))
 {
 	queue_t *queue = safe_malloc(sizeof(queue_t));
@@ -64,8 +65,9 @@ bool queue_is_empty(queue_t *queue)
 	return queue->size == 0;
 }
 
-void queue_node_free(queue_node_t **node, void (*data_free)(void **data)){
-	if(*node){
+void queue_node_free(queue_node_t **node, void (*data_free)(void **data))
+{
+	if (*node) {
 		data_free(&(*node)->data);
 		free(*node);
 		*node = NULL;
@@ -108,7 +110,7 @@ bool queue_remove(queue_t *queue, void *data)
 			queue_node_free(&node, queue->data_free);
 			queue->size--;
 
-			if(queue->size == 0){
+			if (queue->size == 0) {
 				queue->head = NULL;
 				queue->tail = NULL;
 			}
@@ -133,7 +135,7 @@ void queue_print(queue_t *queue, string_t (*to_string_function)(void *), string_
 		string_t data_string = to_string_function(node->data);
 		debug_log("%s%s\n", prefix, data_string);
 
-		if(should_free){
+		if (should_free) {
 			free(data_string);
 		}
 
