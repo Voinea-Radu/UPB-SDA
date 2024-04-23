@@ -157,6 +157,8 @@ response_t *server_handle_request(server_t *server, request_t *request, bool exe
 void server_free(server_t **server)
 {
 	cache_free(&(*server)->cache);
+	database_free(&(*server)->database);
+	queue_free(&(*server)->task_queue);
 
 	free(*server);
 	*server = NULL;
@@ -176,7 +178,7 @@ void execute_task_queue(server_t *server)
 {
 #if DEBUG
 	debug_log("Executing task queue:\n");
-	queue_print(server->task_queue, (string_t (*)(void *))queued_task_to_string, "\t");
+	queue_print(server->task_queue, (string_t (*)(void *))queued_task_to_string, "\t", true);
 #endif // DEBUG
 
 	while (!queue_is_empty(server->task_queue)) {
@@ -199,8 +201,8 @@ string_t queued_task_to_string(request_t *request)
 
 void server_print(server_t *server, string_t prefix)
 {
-	string_t new_prefix = increase_prefix(prefix);
-	new_prefix = increase_prefix(new_prefix);
+	string_t __new_prefix = increase_prefix(prefix);
+	string_t new_prefix = increase_prefix(__new_prefix);
 
 	debug_log("%sServer with id %d:\n", prefix, server->server_id);
 
@@ -211,7 +213,10 @@ void server_print(server_t *server, string_t prefix)
 	cache_print(server->cache, new_prefix);
 
 	debug_log("\t%sTask queue:\n", prefix);
-	queue_print(server->task_queue, (string_t (*)(void *))queued_task_to_string, new_prefix);
+	queue_print(server->task_queue, (string_t (*)(void *))queued_task_to_string, new_prefix, true);
+
+	free(__new_prefix);
+	free(new_prefix);
 }
 
 #endif // DEBUG

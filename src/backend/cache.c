@@ -85,7 +85,7 @@ void cache_print(cache_t *cache, string_t prefix)
 	hash_map_print(cache->map, new_prefix, (void (*)(string_t, void *, void *))cache_print_entry);
 
 	debug_log("%sCache history:\n", prefix);
-	queue_print(cache->queue, key_to_string, new_prefix);
+	queue_print(cache->queue, key_to_string, new_prefix, false);
 }
 
 #endif

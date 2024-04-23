@@ -115,12 +115,18 @@ bool queue_remove(queue_t *queue, void *data)
 
 #if DEBUG
 
-void queue_print(queue_t *queue, string_t (*to_string_function)(void *), string_t prefix)
+void queue_print(queue_t *queue, string_t (*to_string_function)(void *), string_t prefix, bool should_free)
 {
 	queue_node_t *node = queue->head;
 
 	while (node) {
-		debug_log("%s%s\n", prefix, to_string_function(node->data));
+		string_t data_string = to_string_function(node->data);
+		debug_log("%s%s\n", prefix, data_string);
+
+		if(should_free){
+			free(data_string);
+		}
+
 		node = node->next;
 	}
 }

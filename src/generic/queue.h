@@ -35,7 +35,7 @@ bool queue_remove(queue_t *queue, void *data);
 
 #if DEBUG
 
-void queue_print(queue_t *queue, string_t (*to_string_function)(void*),string_t prefix);
+void queue_print(queue_t *queue, string_t (*to_string_function)(void*),string_t prefix, bool should_free);
 
 #endif //DEBUG
 

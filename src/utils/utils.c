@@ -162,6 +162,8 @@ int printf(const char *format, ...)
 
 	debug_log_no_prefix("%s", output);
 
+	free(output);
+
 	return 0;
 }
 
@@ -184,6 +186,9 @@ int debug_log(const char *format, ...)
 
 	debug_log_no_prefix("%s", output_2);
 
+	free(output_1);
+	free(output_2);
+
 	__builtin_va_end(argv);
 	fflush(stdout);
 
@@ -202,6 +207,8 @@ int debug_log_no_prefix(const char *format, ...)
 	vsprintf(output, format, argv);
 
 	fprintf(file, "%s", output);
+
+	free(output);
 
 	__builtin_va_end(argv);
 	fflush(stdout);
