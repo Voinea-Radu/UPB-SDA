@@ -5,4 +5,6 @@
 #ifndef REPLICATION_H
 #define REPLICATION_H
 
+void foo(void);
+
 #endif //REPLICATION_H

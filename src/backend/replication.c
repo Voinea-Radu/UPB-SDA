@@ -3,3 +3,7 @@
 //
 
 #include "replication.h"
+
+void foo(void)
+{
+}

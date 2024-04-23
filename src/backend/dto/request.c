@@ -27,7 +27,7 @@ bool request_equal(request_t *request1, request_t *request2)
 	return request1->type == request2->type && strcmp(request1->document->name, request2->document->name) == 0;
 }
 
-uint request_size(request_t *request)
+uint request_size(__attribute__((unused)) request_t *request)
 {
 	return sizeof(request_t);
 }

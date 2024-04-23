@@ -198,7 +198,6 @@ int printf(const char *format, ...)
 void debug_init(void)
 {
 	FILE *file = fopen("debug.log", "w");
-	fprintf(file, "");
 	fclose(file);
 }
 

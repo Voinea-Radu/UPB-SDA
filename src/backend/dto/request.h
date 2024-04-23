@@ -25,6 +25,6 @@ void request_free(request_t **request);
 
 bool request_equal(request_t *request1, request_t *request2);
 
-uint request_size(request_t *request);
+uint request_size(__attribute__((unused)) request_t *request);
 
 #endif // REQUEST_H
