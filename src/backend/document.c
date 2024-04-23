@@ -26,3 +26,9 @@ void document_free(document_t **document)
 	free(*document);
 	*document = NULL;
 }
+
+uint document_hash(document_t *document)
+{
+	return string_hash(document->name);
+}
+

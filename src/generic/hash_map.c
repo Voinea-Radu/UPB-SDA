@@ -43,7 +43,7 @@ bool hash_map_put(hash_map_t *map, void *key, void *value)
 
 	while (entry) {
 		if (map->key_compare(entry->key, key)) {
-			entry->value = create_and_copy(entry->value, map->value_get_size);
+			entry->value = create_and_copy(value, map->value_get_size);
 			return true;
 		}
 

@@ -74,7 +74,6 @@ void response_print(response_t *response);
 
 void execute_task_queue(server_t *server);
 
-uint document_hash(document_t *document);
 
 bool request_equal(request_t *request1, request_t *request2);
 

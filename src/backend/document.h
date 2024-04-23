@@ -15,6 +15,7 @@ typedef struct {
 document_t *document_init(string_t name, string_t content);
 
 void document_free(document_t **document);
+uint document_hash(document_t *document);
 
 
 #endif //DOCUMENT_H

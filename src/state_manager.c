@@ -106,7 +106,7 @@ void handle_edit_document(string_t buffer, load_balancer_t *load_balancer)
 	}
 
 
-	request_t *request = request_init(GET_DOCUMENT, document_init(document_name, document_content));
+	request_t *request = request_init(EDIT_DOCUMENT, document_init(document_name, document_content));
 	response_t *response = load_balancer_forward_request(load_balancer, request);
 
 	document_free(&request->document);

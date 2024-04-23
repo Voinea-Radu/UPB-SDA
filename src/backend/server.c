@@ -31,12 +31,8 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 	debug_log("Editing document %s\n", document->name);
 #endif // DEBUG
 
-	string_t output = cache_get(server->cache, document->name);
-
-	if (output == NULL) {
-		output = database_get(server->database, document->name);
-
-		if (output == NULL) {
+	if (cache_get(server->cache, document->name) == NULL) {
+		if (database_get(server->database, document->name) == NULL) {
 			document_t *evicted_document = cache_put(server->cache, document);
 
 			if (evicted_document != NULL) {
@@ -204,6 +200,25 @@ void execute_task_queue(server_t *server)
 	}
 }
 
+bool request_equal(request_t *request1, request_t *request2)
+{
+	return request1->type == request2->type && strcmp(request1->document->name, request2->document->name) == 0;
+}
+
+uint request_size(request_t *request)
+{
+	return sizeof(request_t);
+}
+
+void request_free(request_t **request)
+{
+	document_free(&(*request)->document);
+
+	free(*request);
+	*request = NULL;
+}
+
+
 #if DEBUG
 
 string_t queued_task_to_string(request_t *request)
@@ -235,26 +250,3 @@ void server_print(server_t *server, string_t prefix)
 }
 
 #endif // DEBUG
-
-uint document_hash(document_t *document)
-{
-	return string_hash(document->name);
-}
-
-bool request_equal(request_t *request1, request_t *request2)
-{
-	return request1->type == request2->type && strcmp(request1->document->name, request2->document->name) == 0;
-}
-
-uint request_size(request_t *request)
-{
-	return sizeof(request_t);
-}
-
-void request_free(request_t **request)
-{
-	document_free(&(*request)->document);
-
-	free(*request);
-	*request = NULL;
-}
