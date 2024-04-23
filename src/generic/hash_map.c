@@ -73,7 +73,7 @@ void *hash_map_get(hash_map_t *map, void *key)
 	return NULL;
 }
 
-void* hash_map_remove(hash_map_t *map, void *key)
+void *hash_map_remove(hash_map_t *map, void *key)
 {
 	uint index = map->hash(key) % map->capacity;
 	hash_map_entry_t *entry = map->entries[index];
@@ -86,7 +86,7 @@ void* hash_map_remove(hash_map_t *map, void *key)
 			else
 				map->entries[index] = entry->next;
 
-			void* output = entry->value;
+			void *output = entry->value;
 
 			free(entry);
 			--map->size;
@@ -97,6 +97,7 @@ void* hash_map_remove(hash_map_t *map, void *key)
 		entry = entry->next;
 	}
 
+	return NULL;
 }
 
 void hash_map_free(hash_map_t **map)

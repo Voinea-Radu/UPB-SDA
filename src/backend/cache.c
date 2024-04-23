@@ -13,7 +13,7 @@ cache_t *cache_init(uint cache_capacity)
 	cache_t *cache = safe_malloc(sizeof(cache_t));
 
 	cache->map = hash_map_init(cache_capacity, (uint (*)(void *))hash_string, (bool (*)(void *, void *))compare_strings);
-	cache->queue = queue_init();
+	cache->queue = queue_init((bool (*)(void *, void *))compare_strings);
 	cache->capacity = cache_capacity;
 
 	return cache;
@@ -52,7 +52,13 @@ document_t *cache_put(cache_t *cache, document_t document)
 
 string_t cache_get(cache_t *cache, string_t key)
 {
-	return hash_map_get(cache->map, key);
+	string_t output = hash_map_get(cache->map, key);
+
+	if(queue_remove(cache->queue, key)){
+		queue_enqueue(cache->queue, key);
+	}
+
+	return output;
 }
 
 #if DEBUG

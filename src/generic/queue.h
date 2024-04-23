@@ -17,9 +17,11 @@ typedef struct {
 	queue_node_t *head;
 	queue_node_t *tail;
 	uint size;
+
+	bool (*compare_keys)(void *key1, void *key2);
 } queue_t;
 
-queue_t *queue_init(void);
+queue_t *queue_init(bool (*compare_keys)(void *key1, void *key2));
 
 bool queue_enqueue(queue_t *queue, void *data);
 
@@ -28,6 +30,8 @@ void *queue_dequeue(queue_t *queue);
 void queue_free(queue_t **queue);
 
 bool queue_is_empty(queue_t *queue);
+
+bool queue_remove(queue_t *queue, void *data);
 
 #if DEBUG
 

@@ -124,7 +124,7 @@ server_t *server_init(uint cache_size, uint server_id)
 
 	server->database = database_init(DATABASE_HASH_TABLE_SIZE);
 	server->cache = cache_init(cache_size);
-	server->task_queue = queue_init();
+	server->task_queue = queue_init((bool (*)(void *, void *))compare_strings);
 
 	return server;
 }
