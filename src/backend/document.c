@@ -15,12 +15,14 @@ document_t *document_init(string_t name, string_t content)
 	return document;
 }
 
-document_t document_copy(document_t document)
+void document_free(document_t **document)
 {
-	document_t copy;
+	if(*document == NULL)
+		return;
 
-	copy.name = create_and_copy(document.name, (uint (*)(void *))string_data_size);
-	copy.content = create_and_copy(document.content, (uint (*)(void *))string_data_size);
+	string_free(&(*document)->name);
+	string_free(&(*document)->content);
 
-	return copy;
+	free(*document);
+	*document = NULL;
 }

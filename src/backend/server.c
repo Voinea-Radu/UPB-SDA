@@ -8,7 +8,7 @@
 
 #include "../utils/utils.h"
 
-request_t *request_init(request_type_t type, document_t document)
+request_t *request_init(request_type_t type, document_t *document)
 {
 	request_t *request = safe_malloc(sizeof(request_t));
 	request->type = type;
@@ -25,15 +25,15 @@ response_t *response_init(uint server_id, string_t server_log, string_t server_r
 	return response;
 }
 
-static response_t *server_edit_document_immediate(server_t *server, document_t document){
+static response_t *server_edit_document_immediate(server_t *server, document_t* document){
 #if DEBUG
-	debug_log("Editing document %s\n", document.name);
+	debug_log("Editing document %s\n", document->name);
 #endif // DEBUG
 
-	string_t output = cache_get(server->cache, document.name);
+	string_t output = cache_get(server->cache, document->name);
 
 	if (output == NULL) {
-		output = database_get(server->database, document.name);
+		output = database_get(server->database, document->name);
 
 		if (output == NULL) {
 			document_t *evicted_document = cache_put(server->cache, document);
@@ -42,13 +42,13 @@ static response_t *server_edit_document_immediate(server_t *server, document_t d
 				database_put(server->database, *evicted_document);
 
 				return response_init(server->server_id,
-									 log_cache_miss_with_evict(document.name, evicted_document->name),
-									 database_entry_created(document.name));
+									 log_cache_miss_with_evict(document->name, evicted_document->name),
+									 database_entry_created(document->name));
 			}
 
 			return response_init(server->server_id,
-								 log_cache_miss(document.name),
-								 database_entry_created(document.name));
+								 log_cache_miss(document->name),
+								 database_entry_created(document->name));
 		}
 
 		document_t *evicted_document = cache_put(server->cache, document);
@@ -57,67 +57,67 @@ static response_t *server_edit_document_immediate(server_t *server, document_t d
 			database_put(server->database, *evicted_document);
 
 			return response_init(server->server_id,
-								 log_cache_miss_with_evict(document.name, evicted_document->name),
-								 database_entry_edited(document.name));
+								 log_cache_miss_with_evict(document->name, evicted_document->name),
+								 database_entry_edited(document->name));
 		}
 
 		return response_init(server->server_id,
-							 log_cache_miss(document.name),
-							 database_entry_edited(document.name));
+							 log_cache_miss(document->name),
+							 database_entry_edited(document->name));
 
 	}
 
 	cache_put(server->cache, document);
 
 	return response_init(server->server_id,
-						 log_cache_hit(document.name),
-						 database_entry_edited(document.name));
+						 log_cache_hit(document->name),
+						 database_entry_edited(document->name));
 }
 
-static response_t *server_edit_document(server_t *server, document_t document, bool execute_immediately)
+static response_t *server_edit_document(server_t *server, document_t* document, bool execute_immediately)
 {
 	if (execute_immediately) {
 		return server_edit_document_immediate(server, document);
 	}
 
-	request_t *request = request_init(EDIT_DOCUMENT, *document_init(document.name, document.content));
+	request_t *request = request_init(EDIT_DOCUMENT, document_init(document->name, document->content));
 	queue_enqueue(server->task_queue, request);
 
 	return response_init(server->server_id,
 						 log_lazy_exec(server->task_queue->size),
-						 server_queued(EDIT_DOCUMENT, document.name));
+						 server_queued(EDIT_DOCUMENT, document->name));
 }
 
-static response_t *server_get_document(server_t *server, document_t document)
+static response_t *server_get_document(server_t *server, document_t* document)
 {
 	execute_task_queue(server);
 
 #if DEBUG
-	debug_log("Getting document %s\n", document.name);
+	debug_log("Getting document %s\n", document->name);
 #endif // DEBUG
 
-	string_t output = cache_get(server->cache, document.name);
+	string_t output = cache_get(server->cache, document->name);
 
 	if (output != NULL) {
-		return response_init(server->server_id, log_cache_hit(document.name), output);
+		return response_init(server->server_id, log_cache_hit(document->name), output);
 	}
 
-	output = database_get(server->database, document.name);
+	output = database_get(server->database, document->name);
 
 	if (output == NULL) {
-		return response_init(server->server_id, log_fault(document.name), NULL);
+		return response_init(server->server_id, log_fault(document->name), NULL);
 	}
 
-	document.content = output;
+	document->content = output;
 
 	document_t *evicted_document = cache_put(server->cache, document);
 
 	if (evicted_document != NULL) {
 		database_put(server->database, *evicted_document);
-		return response_init(server->server_id, log_cache_miss_with_evict(document.name, evicted_document->name), output);
+		return response_init(server->server_id, log_cache_miss_with_evict(document->name, evicted_document->name), output);
 	}
 
-	return response_init(server->server_id, log_cache_miss(document.name), output);
+	return response_init(server->server_id, log_cache_miss(document->name), output);
 }
 
 server_t *server_init(uint cache_size, uint server_id)
@@ -172,6 +172,7 @@ void response_free(response_t **response){
 	free((*response)->server_log);
 	free((*response)->server_response);
 	free(*response);
+
 	*response = NULL;
 }
 
@@ -197,6 +198,7 @@ void execute_task_queue(server_t *server)
 		response_t *response = server_handle_request(server, request, true);
 
 		response_print(response);
+		request_free(&request);
 	}
 }
 
@@ -206,7 +208,7 @@ string_t queued_task_to_string(request_t *request)
 {
 	string_t output = safe_malloc(sizeof(char) * 10000);
 	sprintf(output, "Request type: %s, Document name: %s, Document content: %s", get_request_type_str(request->type),
-			request->document.name, request->document.content);
+			request->document->name, request->document->content);
 	return output;
 }
 
@@ -238,7 +240,7 @@ uint document_hash(document_t *document)
 }
 
 bool request_equal(request_t *request1, request_t *request2){
-	return request1->type == request2->type && strcmp(request1->document.name, request2->document.name) == 0;
+	return request1->type == request2->type && strcmp(request1->document->name, request2->document->name) == 0;
 }
 
 uint request_size(request_t *request){
@@ -246,8 +248,8 @@ uint request_size(request_t *request){
 }
 
 void request_free(request_t **request){
-	free((*request)->document.name);
-	free((*request)->document.content);
+	document_free(&(*request)->document);
+
 	free(*request);
 	*request = NULL;
 }

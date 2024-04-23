@@ -7,7 +7,8 @@
 #include "../utils/utils.h"
 
 hash_map_t *hash_map_init(uint capacity, uint (*key_hash)(void *key), bool (*key_compare)(void *key1, void *key2),
-						  uint (*key_get_size)(void *key), uint (*value_get_size)(void *value))
+						  uint (*key_get_size)(void *key), uint (*value_get_size)(void *value), void (*key_free)(void **key),
+						  void (*value_free)(void **key))
 {
 	hash_map_t *map = malloc(sizeof(hash_map_t));
 
@@ -27,8 +28,10 @@ hash_map_t *hash_map_init(uint capacity, uint (*key_hash)(void *key), bool (*key
 	map->hash_key = key_hash;
 	map->key_compare = key_compare;
 	map->key_get_size = key_get_size;
+	map->key_free = key_free;
 
 	map->value_get_size = value_get_size;
+	map->value_free = value_free;
 
 	return map;
 }
@@ -68,7 +71,7 @@ void *hash_map_get(hash_map_t *map, void *key)
 
 	while (entry) {
 		if (map->key_compare(entry->key, key))
-			return entry->value;
+			return create_and_copy(entry->value, map->value_get_size);
 
 		entry = entry->next;
 	}
@@ -91,7 +94,9 @@ void *hash_map_remove(hash_map_t *map, void *key)
 
 			void *output = entry->value;
 
+			map->key_free(entry->key);
 			free(entry);
+
 			--map->size;
 			return output;
 		}
@@ -110,7 +115,11 @@ void hash_map_free(hash_map_t **map)
 
 		while (entry) {
 			hash_map_entry_t *next = entry->next;
+
+			(*map)->key_free(&entry->value);
+			(*map)->value_free(&entry->value);
 			free(entry);
+
 			entry = next;
 		}
 	}

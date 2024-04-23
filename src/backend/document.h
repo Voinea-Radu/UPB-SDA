@@ -14,7 +14,7 @@ typedef struct {
 
 document_t *document_init(string_t name, string_t content);
 
-document_t document_copy(document_t document);
+void document_free(document_t **document);
 
 
 #endif //DOCUMENT_H

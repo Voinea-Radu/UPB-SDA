@@ -12,7 +12,8 @@ cache_t *cache_init(uint cache_capacity)
 	cache_t *cache = safe_malloc(sizeof(cache_t));
 
 	cache->map = hash_map_init(cache_capacity, (uint (*)(void *))hash_string, (bool (*)(void *, void *))string_equals,
-							   (uint (*)(void *))string_data_size, (uint (*)(void *))string_data_size);
+							   (uint (*)(void *))string_data_size, (uint (*)(void *))string_data_size,
+							   (void (*)(void **))string_free, (void (*)(void **))string_free);
 	cache->queue = queue_init((bool (*)(void *, void *))string_equals, (uint (*)(void *))string_data_size, (void (*)(void **))string_free);
 	cache->capacity = cache_capacity;
 
@@ -31,9 +32,10 @@ void cache_free(cache_t **cache)
 
 	free(*cache);
 	*cache = NULL;
+
 }
 
-document_t *cache_put(cache_t *cache, document_t document)
+document_t *cache_put(cache_t *cache, document_t* document)
 {
 	document_t *evicted_document = NULL;
 
@@ -44,8 +46,8 @@ document_t *cache_put(cache_t *cache, document_t document)
 		evicted_document = document_init(evicted_key, evicted_content);
 	}
 
-	queue_enqueue(cache->queue, document.name);
-	hash_map_put(cache->map, document.name, document.content);
+	queue_enqueue(cache->queue, document->name);
+	hash_map_put(cache->map, document->name, document->content);
 
 	return evicted_document;
 }

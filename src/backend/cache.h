@@ -25,7 +25,7 @@ bool cache_is_full(cache_t *cache);
 
 void cache_free(cache_t **cache);
 
-document_t* cache_put(cache_t *cache, document_t document);
+document_t* cache_put(cache_t *cache, document_t* document);
 
 string_t cache_get(cache_t *cache, string_t key);
 

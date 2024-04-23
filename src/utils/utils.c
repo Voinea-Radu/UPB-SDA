@@ -150,6 +150,8 @@ void *create_and_copy_explicit(void *src, uint size)
 
 void *create_and_copy(void *src, uint (*get_size)(void *data))
 {
+	if (src == NULL)
+		return NULL;
 	return create_and_copy_explicit(src, get_size(src));
 }
 
@@ -160,10 +162,12 @@ uint string_data_size(string_t data)
 
 void string_free(string_t *data)
 {
+	if (*data == NULL)
+		return;
+
 	free(*data);
 	*data = NULL;
 }
-
 
 #if DEBUG
 

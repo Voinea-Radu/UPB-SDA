@@ -20,7 +20,7 @@ typedef struct {
 
 typedef struct {
 	request_type_t type;
-	document_t document;
+	document_t *document;
 } request_t;
 
 typedef struct {
@@ -34,7 +34,7 @@ typedef struct {
 
 server_t *server_init(uint cache_size, uint server_id);
 
-request_t *request_init(request_type_t type, document_t document);
+request_t *request_init(request_type_t type, document_t* document);
 
 response_t *response_init(uint server_id, string_t server_log, string_t server_response);
 
