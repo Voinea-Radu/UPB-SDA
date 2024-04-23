@@ -3,7 +3,7 @@
 //
 
 #include "document.h"
-#include "../utils/utils.h"
+#include "../../utils/utils.h"
 
 document_t *document_init(string_t name, string_t content)
 {

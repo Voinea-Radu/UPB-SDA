@@ -2,15 +2,15 @@
 // Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
 //
 
-#ifndef LRU_CACHE_H
-#define LRU_CACHE_H
+#ifndef CACHE_H
+#define CACHE_H
 
 #include <stdbool.h>
 #include <sys/types.h>
 #include "../utils/constants.h"
 #include "../generic/hash_map.h"
 #include "../generic/queue.h"
-#include "document.h"
+#include "dto/document.h"
 
 /**
  * @brief The cache structure. This is a Least Recently Used (LRU) cache. See
@@ -82,16 +82,4 @@ string_t cache_get(cache_t *cache, string_t key);
  */
 void cache_free(cache_t **cache);
 
-#if DEBUG
-
-/**
- * @brief Prints the cache
- * @param cache  		The cache to print
- * @param prefix  		The prefix to print before the cache. This is used when
- * 						printing nested structures
- */
-void cache_print(cache_t *cache, string_t prefix);
-
-#endif // DEBUG
-
-#endif // LRU_CACHE_H
+#endif // CACHE_H

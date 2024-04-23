@@ -30,17 +30,23 @@ typedef struct {
 	void (*value_free)(void **key);
 } hash_map_t;
 
+// ==================== Constructor(s) ====================
+
 hash_map_t *hash_map_init(uint capacity, uint (*key_hash)(void *key), bool (*key_compare)(void *key1, void *key2),
 						  uint (*key_get_size)(void *key), uint (*value_get_size)(void *value), void (*key_free)(void **key),
 						  void (*value_free)(void **key));
+
+// ==================== Memory ====================
+
+void hash_map_free(hash_map_t **map);
+
+// ==================== Functional ====================
 
 bool hash_map_put(hash_map_t *map, void *key, void *value);
 
 void *hash_map_get(hash_map_t *map, void *key);
 
 void *hash_map_remove(hash_map_t *map, void *key);
-
-void hash_map_free(hash_map_t **map);
 
 void hash_map_print(hash_map_t *map, string_t prefix, void (*print_entry)(string_t, void *, void *));
 

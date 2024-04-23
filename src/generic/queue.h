@@ -24,24 +24,24 @@ typedef struct {
 	void (*data_free)(void **data);
 } queue_t;
 
+// ==================== Constructor(s) ====================
+
 queue_t *queue_init(bool (*data_compare)(void *key1, void *key2), uint (*data_get_size)(void *data), void (*data_free)(void **data));
+
+// ==================== Memory ====================
+
+void queue_free(queue_t **queue);
+
+void queue_node_free(queue_node_t **node, void (*data_free)(void **data));
+
+// ==================== Functional ====================
 
 bool queue_enqueue(queue_t *queue, void *data);
 
 void *queue_dequeue(queue_t *queue);
 
-void queue_node_free(queue_node_t **node, void (*data_free)(void **data));
-
-void queue_free(queue_t **queue);
-
 bool queue_is_empty(queue_t *queue);
 
 bool queue_remove(queue_t *queue, void *data);
-
-#if DEBUG
-
-void queue_print(queue_t *queue, string_t (*to_string_function)(void*),string_t prefix, bool should_free);
-
-#endif //DEBUG
 
 #endif //QUEUE_H

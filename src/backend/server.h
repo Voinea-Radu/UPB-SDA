@@ -7,8 +7,9 @@
 
 #include "cache.h"
 #include "database.h"
-#include "document.h"
-
+#include "dto/document.h"
+#include "dto/request.h"
+#include "dto/response.h"
 
 typedef struct {
 	uint server_id;
@@ -18,27 +19,11 @@ typedef struct {
 	cache_t *cache;
 } server_t;
 
-typedef struct {
-	request_type_t type;
-	document_t *document;
-} request_t;
-
-typedef struct {
-	uint server_id;
-
-	string_t server_log;
-	string_t server_response;
-} response_t;
-
-// ================== Init Functions ==================
+// ==================== Constructor(s) ====================
 
 server_t *server_init(uint cache_size, uint server_id);
 
-request_t *request_init(request_type_t type, document_t* document);
-
-response_t *response_init(uint server_id, string_t server_log, string_t server_response);
-
-// ================== Memory Functions ==================
+// ==================== Memory ====================
 
 /**
  * @brief Should deallocate completely the memory used by server_t,
@@ -47,11 +32,7 @@ response_t *response_init(uint server_id, string_t server_log, string_t server_r
  */
 void server_free(server_t **server);
 
-void response_free(response_t **response);
-
-void request_free(request_t **request);
-
-// ================== Functional Functions ==================
+// ==================== Functional ====================
 
 /**
  * server_handle_request() - Receives a request_t from the load balancer
@@ -70,19 +51,9 @@ void request_free(request_t **request);
  */
 response_t *server_handle_request(server_t *server, request_t *request, bool execute_immediately);
 
-void response_print(response_t *response);
 
 void execute_task_queue(server_t *server);
 
 
-bool request_equal(request_t *request1, request_t *request2);
-
-uint request_size(request_t *request);
-
-#if DEBUG
-string_t queued_task_to_string(request_t *request);
-
-void server_print(server_t *server, string_t prefix);
-#endif // DEBUG
 
 #endif // SERVER_H
