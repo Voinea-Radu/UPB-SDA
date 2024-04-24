@@ -16,8 +16,13 @@ database_t *database_init(uint capacity)
 
 void database_free(database_t **database)
 {
+	if (database == NULL || *database == NULL) {
+		return;
+	}
+
 	hash_map_free(&(*database)->data);
 	free(*database);
+
 	*database = NULL;
 }
 

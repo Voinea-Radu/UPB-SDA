@@ -133,8 +133,8 @@ void handle_get_document(string_t buffer, load_balancer_t *load_balancer)
 	response_t *response = load_balancer_forward_request(load_balancer, request);
 
 	response_print(response);
-	request_free(&request);
 
+	request_free(&request);
 	response_free(&response);
 	free(document_name);
 }

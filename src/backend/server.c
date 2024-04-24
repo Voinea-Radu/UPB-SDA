@@ -27,48 +27,56 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 #if DEBUG
 	debug_log("Editing document %s\n", document->name);
 #endif // DEBUG
+	string_t lookup_result = cache_get(server->cache, document->name);
 
-	string_t output = cache_get(server->cache, document->name);
+	if (lookup_result != NULL) {
+		string_free(&lookup_result);
+		cache_put(server->cache, document);
 
-	if (output == NULL) {
-		if (database_get(server->database, document->name) == NULL) {
-			document_t *evicted_document = cache_put(server->cache, document);
+		return response_init(server->server_id,
+							 log_cache_hit(document->name),
+							 database_entry_edited(document->name));
+	}
 
-			if (evicted_document != NULL) {
-				database_put(server->database, *evicted_document);
+	lookup_result = database_get(server->database, document->name);
 
-				return response_init(server->server_id,
-									 log_cache_miss_with_evict(document->name, evicted_document->name),
-									 database_entry_created(document->name));
-			}
-
-			return response_init(server->server_id,
-								 log_cache_miss(document->name),
-								 database_entry_created(document->name));
-		}
-
+	if (lookup_result == NULL) {
 		document_t *evicted_document = cache_put(server->cache, document);
 
 		if (evicted_document != NULL) {
 			database_put(server->database, *evicted_document);
 
-			return response_init(server->server_id,
-								 log_cache_miss_with_evict(document->name, evicted_document->name),
-								 database_entry_edited(document->name));
+			response_t *response = response_init(server->server_id,
+												 log_cache_miss_with_evict(document->name, evicted_document->name),
+												 database_entry_created(document->name));
+
+			document_free(&evicted_document);
+
+			return response;
 		}
 
 		return response_init(server->server_id,
 							 log_cache_miss(document->name),
-							 database_entry_edited(document->name));
-
+							 database_entry_created(document->name));
 	}
 
-	string_free(&output);
+	string_free(&lookup_result);
+	document_t *evicted_document = cache_put(server->cache, document);
 
-	cache_put(server->cache, document);
+	if (evicted_document != NULL) {
+		database_put(server->database, *evicted_document);
+
+		response_t *response = response_init(server->server_id,
+											 log_cache_miss_with_evict(document->name, evicted_document->name),
+											 database_entry_edited(document->name));
+
+		document_free(&evicted_document);
+
+		return response;
+	}
 
 	return response_init(server->server_id,
-						 log_cache_hit(document->name),
+						 log_cache_miss(document->name),
 						 database_entry_edited(document->name));
 }
 
@@ -96,28 +104,31 @@ static response_t *server_get_document(server_t *server, document_t *document)
 	debug_log("Getting document %s\n", document->name);
 #endif // DEBUG
 
-	string_t output = cache_get(server->cache, document->name);
+	string_t lookup_result = cache_get(server->cache, document->name);
 
-	if (output != NULL) {
-		return response_init(server->server_id, log_cache_hit(document->name), output);
+	if (lookup_result != NULL) {
+		return response_init(server->server_id, log_cache_hit(document->name), lookup_result);
 	}
 
-	output = database_get(server->database, document->name);
+	lookup_result = database_get(server->database, document->name);
 
-	if (output == NULL) {
+	if (lookup_result == NULL) {
 		return response_init(server->server_id, log_fault(document->name), NULL);
 	}
 
-	document->content = output;
-
-	document_t *evicted_document = cache_put(server->cache, document);
+	document_t *evicted_document = cache_put_explicit(server->cache, document->name, lookup_result);
 
 	if (evicted_document != NULL) {
 		database_put(server->database, *evicted_document);
-		return response_init(server->server_id, log_cache_miss_with_evict(document->name, evicted_document->name), output);
+
+		response_t *response = response_init(server->server_id, log_cache_miss_with_evict(document->name, evicted_document->name), lookup_result);
+
+		document_free(&evicted_document);
+
+		return response;
 	}
 
-	return response_init(server->server_id, log_cache_miss(document->name), output);
+	return response_init(server->server_id, log_cache_miss(document->name), lookup_result);
 }
 
 response_t *server_handle_request(server_t *server, request_t *request, bool execute_immediately)

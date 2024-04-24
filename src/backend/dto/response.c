@@ -16,8 +16,12 @@ response_t *response_init(uint server_id, string_t server_log, string_t server_r
 
 void response_free(response_t **response)
 {
-	free((*response)->server_log);
-	free((*response)->server_response);
+	if (!response || !*response) {
+		return;
+	}
+
+	string_free(&(*response)->server_log);
+	string_free(&(*response)->server_response);
 	free(*response);
 
 	*response = NULL;

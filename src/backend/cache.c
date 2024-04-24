@@ -40,7 +40,12 @@ void cache_free(cache_t **cache)
 	*cache = NULL;
 }
 
-document_t *cache_put(cache_t *cache, document_t *document)
+document_t *cache_put(cache_t *cache, document_t* document)
+{
+	return cache_put_explicit(cache, document->name, document->content);
+}
+
+document_t *cache_put_explicit(cache_t *cache, string_t key, string_t value)
 {
 	document_t *evicted_document = NULL;
 
@@ -51,9 +56,9 @@ document_t *cache_put(cache_t *cache, document_t *document)
 		evicted_document = document_init(evicted_key, evicted_content);
 	}
 
-	queue_remove(cache->queue, document->name);
-	queue_enqueue(cache->queue, document->name);
-	hash_map_put(cache->map, document->name, document->content);
+	queue_remove(cache->queue, key);
+	queue_enqueue(cache->queue, key);
+	hash_map_put(cache->map, key, value);
 
 	return evicted_document;
 }
