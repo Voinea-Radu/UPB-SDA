@@ -26,9 +26,14 @@ void database_free(database_t **database)
 	*database = NULL;
 }
 
-void database_put(database_t *database, document_t document)
+void database_put_explicit(database_t *database, string_t key, string_t value)
 {
-	hash_map_put(database->data, document.name, document.content);
+	hash_map_put(database->data, key, value);
+}
+
+void database_put(database_t *database, document_t *document)
+{
+	database_put_explicit(database, document->name, document->content);
 }
 
 string_t database_get(database_t *database, string_t key)

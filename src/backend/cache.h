@@ -27,9 +27,7 @@
  */
 typedef struct cache {
 	hash_map_t *map; // HashMap<String, String>
-	queue_t *queue; // Queue<String>
-
-	uint capacity;
+	queue_t *history; // Queue<String>
 } cache_t;
 
 // ==================== Constructor(s) ====================

@@ -27,11 +27,15 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 #if DEBUG
 	debug_log("Editing document %s\n", document->name);
 #endif // DEBUG
+	static int a = 0;
+
 	string_t lookup_result = cache_get(server->cache, document->name);
 
 	if (lookup_result != NULL) {
+		document_t *evicted_document = cache_put(server->cache, document);
+
 		string_free(&lookup_result);
-		cache_put(server->cache, document);
+		document_free(&evicted_document);
 
 		return response_init(server->server_id,
 							 log_cache_hit(document->name),
@@ -40,15 +44,16 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 
 	lookup_result = database_get(server->database, document->name);
 
-	if (lookup_result == NULL) {
+	if (lookup_result != NULL) {
+		string_free(&lookup_result);
 		document_t *evicted_document = cache_put(server->cache, document);
 
 		if (evicted_document != NULL) {
-			database_put(server->database, *evicted_document);
+			database_put(server->database, evicted_document);
 
 			response_t *response = response_init(server->server_id,
 												 log_cache_miss_with_evict(document->name, evicted_document->name),
-												 database_entry_created(document->name));
+												 database_entry_edited(document->name));
 
 			document_free(&evicted_document);
 
@@ -57,18 +62,17 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 
 		return response_init(server->server_id,
 							 log_cache_miss(document->name),
-							 database_entry_created(document->name));
+							 database_entry_edited(document->name));
 	}
 
-	string_free(&lookup_result);
 	document_t *evicted_document = cache_put(server->cache, document);
 
 	if (evicted_document != NULL) {
-		database_put(server->database, *evicted_document);
+		database_put(server->database, evicted_document);
 
 		response_t *response = response_init(server->server_id,
 											 log_cache_miss_with_evict(document->name, evicted_document->name),
-											 database_entry_edited(document->name));
+											 database_entry_created(document->name));
 
 		document_free(&evicted_document);
 
@@ -77,7 +81,7 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 
 	return response_init(server->server_id,
 						 log_cache_miss(document->name),
-						 database_entry_edited(document->name));
+						 database_entry_created(document->name));
 }
 
 static response_t *server_edit_document(server_t *server, document_t *document, bool execute_immediately)
@@ -119,7 +123,7 @@ static response_t *server_get_document(server_t *server, document_t *document)
 	document_t *evicted_document = cache_put_explicit(server->cache, document->name, lookup_result);
 
 	if (evicted_document != NULL) {
-		database_put(server->database, *evicted_document);
+		database_put(server->database, evicted_document);
 
 		response_t *response = response_init(server->server_id, log_cache_miss_with_evict(document->name, evicted_document->name), lookup_result);
 

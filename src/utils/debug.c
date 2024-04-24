@@ -22,7 +22,7 @@ void cache_print(cache_t *cache, string_t prefix)
 {
 	string_t new_prefix = increase_prefix(prefix);
 
-	debug_log("%sCache capacity: %d\n", prefix, cache->capacity);
+	debug_log("%sCache capacity: %d\n", prefix, cache->map->capacity);
 	debug_log("%sCache size: %d\n", prefix, cache->map->size);
 
 	debug_log("%sCache entries:\n", prefix);
@@ -31,7 +31,7 @@ void cache_print(cache_t *cache, string_t prefix)
 				   (void (*)(string_t, void *, void *))cache_print_entry);
 
 	debug_log("%sCache history:\n", prefix);
-	queue_print(cache->queue, key_to_string, new_prefix, false);
+	queue_print(cache->history, key_to_string, new_prefix, false);
 
 	free(new_prefix);
 }

@@ -22,11 +22,14 @@ queue_t *queue_init(bool (*data_compare)(void *key1, void *key2), uint (*data_ge
 
 void queue_node_free(queue_node_t **node, void (*data_free)(void **data))
 {
-	if (*node) {
-		data_free(&(*node)->data);
-		free(*node);
-		*node = NULL;
+	if (node == NULL || *node == NULL) {
+		return;
 	}
+
+	data_free(&(*node)->data);
+	free(*node);
+
+	*node = NULL;
 }
 
 void queue_free(queue_t **queue)
@@ -44,7 +47,7 @@ void queue_free(queue_t **queue)
 	*queue = NULL;
 }
 
-bool queue_enqueue(queue_t *queue, void *data)
+void queue_enqueue(queue_t *queue, void *data)
 {
 	queue_node_t *node = safe_malloc(sizeof(queue_node_t));
 	node->data = create_and_copy(data, queue->data_get_size);
@@ -59,8 +62,6 @@ bool queue_enqueue(queue_t *queue, void *data)
 	}
 
 	queue->size++;
-
-	return true;
 }
 
 void *queue_dequeue(queue_t *queue)
@@ -70,7 +71,7 @@ void *queue_dequeue(queue_t *queue)
 	}
 
 	queue_node_t *node = queue->head;
-	void *data = node->data;
+	void *output = node->data;
 
 	queue->head = node->next;
 	queue->size--;
@@ -81,7 +82,7 @@ void *queue_dequeue(queue_t *queue)
 
 	free(node);
 
-	return data;
+	return output;
 }
 
 bool queue_is_empty(queue_t *queue)
@@ -89,7 +90,7 @@ bool queue_is_empty(queue_t *queue)
 	return queue->size == 0;
 }
 
-bool queue_remove(queue_t *queue, void *data)
+void queue_remove(queue_t *queue, void *data)
 {
 	queue_node_t *node = queue->head;
 	queue_node_t *prev = NULL;
@@ -109,17 +110,10 @@ bool queue_remove(queue_t *queue, void *data)
 			queue_node_free(&node, queue->data_free);
 			queue->size--;
 
-			if (queue->size == 0) {
-				queue->head = NULL;
-				queue->tail = NULL;
-			}
-
-			return true;
+			return;
 		}
 
 		prev = node;
 		node = node->next;
 	}
-
-	return false;
 }

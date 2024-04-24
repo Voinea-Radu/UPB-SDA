@@ -115,6 +115,7 @@ function check_test() {
         rm -f time.err
     return
     fi
+    TOTAL=$(expr $TOTAL + $potential_points)
   else
     TOTAL=$(expr $TOTAL + $potential_points)
   fi

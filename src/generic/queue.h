@@ -36,12 +36,12 @@ void queue_node_free(queue_node_t **node, void (*data_free)(void **data));
 
 // ==================== Functional ====================
 
-bool queue_enqueue(queue_t *queue, void *data);
+void queue_enqueue(queue_t *queue, void *data);
 
 void *queue_dequeue(queue_t *queue);
 
 bool queue_is_empty(queue_t *queue);
 
-bool queue_remove(queue_t *queue, void *data);
+void queue_remove(queue_t *queue, void *data);
 
 #endif //QUEUE_H

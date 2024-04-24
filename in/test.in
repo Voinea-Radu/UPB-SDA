@@ -1,4 +1,5 @@
-3
-ADD_SERVER 1 5
-EDIT "manager.txt" "Box understand feel."
-GET "manager.txt"
+4
+ADD_SERVER 1 1
+EDIT "1.txt" "Text 1"
+EDIT "2.txt" "Text 2"
+GET "1.txt"
