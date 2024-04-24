@@ -217,19 +217,19 @@ document_t **server_get_all_documents(server_t *server, uint *size)
 	document_t **documents = safe_malloc(*size * sizeof(document_t *));
 	uint index = 0;
 
-	document_t **cache_entries = hash_map_get_values(server->cache->data);
 	document_t **database_entries = hash_map_get_values(server->database->data);
-
-	for (uint i = 0; i < server->cache->data->size; i++){
-		documents[index++] = cache_entries[i];
-	}
+	document_t **cache_entries = hash_map_get_values(server->cache->data);
 
 	for (uint i = 0; i < server->database->data->size; i++){
 		documents[index++] = database_entries[i];
 	}
 
-	free(cache_entries);
+	for (uint i = 0; i < server->cache->data->size; i++){
+		documents[index++] = cache_entries[i];
+	}
+
 	free(database_entries);
+	free(cache_entries);
 
 	return documents;
 }
