@@ -43,6 +43,7 @@ string_t database_get(database_t *database, string_t key)
 
 void database_remove(database_t *database, string_t key)
 {
-	hash_map_remove(database->data, key);
+	string_t result = hash_map_remove(database->data, key);
+	string_free(&result);
 }
 

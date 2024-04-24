@@ -88,4 +88,12 @@ string_t cache_get(cache_t *cache, string_t key)
 	return output;
 }
 
+void cache_remove(cache_t *cache, string_t key)
+{
+	string_t result = hash_map_remove(cache->data, key);
+	string_free(&result);
+
+	queue_remove(cache->history, key);
+}
+
 

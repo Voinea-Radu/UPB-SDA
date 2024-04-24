@@ -73,6 +73,8 @@ document_t *cache_put_explicit(cache_t *cache, string_t key, string_t value);
  */
 string_t cache_get(cache_t *cache, string_t key);
 
+void cache_remove(cache_t *cache, string_t key);
+
 // ==================== Memory ====================
 
 /**

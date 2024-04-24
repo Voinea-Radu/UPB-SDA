@@ -27,11 +27,12 @@ void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int
 #endif // DEBUG
 	server_t *server = server_init(cache_size, server_id);
 	node_t *current_node = load_balancer->servers->head;
+	server_t *current_server = NULL;
 
 	int index = 0;
 
 	while (current_node) {
-		server_t *current_server = current_node->data;
+		current_server = current_node->data;
 		if (server->hash < current_server->hash) {
 			break;
 		}
@@ -44,6 +45,33 @@ void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int
 	load_balancer->servers_count++;
 
 	free(server);
+
+
+	if(current_server != NULL) {
+		execute_task_queue(current_server);
+
+		uint current_server_documents_count = 0;
+		document_t **current_server_documents = server_get_all_documents(current_server, &current_server_documents_count);
+
+		for (uint i = 0; i < current_server_documents_count; i++) {
+			document_t *document = current_server_documents[i];
+			server_t *target_server = get_target_server(load_balancer, document);
+
+			if (target_server->server_id == current_server->server_id) {
+				document_free(&document);
+				continue;
+			}
+
+			remove_document(current_server, document);
+			request_t *request = request_init(EDIT_DOCUMENT, document);
+			response_t *response = load_balancer_forward_request(load_balancer, request, true, true);
+
+			request_free(&request);
+			response_free(&response);
+		}
+
+		free(current_server_documents);
+	}
 
 #if DEBUG
 	load_balancer_print(load_balancer);
@@ -61,27 +89,18 @@ void load_balancer_remove_server(load_balancer_t *load_balancer, uint server_id)
 
 	execute_task_queue(removed_server);
 
-	document_t **cache_entries = hash_map_get_values(removed_server->cache->data);
-	document_t **database_entries = hash_map_get_values(removed_server->database->data);
+	uint removed_server_documents_count = 0;
+	document_t **removed_server_documents = server_get_all_documents(removed_server, &removed_server_documents_count);
 
-	for (uint i = 0; i < removed_server->cache->data->size; i++){
-		request_t *request = request_init(EDIT_DOCUMENT, cache_entries[i]);
+	for (uint i = 0; i < removed_server_documents_count; i++) {
+		request_t *request = request_init(EDIT_DOCUMENT, removed_server_documents[i]);
 		response_t *response = load_balancer_forward_request(load_balancer, request, true, true);
 
 		request_free(&request);
 		response_free(&response);
 	}
 
-	for (uint i = 0; i < removed_server->database->data->size; i++){
-		request_t *request = request_init(EDIT_DOCUMENT, database_entries[i]);
-		response_t *response = load_balancer_forward_request(load_balancer, request, true, true);
-
-		request_free(&request);
-		response_free(&response);
-	}
-
-	free(cache_entries);
-	free(database_entries);
+	free(removed_server_documents);
 
 	server_free(&server_to_remove);
 	server_free(&removed_server);
@@ -91,27 +110,33 @@ void load_balancer_remove_server(load_balancer_t *load_balancer, uint server_id)
 #endif // DEBUG
 }
 
-response_t *load_balancer_forward_request(load_balancer_t *load_balancer, request_t *request, bool execute_immediately, bool bypass_cache)
+server_t *get_target_server(load_balancer_t *load_balancer, document_t *document)
 {
-	uint hash = load_balancer->hash_document(request->document);
-
-#if DEBUG
-	debug_log("Forwarding request with hash %u\n", hash);
-#endif // DEBUG
-
+	uint hash = load_balancer->hash_document(document);
 	node_t *current_node = load_balancer->servers->head;
 
 	while (current_node) {
 		server_t *current_server = current_node->data;
 
 		if (hash <= current_server->hash) {
-			return server_handle_request(current_server, request, execute_immediately, bypass_cache);
+			return current_server;
 		}
 
 		current_node = current_node->next;
 	}
 
-	return server_handle_request(load_balancer->servers->head->data, request, execute_immediately, bypass_cache);
+	return load_balancer->servers->head->data;
+}
+
+response_t *load_balancer_forward_request(load_balancer_t *load_balancer, request_t *request, bool execute_immediately, bool bypass_cache)
+{
+#if DEBUG
+	uint hash = load_balancer->hash_document(request->document);
+	debug_log("Forwarding request with hash %u\n", hash);
+#endif // DEBUG
+
+	server_t *target_server = get_target_server(load_balancer, request->document);
+	return server_handle_request(target_server, request, execute_immediately, bypass_cache);
 }
 
 void load_balancer_free(load_balancer_t **load_balancer)

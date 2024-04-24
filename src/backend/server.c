@@ -207,3 +207,35 @@ bool server_compare(server_t *server1, server_t *server2)
 {
 	return server1->hash == server2->hash;
 }
+
+document_t **server_get_all_documents(server_t *server, uint *size)
+{
+	*size = 0;
+	*size += server->cache->data->size;
+	*size += server->database->data->size;
+
+	document_t **documents = safe_malloc(*size * sizeof(document_t *));
+	uint index = 0;
+
+	document_t **cache_entries = hash_map_get_values(server->cache->data);
+	document_t **database_entries = hash_map_get_values(server->database->data);
+
+	for (uint i = 0; i < server->cache->data->size; i++){
+		documents[index++] = cache_entries[i];
+	}
+
+	for (uint i = 0; i < server->database->data->size; i++){
+		documents[index++] = database_entries[i];
+	}
+
+	free(cache_entries);
+	free(database_entries);
+
+	return documents;
+}
+
+void remove_document(server_t *server, document_t *document)
+{
+	cache_remove(server->cache, document->name);
+	database_remove(server->database, document->name);
+}

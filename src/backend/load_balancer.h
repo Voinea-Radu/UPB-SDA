@@ -55,6 +55,8 @@ void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int
  */
 void load_balancer_remove_server(load_balancer_t *load_balancer, uint server_id);
 
+server_t *get_target_server(load_balancer_t *load_balancer, document_t *document);
+
 /**
  * load_balancer_forward_request() - Forwards a request_t to the appropriate server_t.
  * 

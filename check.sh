@@ -129,7 +129,7 @@ function checkBonus {
     echo "" > checkstyle.txt
 
     echo -ne "Coding style Errors:\n"
-    for entry in $(find . -type f \( -name "*.c" -o -name "*.h" \)); do
+    for entry in $(find src -type f \( -name "*.c" -o -name "*.h" \)); do
 	echo $entry
         if [[ -f $entry ]]; then
             python2.7 cpplint.py --root=$(pwd) --filter=-build/include,-runtime/printf,-runtime/threadsafe_fn,-build/include_what_you_use,-runtime/int "$entry" > checkstyle.txt
