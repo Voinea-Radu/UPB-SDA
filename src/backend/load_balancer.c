@@ -84,6 +84,7 @@ void load_balancer_remove_server(load_balancer_t *load_balancer, uint server_id)
 	free(database_entries);
 
 	server_free(&server_to_remove);
+	server_free(&removed_server);
 #if DEBUG
 	load_balancer_print(load_balancer);
 	debug_log("\n");

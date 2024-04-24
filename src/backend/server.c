@@ -200,7 +200,7 @@ void execute_task_queue(server_t *server)
 
 uint server_size(server_t *server)
 {
-	return 2 * sizeof(uint) + sizeof(server->hash) + 3 * sizeof(void *);
+	return sizeof(*server);
 }
 
 bool server_compare(server_t *server1, server_t *server2)
