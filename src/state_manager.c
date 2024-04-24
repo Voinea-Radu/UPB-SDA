@@ -79,7 +79,7 @@ void handle_remove_server(string_t buffer, load_balancer_t *load_balancer)
 
 	load_balancer_remove_server(load_balancer, server_id);
 #if DEBUG
-	debug_log("Deleted server %d", server_id);
+	debug_log("Deleted server %d\n", server_id);
 #endif // DEBUG
 }
 
@@ -107,7 +107,7 @@ void handle_edit_document(string_t buffer, load_balancer_t *load_balancer)
 
 
 	request_t *request = request_init(EDIT_DOCUMENT, document_init(document_name, document_content));
-	response_t *response = load_balancer_forward_request(load_balancer, request);
+	response_t *response = load_balancer_forward_request(load_balancer, request, false, false);
 
 	document_free(&request->document);
 
@@ -130,7 +130,7 @@ void handle_get_document(string_t buffer, load_balancer_t *load_balancer)
 	memcpy(document_name, buffer + word_start + 1, word_end - word_start - 1);
 
 	request_t *request = request_init(GET_DOCUMENT, document_init(document_name, NULL));
-	response_t *response = load_balancer_forward_request(load_balancer, request);
+	response_t *response = load_balancer_forward_request(load_balancer, request, false, false);
 
 	response_print(response);
 

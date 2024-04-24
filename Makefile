@@ -12,7 +12,7 @@ all: $(TARGETS)
 build: $(TARGETS)
 
 tema2: src/main.c
-	$(CC) $(CFLAGS) src/**/**/*.c src/**/*.c src/*.c src/**/*.h src/*.h -lm -o tema2
+	$(CC) $(CFLAGS) src/**/**/*.c src/**/*.c src/*.c src/**/**/*.h src/**/*.h src/*.h -lm -o tema2
 
 pack:
 	zip -FSr 315CA_VoineaRadu_TEMA1.zip README Makefile src/

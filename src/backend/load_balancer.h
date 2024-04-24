@@ -6,13 +6,14 @@
 #define LOAD_BALANCER_H
 
 #include "server.h"
+#include "../generic/linked_list.h"
 
 #define MAX_SERVERS             99999
 
 typedef struct load_balancer {
 	uint (*hash_document)(document_t *document);
 
-	server_t *servers[MAX_SERVERS];
+	linked_list_t *servers;
 	uint servers_count;
 
 	bool enable_vnodes;
@@ -20,6 +21,8 @@ typedef struct load_balancer {
 
 
 load_balancer_t *load_balancer_init(bool enable_vnodes);
+
+void reorder_servers(load_balancer_t *load_balancer);
 
 void load_balancer_free(load_balancer_t **load_balancer);
 
@@ -50,7 +53,7 @@ void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int
  * Additionally, all the tasks stored in the removed server_t's queue
  * should be executed before moving the documents.
  */
-void load_balancer_remove_server(load_balancer_t *load_balancer, int server_id);
+void load_balancer_remove_server(load_balancer_t *load_balancer, uint server_id);
 
 /**
  * load_balancer_forward_request() - Forwards a request_t to the appropriate server_t.
@@ -67,7 +70,7 @@ void load_balancer_remove_server(load_balancer_t *load_balancer, int server_id);
  * and should be freed either here, either in server_handle_request, after
  * using them.
  */
-response_t *load_balancer_forward_request(load_balancer_t *load_balancer, request_t *request);
+response_t *load_balancer_forward_request(load_balancer_t *load_balancer, request_t *request, bool execute_immediately, bool bypass_cache);
 
 void load_balancer_print(load_balancer_t *load_balancer);
 

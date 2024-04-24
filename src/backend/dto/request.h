@@ -5,6 +5,7 @@
 #ifndef REQUEST_H
 #define REQUEST_H
 
+#include <stdbool.h>
 #include "../../utils/constants.h"
 #include "document.h"
 

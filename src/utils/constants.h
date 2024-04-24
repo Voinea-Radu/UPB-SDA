@@ -10,7 +10,7 @@
 typedef char *string_t;
 typedef unsigned int uint;
 
-#define DEBUG 0
+#define DEBUG 1
 
 #define TASK_QUEUE_SIZE          1000
 #define DATABASE_HASH_TABLE_SIZE 1000

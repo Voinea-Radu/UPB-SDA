@@ -136,3 +136,24 @@ void hash_map_print(hash_map_t *map, string_t prefix, void (*print_entry)(string
 		}
 	}
 }
+
+document_t** hash_map_get_values(hash_map_t *map)
+{
+	document_t **values = safe_malloc(map->size * sizeof(document_t *));
+	uint index = 0;
+
+	for (uint i = 0; i < map->capacity; ++i) {
+		hash_map_entry_t *entry = map->entries[i];
+
+		while (entry) {
+			values[index] = safe_malloc(sizeof(document_t));
+			values[index]->name = create_and_copy(entry->key, map->key_get_size);
+			values[index]->content = create_and_copy(entry->value, map->value_get_size);
+
+			index++;
+			entry = entry->next;
+		}
+	}
+
+	return values;
+}

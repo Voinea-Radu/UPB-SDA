@@ -13,6 +13,7 @@
 
 typedef struct {
 	uint server_id;
+	uint hash;
 
 	queue_t *task_queue;
 	database_t *database;
@@ -49,11 +50,12 @@ void server_free(server_t **server);
  *     this case, after executing each task, PRINT_RESPONSE should
  *     be called).
  */
-response_t *server_handle_request(server_t *server, request_t *request, bool execute_immediately);
-
+response_t *server_handle_request(server_t *server, request_t *request, bool execute_immediately, bool bypass_cache);
 
 void execute_task_queue(server_t *server);
 
+uint server_size(server_t *server);
 
+bool server_compare (server_t *server1, server_t *server2);
 
 #endif // SERVER_H

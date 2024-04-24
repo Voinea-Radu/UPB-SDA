@@ -1,1 +1,1 @@
-make clean; make; ./tema2 in/test1.in > out.log
+make clean; make; ./tema2 in/test11.in > out.log

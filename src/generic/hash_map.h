@@ -7,6 +7,7 @@
 
 #include <stdbool.h>
 #include "../utils/constants.h"
+#include "../backend/dto/document.h"
 
 typedef struct hash_map_entry {
 	void *key;
@@ -49,5 +50,7 @@ void *hash_map_get(hash_map_t *map, void *key);
 void *hash_map_remove(hash_map_t *map, void *key);
 
 void hash_map_print(hash_map_t *map, string_t prefix, void (*print_entry)(string_t, void *, void *));
+
+document_t** hash_map_get_values(hash_map_t *map);
 
 #endif //HASH_MAP_H

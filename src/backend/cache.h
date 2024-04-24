@@ -17,7 +17,7 @@
  * <a href="https://en.wikipedia.org/wiki/Cache_replacement_policies
  * #Least_recently_used_(LRU)">LRU Cache</a> for more information.
  *
- * @param map  		The hash map that stores the key-value pairs. The key is a
+ * @param map  		The hash data that stores the key-value pairs. The key is a
  * 					string (the name of the document to be cached) and the value
  * 					is a string (the content of the document)
  * @param queue  	The queue that stores the keys in the order they were
@@ -26,7 +26,7 @@
  * @param capacity 	The maximum number of elements the cache can store
  */
 typedef struct cache {
-	hash_map_t *map; // HashMap<String, String>
+	hash_map_t *data; // HashMap<String, String>
 	queue_t *history; // Queue<String>
 } cache_t;
 

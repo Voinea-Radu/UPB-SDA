@@ -14,6 +14,7 @@ server_t *server_init(uint cache_size, uint server_id)
 	server_t *server = safe_malloc(sizeof(server_t));
 
 	server->server_id = server_id;
+	server->hash = uint_hash(server_id);
 
 	server->database = database_init(DATABASE_HASH_TABLE_SIZE);
 	server->cache = cache_init(cache_size);
@@ -22,13 +23,19 @@ server_t *server_init(uint cache_size, uint server_id)
 	return server;
 }
 
-static response_t *server_edit_document_immediate(server_t *server, document_t *document)
+static response_t *server_edit_document_immediate(server_t *server, document_t *document, bool bypass_cache)
 {
+	if(bypass_cache) {
+		database_put(server->database, document);
+
+		return response_init(server->server_id,
+							 log_cache_miss(document->name),
+							 database_entry_created(document->name));
+	}
+
 #if DEBUG
 	debug_log("Editing document %s\n", document->name);
 #endif // DEBUG
-	static int a = 0;
-
 	string_t lookup_result = cache_get(server->cache, document->name);
 
 	if (lookup_result != NULL) {
@@ -84,10 +91,10 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 						 database_entry_created(document->name));
 }
 
-static response_t *server_edit_document(server_t *server, document_t *document, bool execute_immediately)
+static response_t *server_edit_document(server_t *server, document_t *document, bool execute_immediately, bool bypass_cache)
 {
 	if (execute_immediately) {
-		return server_edit_document_immediate(server, document);
+		return server_edit_document_immediate(server, document, bypass_cache);
 	}
 
 	request_t *request = request_init(EDIT_DOCUMENT, document_init(document->name, document->content));
@@ -135,13 +142,16 @@ static response_t *server_get_document(server_t *server, document_t *document)
 	return response_init(server->server_id, log_cache_miss(document->name), lookup_result);
 }
 
-response_t *server_handle_request(server_t *server, request_t *request, bool execute_immediately)
+response_t *server_handle_request(server_t *server, request_t *request, bool execute_immediately, bool bypass_cache)
 {
+#if DEBUG
+	debug_log("Request received by server %u\n", server->server_id);
+#endif // DEBUG
 	response_t *output = NULL;
 
 	switch (request->type) {
 	case EDIT_DOCUMENT: {
-		output = server_edit_document(server, request->document, execute_immediately);
+		output = server_edit_document(server, request->document, execute_immediately, bypass_cache);
 #if DEBUG
 		server_print(server, "");
 #endif // DEBUG
@@ -179,11 +189,21 @@ void execute_task_queue(server_t *server)
 
 	while (!queue_is_empty(server->task_queue)) {
 		request_t *request = queue_dequeue(server->task_queue);
-		response_t *response = server_handle_request(server, request, true);
+		response_t *response = server_handle_request(server, request, true, false);
 
 		response_print(response);
 
 		request_free(&request);
 		response_free(&response);
 	}
+}
+
+uint server_size(server_t *server)
+{
+	return 2 * sizeof(uint) + sizeof(server->hash) + 3 * sizeof(void *);
+}
+
+bool server_compare(server_t *server1, server_t *server2)
+{
+	return server1->hash == server2->hash;
 }

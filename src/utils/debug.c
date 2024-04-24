@@ -22,12 +22,12 @@ void cache_print(cache_t *cache, string_t prefix)
 {
 	string_t new_prefix = increase_prefix(prefix);
 
-	debug_log("%sCache capacity: %d\n", prefix, cache->map->capacity);
-	debug_log("%sCache size: %d\n", prefix, cache->map->size);
+	debug_log("%sCache capacity: %d\n", prefix, cache->data->capacity);
+	debug_log("%sCache size: %d\n", prefix, cache->data->size);
 
 	debug_log("%sCache entries:\n", prefix);
 
-	hash_map_print(cache->map, new_prefix,
+	hash_map_print(cache->data, new_prefix,
 				   (void (*)(string_t, void *, void *))cache_print_entry);
 
 	debug_log("%sCache history:\n", prefix);
@@ -39,8 +39,13 @@ void cache_print(cache_t *cache, string_t prefix)
 void load_balancer_print(load_balancer_t *load_balancer)
 {
 	debug_log("Servers count: %d\n", load_balancer->servers_count);
-	for (uint i = 0; i < load_balancer->servers_count; i++) {
-		server_print(load_balancer->servers[i], "");
+
+	node_t *node = load_balancer->servers->head;
+
+	while (node) {
+		server_t *server = (server_t *)node->data;
+		server_print(server, "");
+		node = node->next;
 	}
 }
 
@@ -57,7 +62,8 @@ void server_print(server_t *server, string_t prefix)
 	string_t __new_prefix = increase_prefix(prefix);
 	string_t new_prefix = increase_prefix(__new_prefix);
 
-	debug_log("%sServer with id %d:\n", prefix, server->server_id);
+	debug_log("%sServer with id %u:\n", prefix, server->server_id);
+	debug_log("\t%sHash: %u\n", prefix, server->hash);
 
 	debug_log("\t%sDatabase:\n", prefix);
 	database_print(server->database, new_prefix);
