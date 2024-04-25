@@ -16,7 +16,7 @@ typedef struct {
 
 // ==================== Constructor(s) ====================
 
-request_t *request_init(request_type_t type, document_t* document);
+request_t *request_init(request_type_t type, document_t *document);
 
 // ==================== Memory ====================
 

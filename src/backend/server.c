@@ -25,7 +25,7 @@ server_t *server_init(uint cache_size, uint server_id)
 
 static response_t *server_edit_document_immediate(server_t *server, document_t *document, bool bypass_cache)
 {
-	if(bypass_cache) {
+	if (bypass_cache) {
 		database_put(server->database, document);
 
 		return response_init(server->server_id,
@@ -100,7 +100,7 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 static response_t *server_edit_document(server_t *server, document_t *document, bool execute_immediately, bool bypass_cache)
 {
 	if (execute_immediately) {
-		response_t* output = server_edit_document_immediate(server, document, bypass_cache);
+		response_t *output = server_edit_document_immediate(server, document, bypass_cache);
 
 #if DEBUG
 		if(strcmp("public_economic.txt", document->name) == 0) {
@@ -230,11 +230,11 @@ document_t **server_get_all_documents(server_t *server, uint *size)
 	document_t **database_entries = hash_map_get_values(server->database->data);
 	document_t **cache_entries = hash_map_get_values(server->cache->data);
 
-	for (uint i = 0; i < server->database->data->size; i++){
+	for (uint i = 0; i < server->database->data->size; i++) {
 		documents[index++] = database_entries[i];
 	}
 
-	for (uint i = 0; i < server->cache->data->size; i++){
+	for (uint i = 0; i < server->cache->data->size; i++) {
 		documents[index++] = cache_entries[i];
 	}
 

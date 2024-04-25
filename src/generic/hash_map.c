@@ -137,7 +137,7 @@ void hash_map_print(hash_map_t *map, string_t prefix, void (*print_entry)(string
 	}
 }
 
-document_t** hash_map_get_values(hash_map_t *map)
+document_t **hash_map_get_values(hash_map_t *map)
 {
 	document_t **values = safe_malloc(map->size * sizeof(document_t *));
 	uint index = 0;

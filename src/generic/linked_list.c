@@ -108,7 +108,7 @@ void *linked_list_remove(linked_list_t *list, void *data)
 				list->tail = prev;
 			}
 
-			void* output = node->data;
+			void *output = node->data;
 
 			free(node);
 			list->size--;

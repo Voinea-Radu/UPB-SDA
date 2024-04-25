@@ -24,7 +24,7 @@ void database_free(database_t **database);
 
 void database_put_explicit(database_t *database, string_t key, string_t value);
 
-void database_put(database_t *database, document_t* document);
+void database_put(database_t *database, document_t *document);
 
 string_t database_get(database_t *database, string_t key);
 

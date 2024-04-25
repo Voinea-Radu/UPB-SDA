@@ -10,7 +10,7 @@ uint uint_hash(uint value)
 	value = ((value >> 16u) ^ value) * 0x45d9f3b;
 	value = (value >> 16u) ^ value;
 
-	return value ;
+	return value;
 }
 
 uint string_hash(string_t value)
@@ -23,7 +23,7 @@ uint string_hash(string_t value)
 		hash = ((hash << 5u) + hash) + c;
 	}
 
-	return hash ;
+	return hash;
 }
 
 bool string_equals(string_t string1, string_t string2)

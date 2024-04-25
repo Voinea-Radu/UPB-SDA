@@ -35,7 +35,7 @@ void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int
 	while (current_node) {
 		current_server = current_node->data;
 		if (server->hash < current_server->hash) {
-			found =true;
+			found = true;
 			break;
 		}
 
@@ -43,8 +43,8 @@ void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int
 		index++;
 	}
 
-	if(load_balancer->servers->head!=NULL){
-		if(current_server == NULL||!found){
+	if (load_balancer->servers->head != NULL) {
+		if (current_server == NULL || !found) {
 			current_server = load_balancer->servers->head->data;
 		}
 	}
@@ -54,7 +54,7 @@ void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int
 
 	free(server);
 
-	if(current_server != NULL) {
+	if (current_server != NULL) {
 		execute_task_queue(current_server);
 
 		uint current_server_documents_count = 0;

@@ -22,12 +22,16 @@ typedef struct {
 
 	// Key functions
 	uint (*hash_key)(void *key);
+
 	bool (*key_compare)(void *key1, void *key2);
+
 	uint (*key_get_size)(void *key);
+
 	void (*key_free)(void **key);
 
 	// Value functions
 	uint (*value_get_size)(void *value);
+
 	void (*value_free)(void **key);
 } hash_map_t;
 
@@ -51,6 +55,6 @@ void *hash_map_remove(hash_map_t *map, void *key);
 
 void hash_map_print(hash_map_t *map, string_t prefix, void (*print_entry)(string_t, void *, void *));
 
-document_t** hash_map_get_values(hash_map_t *map);
+document_t **hash_map_get_values(hash_map_t *map);
 
 #endif //HASH_MAP_H

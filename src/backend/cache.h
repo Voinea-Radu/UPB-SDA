@@ -60,7 +60,7 @@ bool cache_is_full(cache_t *cache);
  * @param document	The document to put in the cache
  * @return The document that was evicted from the cache
  */
-document_t *cache_put(cache_t *cache, document_t* document);
+document_t *cache_put(cache_t *cache, document_t *document);
 
 document_t *cache_put_explicit(cache_t *cache, string_t key, string_t value);
 

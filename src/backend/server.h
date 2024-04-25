@@ -56,7 +56,7 @@ void execute_task_queue(server_t *server);
 
 uint server_size(server_t *server);
 
-bool server_compare (server_t *server1, server_t *server2);
+bool server_compare(server_t *server1, server_t *server2);
 
 document_t **server_get_all_documents(server_t *server, uint *size);
 
