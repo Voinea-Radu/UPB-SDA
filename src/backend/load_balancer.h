@@ -39,6 +39,7 @@ void load_balancer_free(load_balancer_t **load_balancer);
  * servers should execute all the tasks in their queues.
  */
 void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int cache_size);
+server_t* __load_balancer_add_server(load_balancer_t *load_balancer, server_t* server);
 
 /**
  * load_balancer_remove_server() Removes a server_t from the system.
@@ -54,8 +55,10 @@ void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int
  * should be executed before moving the documents.
  */
 void load_balancer_remove_server(load_balancer_t *load_balancer, uint server_id);
+void __load_balancer_remove_server(load_balancer_t *load_balancer, uint server_id);
 
-server_t *get_target_server(load_balancer_t *load_balancer, document_t *document);
+server_t *load_balancer_get_target_server(load_balancer_t *load_balancer, document_t *document);
+server_t *load_balancer_get_server(load_balancer_t *load_balancer, uint hash);
 
 /**
  * load_balancer_forward_request() - Forwards a request_t to the appropriate server_t.
@@ -74,6 +77,6 @@ server_t *get_target_server(load_balancer_t *load_balancer, document_t *document
  */
 response_t *load_balancer_forward_request(load_balancer_t *load_balancer, request_t *request, bool execute_immediately, bool bypass_cache);
 
-void load_balancer_print(load_balancer_t *load_balancer);
+uint get_replica_id(uint server_id, int replica_number);
 
 #endif // LOAD_BALANCER_H

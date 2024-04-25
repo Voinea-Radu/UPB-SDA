@@ -16,6 +16,7 @@ typedef unsigned int uint;
 #define DATABASE_HASH_TABLE_SIZE 1000
 #define MAX_LOG_LENGTH           1000
 #define MAX_RESPONSE_LENGTH      4096
+#define REPLICA_COUNT            3
 
 #define REQUEST_TYPE_LENGTH     64
 #define DOC_NAME_LENGTH         64

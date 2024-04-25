@@ -6,11 +6,12 @@
 #include "request.h"
 #include "../../utils/utils.h"
 
-request_t *request_init(request_type_t type, document_t *document)
+request_t *request_init(request_type_t type, document_t *document, uint server_id)
 {
 	request_t *request = safe_malloc(sizeof(request_t));
 	request->type = type;
 	request->document = document;
+	request->server_id = server_id;
 	return request;
 }
 

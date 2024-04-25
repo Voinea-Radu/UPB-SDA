@@ -5,6 +5,7 @@
 #include "load_balancer.h"
 #include "server.h"
 #include "../utils/utils.h"
+#include "../utils/debug.h"
 
 load_balancer_t *load_balancer_init(bool enable_vnodes)
 {
@@ -22,10 +23,38 @@ load_balancer_t *load_balancer_init(bool enable_vnodes)
 
 void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int cache_size)
 {
+	server_t *real_server = server_init(cache_size, server_id);
+
+	if (load_balancer->enable_vnodes) {
+		server_t *__real_server = __load_balancer_add_server(load_balancer, real_server);
+		free(real_server);
+		real_server = __real_server;
+
+		for (int i = 1; i < REPLICA_COUNT; i++) {
+			uint replica_id = get_replica_id(server_id, i);
+			server_t *replica_server = virtual_server_init(0, replica_id, real_server);
+
+			__load_balancer_add_server(load_balancer, replica_server);
+			free(replica_server);
+		}
 #if DEBUG
-	debug_log("Adding server %d with cache size %u and hash %u\n", server_id, cache_size, uint_hash(server_id));
+		load_balancer_print(load_balancer);
 #endif // DEBUG
-	server_t *server = server_init(cache_size, server_id);
+		return;
+	}
+
+	__load_balancer_add_server(load_balancer, real_server);
+	free(real_server);
+#if DEBUG
+	load_balancer_print(load_balancer);
+#endif // DEBUG
+}
+
+server_t* __load_balancer_add_server(load_balancer_t *load_balancer, server_t *server)
+{
+#if DEBUG
+	debug_log("Adding server %d with cache size %u and hash %u\n", server->server_id, server->cache, server->hash);
+#endif // DEBUG
 	node_t *current_node = load_balancer->servers->head;
 	server_t *current_server = NULL;
 
@@ -52,17 +81,15 @@ void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int
 	linked_list_add_at_index(load_balancer->servers, server, index);
 	load_balancer->servers_count++;
 
-	free(server);
-
 	if (current_server != NULL) {
-		execute_task_queue(current_server);
+		execute_task_queue(current_server, current_server->server_id);
 
 		uint current_server_documents_count = 0;
 		document_t **current_server_documents = server_get_all_documents(current_server, &current_server_documents_count);
 
 		for (uint i = 0; i < current_server_documents_count; i++) {
 			document_t *document = current_server_documents[i];
-			server_t *target_server = get_target_server(load_balancer, document);
+			server_t *target_server = load_balancer_get_target_server(load_balancer, document);
 
 			if (target_server->server_id == current_server->server_id) {
 #if DEBUG
@@ -77,7 +104,7 @@ void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int
 #endif // DEBUG
 
 			remove_document(current_server, document);
-			request_t *request = request_init(EDIT_DOCUMENT, document);
+			request_t *request = request_init(EDIT_DOCUMENT, document,0);
 			response_t *response = load_balancer_forward_request(load_balancer, request, true, true);
 
 			request_free(&request);
@@ -86,6 +113,8 @@ void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int
 
 		free(current_server_documents);
 	}
+
+	return linked_list_get_at_index(load_balancer->servers, index);
 }
 
 void load_balancer_remove_server(load_balancer_t *load_balancer, uint server_id)
@@ -96,20 +125,31 @@ void load_balancer_remove_server(load_balancer_t *load_balancer, uint server_id)
 	server_t *server_to_remove = server_init(0, server_id);
 	server_t *removed_server = linked_list_remove(load_balancer->servers, server_to_remove);
 
-	execute_task_queue(removed_server);
+	if (load_balancer->enable_vnodes) {
+		for (int i = 1; i < REPLICA_COUNT; i++) {
+			uint replica_id = get_replica_id(server_id, i);
+			server_t *replica_server = server_init(0, replica_id);
+
+			server_t *removed_replica_server = linked_list_remove(load_balancer->servers, replica_server);
+			server_free(&replica_server);
+			server_free(&removed_replica_server);
+		}
+	}
+
+	execute_task_queue(removed_server, removed_server->server_id);
 
 	uint removed_server_documents_count = 0;
 	document_t **removed_server_documents = server_get_all_documents(removed_server, &removed_server_documents_count);
 
 	for (uint i = 0; i < removed_server_documents_count; i++) {
-		server_t *target_server = get_target_server(load_balancer, removed_server_documents[i]);
 
 #if DEBUG
+		server_t *target_server = load_balancer_get_target_server(load_balancer, removed_server_documents[i]);
 		debug_log("Migrating document %s from (deleted) server %d to server %d\n", removed_server_documents[i]->name, removed_server->server_id,
 				  target_server->server_id);
 #endif // DEBUG
 
-		request_t *request = request_init(EDIT_DOCUMENT, removed_server_documents[i]);
+		request_t *request = request_init(EDIT_DOCUMENT, removed_server_documents[i],0);
 		response_t *response = load_balancer_forward_request(load_balancer, request, true, true);
 
 		request_free(&request);
@@ -122,9 +162,14 @@ void load_balancer_remove_server(load_balancer_t *load_balancer, uint server_id)
 	server_free(&removed_server);
 }
 
-server_t *get_target_server(load_balancer_t *load_balancer, document_t *document)
+server_t *load_balancer_get_target_server(load_balancer_t *load_balancer, document_t *document)
 {
 	uint hash = load_balancer->hash_document(document);
+	return load_balancer_get_server(load_balancer, hash);
+}
+
+server_t *load_balancer_get_server(load_balancer_t *load_balancer, uint hash)
+{
 	node_t *current_node = load_balancer->servers->head;
 
 	while (current_node) {
@@ -142,7 +187,22 @@ server_t *get_target_server(load_balancer_t *load_balancer, document_t *document
 
 response_t *load_balancer_forward_request(load_balancer_t *load_balancer, request_t *request, bool execute_immediately, bool bypass_cache)
 {
-	server_t *target_server = get_target_server(load_balancer, request->document);
+#if DEBUG
+	if(strcmp("5a51719f5ec", request->document->name) == 0)
+	{
+		printf("Request for document %s\n", request->document->name);
+	}
+#endif // DEBUG
+
+	server_t *target_server = load_balancer_get_target_server(load_balancer, request->document);
+	request->server_id = target_server->server_id;
+
+	if (load_balancer->enable_vnodes && target_server->virtual_server) {
+		response_t *response = server_handle_request(target_server->real_server, request, execute_immediately, bypass_cache);
+
+		return response;
+	}
+
 	return server_handle_request(target_server, request, execute_immediately, bypass_cache);
 }
 
@@ -152,5 +212,10 @@ void load_balancer_free(load_balancer_t **load_balancer)
 
 	free(*load_balancer);
 	*load_balancer = NULL;
+}
+
+uint get_replica_id(uint server_id, int replica_number)
+{
+	return replica_number * 100000 + server_id;
 }
 

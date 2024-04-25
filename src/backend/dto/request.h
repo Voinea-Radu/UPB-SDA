@@ -12,11 +12,12 @@
 typedef struct {
 	request_type_t type;
 	document_t *document;
+	uint server_id;
 } request_t;
 
 // ==================== Constructor(s) ====================
 
-request_t *request_init(request_type_t type, document_t *document);
+request_t *request_init(request_type_t type, document_t *document, uint server_id);
 
 // ==================== Memory ====================
 

@@ -5,10 +5,10 @@
 #include "response.h"
 #include "../../utils/utils.h"
 
-response_t *response_init(uint server_id, string_t server_log, string_t server_response)
+response_t *response_init(string_t server_log, string_t server_response)
 {
 	response_t *response = safe_malloc(sizeof(response_t));
-	response->server_id = server_id;
+	response->server_id = 0xffffffff;
 	response->server_log = server_log;
 	response->server_response = server_response;
 	return response;

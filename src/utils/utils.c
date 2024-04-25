@@ -304,4 +304,3 @@ string_t log_fault(string_t document_name)
 	sprintf(output, LOG_FAULT, document_name);
 	return output;
 }
-

@@ -37,6 +37,23 @@ void linked_list_free(linked_list_t **list)
 	*list = NULL;
 }
 
+void* linked_list_get_at_index(linked_list_t *list, int index)
+{
+	node_t *node = list->head;
+	int i = 0;
+
+	while (node && i < index) {
+		node = node->next;
+		i++;
+	}
+
+	if (node) {
+		return node->data;
+	}
+
+	return NULL;
+}
+
 void linked_list_add_at_index(linked_list_t *list, void *data, int index)
 {
 	node_t *node = malloc(sizeof(node_t));
@@ -108,7 +125,7 @@ void *linked_list_remove(linked_list_t *list, void *data)
 				list->tail = prev;
 			}
 
-			void *output = node->data;
+			void* output = node->data;
 
 			free(node);
 			list->size--;

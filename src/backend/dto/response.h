@@ -17,7 +17,7 @@ typedef struct {
 
 // ==================== Constructor(s) ====================
 
-response_t *response_init(uint server_id, string_t server_log, string_t server_response);
+response_t *response_init(string_t server_log, string_t server_response);
 
 // ==================== Memory ====================
 

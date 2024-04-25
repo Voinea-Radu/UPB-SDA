@@ -9,6 +9,7 @@
 #include "../backend/cache.h"
 #include "../backend/dto/request.h"
 #include "../backend/server.h"
+#include "../backend/load_balancer.h"
 
 #if DEBUG
 
@@ -27,6 +28,8 @@ void server_print(server_t *server, string_t prefix);
 void database_print(database_t *database, string_t prefix);
 
 void queue_print(queue_t *queue, string_t (*to_string_function)(void*),string_t prefix, bool should_free);
+
+void load_balancer_print(load_balancer_t *load_balancer);
 
 #endif // DEBUG
 

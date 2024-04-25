@@ -15,10 +15,23 @@ server_t *server_init(uint cache_size, uint server_id)
 
 	server->server_id = server_id;
 	server->hash = uint_hash(server_id);
+	server->virtual_server = false;
 
 	server->database = database_init(DATABASE_HASH_TABLE_SIZE);
 	server->cache = cache_init(cache_size);
 	server->task_queue = queue_init((bool (*)(void *, void *))request_equal, (uint (*)(void *))request_size, (void (*)(void **))request_free);
+
+	server->real_server = NULL;
+
+	return server;
+}
+
+server_t *virtual_server_init(uint cache_size, uint server_id, server_t *real_server)
+{
+	server_t *server = server_init(cache_size, server_id);
+
+	server->virtual_server = true;
+	server->real_server = real_server;
 
 	return server;
 }
@@ -28,8 +41,7 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 	if (bypass_cache) {
 		database_put(server->database, document);
 
-		return response_init(server->server_id,
-							 log_cache_miss(document->name),
+		return response_init(log_cache_miss(document->name),
 							 database_entry_created(document->name));
 	}
 
@@ -50,8 +62,7 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 		string_free(&lookup_result);
 		document_free(&evicted_document);
 
-		return response_init(server->server_id,
-							 log_cache_hit(document->name),
+		return response_init(log_cache_hit(document->name),
 							 database_entry_edited(document->name));
 	}
 
@@ -64,8 +75,7 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 		if (evicted_document != NULL) {
 			database_put(server->database, evicted_document);
 
-			response_t *response = response_init(server->server_id,
-												 log_cache_miss_with_evict(document->name, evicted_document->name),
+			response_t *response = response_init(log_cache_miss_with_evict(document->name, evicted_document->name),
 												 database_entry_edited(document->name));
 
 			document_free(&evicted_document);
@@ -73,8 +83,7 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 			return response;
 		}
 
-		return response_init(server->server_id,
-							 log_cache_miss(document->name),
+		return response_init(log_cache_miss(document->name),
 							 database_entry_edited(document->name));
 	}
 
@@ -83,8 +92,7 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 	if (evicted_document != NULL) {
 		database_put(server->database, evicted_document);
 
-		response_t *response = response_init(server->server_id,
-											 log_cache_miss_with_evict(document->name, evicted_document->name),
+		response_t *response = response_init(log_cache_miss_with_evict(document->name, evicted_document->name),
 											 database_entry_created(document->name));
 
 		document_free(&evicted_document);
@@ -92,8 +100,7 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 		return response;
 	}
 
-	return response_init(server->server_id,
-						 log_cache_miss(document->name),
+	return response_init(log_cache_miss(document->name),
 						 database_entry_created(document->name));
 }
 
@@ -107,25 +114,23 @@ static response_t *server_edit_document(server_t *server, document_t *document, 
 			debug_log("Edited public_economic.txt\n");
 			server_print(server, "");
 		}
-
 #endif // DEBUG
 
 		return output;
 	}
 
-	request_t *request = request_init(EDIT_DOCUMENT, document_init(document->name, document->content));
+	request_t *request = request_init(EDIT_DOCUMENT, document_init(document->name, document->content), 0);
 	queue_enqueue(server->task_queue, request);
 
 	free(request);
 
-	return response_init(server->server_id,
-						 log_lazy_exec(server->task_queue->size),
+	return response_init(log_lazy_exec(server->task_queue->size),
 						 server_queued(EDIT_DOCUMENT, document->name));
 }
 
-static response_t *server_get_document(server_t *server, document_t *document)
+static response_t *server_get_document(server_t *server, document_t *document, uint actual_server_id)
 {
-	execute_task_queue(server);
+	execute_task_queue(server, actual_server_id);
 
 #if DEBUG
 	debug_log("Getting document %s\n", document->name);
@@ -134,13 +139,13 @@ static response_t *server_get_document(server_t *server, document_t *document)
 	string_t lookup_result = cache_get(server->cache, document->name);
 
 	if (lookup_result != NULL) {
-		return response_init(server->server_id, log_cache_hit(document->name), lookup_result);
+		return response_init(log_cache_hit(document->name), lookup_result);
 	}
 
 	lookup_result = database_get(server->database, document->name);
 
 	if (lookup_result == NULL) {
-		return response_init(server->server_id, log_fault(document->name), NULL);
+		return response_init( log_fault(document->name), NULL);
 	}
 
 	document_t *evicted_document = cache_put_explicit(server->cache, document->name, lookup_result);
@@ -148,14 +153,14 @@ static response_t *server_get_document(server_t *server, document_t *document)
 	if (evicted_document != NULL) {
 		database_put(server->database, evicted_document);
 
-		response_t *response = response_init(server->server_id, log_cache_miss_with_evict(document->name, evicted_document->name), lookup_result);
+		response_t *response = response_init( log_cache_miss_with_evict(document->name, evicted_document->name), lookup_result);
 
 		document_free(&evicted_document);
 
 		return response;
 	}
 
-	return response_init(server->server_id, log_cache_miss(document->name), lookup_result);
+	return response_init( log_cache_miss(document->name), lookup_result);
 }
 
 response_t *server_handle_request(server_t *server, request_t *request, bool execute_immediately, bool bypass_cache)
@@ -171,12 +176,14 @@ response_t *server_handle_request(server_t *server, request_t *request, bool exe
 		break;
 	}
 	case GET_DOCUMENT: {
-		output = server_get_document(server, request->document);
+		output = server_get_document(server, request->document, request->server_id);
 		break;
 	}
 	default:
 		return NULL;
 	}
+
+	output->server_id = request->server_id;
 	return output;
 }
 
@@ -190,7 +197,7 @@ void server_free(server_t **server)
 	*server = NULL;
 }
 
-void execute_task_queue(server_t *server)
+void execute_task_queue(server_t *server, uint actual_server_id)
 {
 #if DEBUG
 	debug_log("Executing task queue:\n");
@@ -200,6 +207,7 @@ void execute_task_queue(server_t *server)
 	while (!queue_is_empty(server->task_queue)) {
 		request_t *request = queue_dequeue(server->task_queue);
 		response_t *response = server_handle_request(server, request, true, false);
+		response->server_id = actual_server_id;
 
 		response_print(response);
 

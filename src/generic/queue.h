@@ -20,9 +20,7 @@ typedef struct {
 
 	// Data functions
 	bool (*data_compare)(void *data1, void *data2);
-
 	uint (*data_get_size)(void *data);
-
 	void (*data_free)(void **data);
 } queue_t;
 

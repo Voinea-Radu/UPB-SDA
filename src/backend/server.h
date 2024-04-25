@@ -11,18 +11,24 @@
 #include "dto/request.h"
 #include "dto/response.h"
 
-typedef struct {
+typedef struct server_t {
 	uint server_id;
 	uint hash;
 
 	queue_t *task_queue;
 	database_t *database;
 	cache_t *cache;
+
+	bool virtual_server;
+
+	struct server_t *real_server;
 } server_t;
 
 // ==================== Constructor(s) ====================
 
 server_t *server_init(uint cache_size, uint server_id);
+
+server_t *virtual_server_init(uint cache_size, uint server_id, server_t *real_server);
 
 // ==================== Memory ====================
 
@@ -52,7 +58,7 @@ void server_free(server_t **server);
  */
 response_t *server_handle_request(server_t *server, request_t *request, bool execute_immediately, bool bypass_cache);
 
-void execute_task_queue(server_t *server);
+void execute_task_queue(server_t *server, uint actual_server_id);
 
 uint server_size(server_t *server);
 
