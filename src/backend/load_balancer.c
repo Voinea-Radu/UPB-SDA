@@ -23,17 +23,19 @@ load_balancer_t *load_balancer_init(bool enable_vnodes)
 void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int cache_size)
 {
 #if DEBUG
-	debug_log("Adding server %d with cache size %d\n", server_id, cache_size);
+	debug_log("Adding server %d with cache size %u and hash %u\n", server_id, cache_size, uint_hash(server_id));
 #endif // DEBUG
 	server_t *server = server_init(cache_size, server_id);
 	node_t *current_node = load_balancer->servers->head;
 	server_t *current_server = NULL;
 
 	int index = 0;
+	bool found = false;
 
 	while (current_node) {
 		current_server = current_node->data;
 		if (server->hash < current_server->hash) {
+			found =true;
 			break;
 		}
 
@@ -41,11 +43,16 @@ void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int
 		index++;
 	}
 
+	if(load_balancer->servers->head!=NULL){
+		if(current_server == NULL||!found){
+			current_server = load_balancer->servers->head->data;
+		}
+	}
+
 	linked_list_add_at_index(load_balancer->servers, server, index);
 	load_balancer->servers_count++;
 
 	free(server);
-
 
 	if(current_server != NULL) {
 		execute_task_queue(current_server);
@@ -58,9 +65,16 @@ void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int
 			server_t *target_server = get_target_server(load_balancer, document);
 
 			if (target_server->server_id == current_server->server_id) {
+#if DEBUG
+				debug_log("Document %s already on correct server %d\n", document->name, current_server->server_id);
+#endif // DEBUG
 				document_free(&document);
 				continue;
 			}
+
+#if DEBUG
+			debug_log("Migrating document %s from server %d to server %d\n", document->name, current_server->server_id, target_server->server_id);
+#endif // DEBUG
 
 			remove_document(current_server, document);
 			request_t *request = request_init(EDIT_DOCUMENT, document);
@@ -72,11 +86,6 @@ void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int
 
 		free(current_server_documents);
 	}
-
-#if DEBUG
-	load_balancer_print(load_balancer);
-	debug_log("\n");
-#endif // DEBUG
 }
 
 void load_balancer_remove_server(load_balancer_t *load_balancer, uint server_id)
@@ -93,6 +102,13 @@ void load_balancer_remove_server(load_balancer_t *load_balancer, uint server_id)
 	document_t **removed_server_documents = server_get_all_documents(removed_server, &removed_server_documents_count);
 
 	for (uint i = 0; i < removed_server_documents_count; i++) {
+		server_t *target_server = get_target_server(load_balancer, removed_server_documents[i]);
+
+#if DEBUG
+		debug_log("Migrating document %s from (deleted) server %d to server %d\n", removed_server_documents[i]->name, removed_server->server_id,
+				  target_server->server_id);
+#endif // DEBUG
+
 		request_t *request = request_init(EDIT_DOCUMENT, removed_server_documents[i]);
 		response_t *response = load_balancer_forward_request(load_balancer, request, true, true);
 
@@ -104,10 +120,6 @@ void load_balancer_remove_server(load_balancer_t *load_balancer, uint server_id)
 
 	server_free(&server_to_remove);
 	server_free(&removed_server);
-#if DEBUG
-	load_balancer_print(load_balancer);
-	debug_log("\n");
-#endif // DEBUG
 }
 
 server_t *get_target_server(load_balancer_t *load_balancer, document_t *document)
@@ -130,11 +142,6 @@ server_t *get_target_server(load_balancer_t *load_balancer, document_t *document
 
 response_t *load_balancer_forward_request(load_balancer_t *load_balancer, request_t *request, bool execute_immediately, bool bypass_cache)
 {
-#if DEBUG
-	uint hash = load_balancer->hash_document(request->document);
-	debug_log("Forwarding request with hash %u\n", hash);
-#endif // DEBUG
-
 	server_t *target_server = get_target_server(load_balancer, request->document);
 	return server_handle_request(target_server, request, execute_immediately, bypass_cache);
 }

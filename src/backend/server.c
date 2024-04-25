@@ -35,6 +35,12 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 
 #if DEBUG
 	debug_log("Editing document %s\n", document->name);
+
+	if(strcmp("public_economic.txt", document->name) == 0) {
+		debug_log("Editing public_economic.txt\n");
+		server_print(server, "");
+	}
+
 #endif // DEBUG
 	string_t lookup_result = cache_get(server->cache, document->name);
 
@@ -94,7 +100,17 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 static response_t *server_edit_document(server_t *server, document_t *document, bool execute_immediately, bool bypass_cache)
 {
 	if (execute_immediately) {
-		return server_edit_document_immediate(server, document, bypass_cache);
+		response_t* output = server_edit_document_immediate(server, document, bypass_cache);
+
+#if DEBUG
+		if(strcmp("public_economic.txt", document->name) == 0) {
+			debug_log("Edited public_economic.txt\n");
+			server_print(server, "");
+		}
+
+#endif // DEBUG
+
+		return output;
 	}
 
 	request_t *request = request_init(EDIT_DOCUMENT, document_init(document->name, document->content));
@@ -152,16 +168,10 @@ response_t *server_handle_request(server_t *server, request_t *request, bool exe
 	switch (request->type) {
 	case EDIT_DOCUMENT: {
 		output = server_edit_document(server, request->document, execute_immediately, bypass_cache);
-#if DEBUG
-		server_print(server, "");
-#endif // DEBUG
 		break;
 	}
 	case GET_DOCUMENT: {
 		output = server_get_document(server, request->document);
-#if DEBUG
-		server_print(server, "");
-#endif // DEBUG
 		break;
 	}
 	default:
@@ -236,6 +246,9 @@ document_t **server_get_all_documents(server_t *server, uint *size)
 
 void remove_document(server_t *server, document_t *document)
 {
+#if DEBUG
+	debug_log("[Server %d] Removing document %s\n",server->server_id, document->name);
+#endif // DEBUG
 	cache_remove(server->cache, document->name);
 	database_remove(server->database, document->name);
 }
