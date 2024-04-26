@@ -199,8 +199,13 @@ void server_free(server_t **server)
 
 void execute_task_queue(server_t *server, uint actual_server_id)
 {
+	if(server->virtual_server){
+		execute_task_queue(server->real_server, actual_server_id);
+		return;
+	}
+
 #if DEBUG
-	debug_log("Executing task queue:\n");
+	debug_log("Executing task queue of server %d:\n", actual_server_id);
 	queue_print(server->task_queue, (string_t (*)(void *))queued_task_to_string, "\t", true);
 #endif // DEBUG
 
@@ -228,6 +233,10 @@ bool server_compare(server_t *server1, server_t *server2)
 
 document_t **server_get_all_documents(server_t *server, uint *size)
 {
+	if(server->virtual_server){
+		return server_get_all_documents(server->real_server, size);
+	}
+
 	*size = 0;
 	*size += server->cache->data->size;
 	*size += server->database->data->size;
@@ -254,6 +263,11 @@ document_t **server_get_all_documents(server_t *server, uint *size)
 
 void remove_document(server_t *server, document_t *document)
 {
+	if(server->virtual_server){
+		remove_document(server->real_server, document);
+		return;
+	}
+
 #if DEBUG
 	debug_log("[Server %d] Removing document %s\n",server->server_id, document->name);
 #endif // DEBUG

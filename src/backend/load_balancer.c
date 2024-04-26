@@ -37,23 +37,17 @@ void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int
 			__load_balancer_add_server(load_balancer, replica_server);
 			free(replica_server);
 		}
-#if DEBUG
-		load_balancer_print(load_balancer);
-#endif // DEBUG
 		return;
 	}
 
 	__load_balancer_add_server(load_balancer, real_server);
 	free(real_server);
-#if DEBUG
-	load_balancer_print(load_balancer);
-#endif // DEBUG
 }
 
 server_t* __load_balancer_add_server(load_balancer_t *load_balancer, server_t *server)
 {
 #if DEBUG
-	debug_log("Adding server %d with cache size %u and hash %u\n", server->server_id, server->cache, server->hash);
+	debug_log("Adding server %d with cache size %u and hash %u\n", server->server_id, server->cache->data->size, server->hash);
 #endif // DEBUG
 	node_t *current_node = load_balancer->servers->head;
 	server_t *current_server = NULL;
@@ -91,9 +85,12 @@ server_t* __load_balancer_add_server(load_balancer_t *load_balancer, server_t *s
 			document_t *document = current_server_documents[i];
 			server_t *target_server = load_balancer_get_target_server(load_balancer, document);
 
-			if (target_server->server_id == current_server->server_id) {
+			server_t *server_1 = current_server->virtual_server ? current_server->real_server : current_server;
+			server_t *server_2 = target_server->virtual_server ? target_server->real_server : target_server;
+
+			if (server_1->server_id == server_2->server_id) {
 #if DEBUG
-				debug_log("Document %s already on correct server %d\n", document->name, current_server->server_id);
+				debug_log("Document %s already on correct server %d\n", document->name, server_1->server_id);
 #endif // DEBUG
 				document_free(&document);
 				continue;
@@ -187,13 +184,6 @@ server_t *load_balancer_get_server(load_balancer_t *load_balancer, uint hash)
 
 response_t *load_balancer_forward_request(load_balancer_t *load_balancer, request_t *request, bool execute_immediately, bool bypass_cache)
 {
-#if DEBUG
-	if(strcmp("5a51719f5ec", request->document->name) == 0)
-	{
-		printf("Request for document %s\n", request->document->name);
-	}
-#endif // DEBUG
-
 	server_t *target_server = load_balancer_get_target_server(load_balancer, request->document);
 	request->server_id = target_server->server_id;
 
