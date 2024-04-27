@@ -20,13 +20,17 @@ typedef struct {
 
 	// Data functions
 	bool (*data_compare)(void *data1, void *data2);
+
 	uint (*data_get_size)(void *data);
+
 	void (*data_free)(void **data);
 } queue_t;
 
 // ==================== Constructor(s) ====================
 
-queue_t *queue_init(bool (*data_compare)(void *key1, void *key2), uint (*data_get_size)(void *data), void (*data_free)(void **data));
+queue_t *queue_init(bool (*data_compare)(void *key1, void *key2),
+					uint (*data_get_size)(void *data),
+					void (*data_free)(void **data));
 
 // ==================== Memory ====================
 
@@ -44,4 +48,4 @@ bool queue_is_empty(queue_t *queue);
 
 void queue_remove(queue_t *queue, void *data);
 
-#endif //QUEUE_H
+#endif  // QUEUE_H

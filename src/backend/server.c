@@ -19,14 +19,17 @@ server_t *server_init(uint cache_size, uint server_id)
 
 	server->database = database_init(DATABASE_HASH_TABLE_SIZE);
 	server->cache = cache_init(cache_size);
-	server->task_queue = queue_init((bool (*)(void *, void *))request_equal, (uint (*)(void *))request_size, (void (*)(void **))request_free);
+	server->task_queue = queue_init((bool (*)(void *, void *))request_equal,
+									(uint (*)(void *))request_size,
+									(void (*)(void **))request_free);
 
 	server->real_server = NULL;
 
 	return server;
 }
 
-server_t *virtual_server_init(uint cache_size, uint server_id, server_t *real_server)
+server_t *virtual_server_init(uint cache_size, uint server_id,
+							  server_t *real_server)
 {
 	server_t *server = server_init(cache_size, server_id);
 
@@ -36,7 +39,9 @@ server_t *virtual_server_init(uint cache_size, uint server_id, server_t *real_se
 	return server;
 }
 
-static response_t *server_edit_document_immediate(server_t *server, document_t *document, bool bypass_cache)
+static response_t *server_edit_document_immediate(server_t *server,
+												  document_t *document,
+												  bool bypass_cache)
 {
 	if (bypass_cache) {
 		database_put(server->database, document);
@@ -48,12 +53,11 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 #if DEBUG
 	debug_log("Editing document %s\n", document->name);
 
-	if(strcmp("public_economic.txt", document->name) == 0) {
+	if (strcmp("public_economic.txt", document->name) == 0) {
 		debug_log("Editing public_economic.txt\n");
 		server_print(server, "");
 	}
-
-#endif // DEBUG
+#endif  // DEBUG
 	string_t lookup_result = cache_get(server->cache, document->name);
 
 	if (lookup_result != NULL) {
@@ -75,8 +79,10 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 		if (evicted_document != NULL) {
 			database_put(server->database, evicted_document);
 
-			response_t *response = response_init(log_cache_miss_with_evict(document->name, evicted_document->name),
-												 database_entry_edited(document->name));
+			response_t *response = response_init(
+					log_cache_miss_with_evict(document->name,
+											  evicted_document->name),
+					database_entry_edited(document->name));
 
 			document_free(&evicted_document);
 
@@ -92,8 +98,10 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 	if (evicted_document != NULL) {
 		database_put(server->database, evicted_document);
 
-		response_t *response = response_init(log_cache_miss_with_evict(document->name, evicted_document->name),
-											 database_entry_created(document->name));
+		response_t *response = response_init(
+				log_cache_miss_with_evict(document->name,
+										  evicted_document->name),
+				database_entry_created(document->name));
 
 		document_free(&evicted_document);
 
@@ -104,22 +112,27 @@ static response_t *server_edit_document_immediate(server_t *server, document_t *
 						 database_entry_created(document->name));
 }
 
-static response_t *server_edit_document(server_t *server, document_t *document, bool execute_immediately, bool bypass_cache)
+static response_t *server_edit_document(server_t *server, document_t *document,
+										bool execute_immediately,
+										bool bypass_cache)
 {
 	if (execute_immediately) {
-		response_t *output = server_edit_document_immediate(server, document, bypass_cache);
+		response_t *output = server_edit_document_immediate(server, document,
+															bypass_cache);
 
 #if DEBUG
-		if(strcmp("public_economic.txt", document->name) == 0) {
+		if (strcmp("public_economic.txt", document->name) == 0) {
 			debug_log("Edited public_economic.txt\n");
 			server_print(server, "");
 		}
-#endif // DEBUG
+#endif  // DEBUG
 
 		return output;
 	}
 
-	request_t *request = request_init(EDIT_DOCUMENT, document_init(document->name, document->content), 0);
+	request_t *request = request_init(EDIT_DOCUMENT,
+									  document_init(document->name,
+													document->content), 0);
 	queue_enqueue(server->task_queue, request);
 
 	free(request);
@@ -128,13 +141,14 @@ static response_t *server_edit_document(server_t *server, document_t *document, 
 						 server_queued(EDIT_DOCUMENT, document->name));
 }
 
-static response_t *server_get_document(server_t *server, document_t *document, uint actual_server_id)
+static response_t *server_get_document(server_t *server, document_t *document,
+									   uint actual_server_id)
 {
 	execute_task_queue(server, actual_server_id);
 
 #if DEBUG
 	debug_log("Getting document %s\n", document->name);
-#endif // DEBUG
+#endif  // DEBUG
 
 	string_t lookup_result = cache_get(server->cache, document->name);
 
@@ -145,38 +159,47 @@ static response_t *server_get_document(server_t *server, document_t *document, u
 	lookup_result = database_get(server->database, document->name);
 
 	if (lookup_result == NULL) {
-		return response_init( log_fault(document->name), NULL);
+		return response_init(log_fault(document->name), NULL);
 	}
 
-	document_t *evicted_document = cache_put_explicit(server->cache, document->name, lookup_result);
+	document_t *evicted_document = cache_put_explicit(server->cache,
+													  document->name,
+													  lookup_result);
 
 	if (evicted_document != NULL) {
 		database_put(server->database, evicted_document);
 
-		response_t *response = response_init( log_cache_miss_with_evict(document->name, evicted_document->name), lookup_result);
+		response_t *response = response_init(
+				log_cache_miss_with_evict(document->name,
+										  evicted_document->name),
+				lookup_result);
 
 		document_free(&evicted_document);
 
 		return response;
 	}
 
-	return response_init( log_cache_miss(document->name), lookup_result);
+	return response_init(log_cache_miss(document->name), lookup_result);
 }
 
-response_t *server_handle_request(server_t *server, request_t *request, bool execute_immediately, bool bypass_cache)
+response_t *server_handle_request(server_t *server, request_t *request,
+								  bool execute_immediately,
+								  bool bypass_cache)
 {
 #if DEBUG
 	debug_log("Request received by server %u\n", server->server_id);
-#endif // DEBUG
+#endif  // DEBUG
 	response_t *output = NULL;
 
 	switch (request->type) {
 	case EDIT_DOCUMENT: {
-		output = server_edit_document(server, request->document, execute_immediately, bypass_cache);
+		output = server_edit_document(server, request->document,
+									  execute_immediately, bypass_cache);
 		break;
 	}
 	case GET_DOCUMENT: {
-		output = server_get_document(server, request->document, request->server_id);
+		output = server_get_document(server, request->document,
+									 request->server_id);
 		break;
 	}
 	default:
@@ -199,19 +222,21 @@ void server_free(server_t **server)
 
 void execute_task_queue(server_t *server, uint actual_server_id)
 {
-	if(server->virtual_server){
+	if (server->virtual_server) {
 		execute_task_queue(server->real_server, actual_server_id);
 		return;
 	}
 
 #if DEBUG
 	debug_log("Executing task queue of server %d:\n", actual_server_id);
-	queue_print(server->task_queue, (string_t (*)(void *))queued_task_to_string, "\t", true);
-#endif // DEBUG
+	queue_print(server->task_queue, (string_t (*)(void *))queued_task_to_string,
+				"\t", true);
+#endif  // DEBUG
 
 	while (!queue_is_empty(server->task_queue)) {
 		request_t *request = queue_dequeue(server->task_queue);
-		response_t *response = server_handle_request(server, request, true, false);
+		response_t *response = server_handle_request(server, request, true,
+													 false);
 		response->server_id = actual_server_id;
 
 		response_print(response);
@@ -233,7 +258,7 @@ bool server_compare(server_t *server1, server_t *server2)
 
 document_t **server_get_all_documents(server_t *server, uint *size)
 {
-	if(server->virtual_server){
+	if (server->virtual_server) {
 		return server_get_all_documents(server->real_server, size);
 	}
 
@@ -263,14 +288,15 @@ document_t **server_get_all_documents(server_t *server, uint *size)
 
 void remove_document(server_t *server, document_t *document)
 {
-	if(server->virtual_server){
+	if (server->virtual_server) {
 		remove_document(server->real_server, document);
 		return;
 	}
 
 #if DEBUG
-	debug_log("[Server %d] Removing document %s\n",server->server_id, document->name);
-#endif // DEBUG
+	debug_log("[Server %d] Removing document %s\n", server->server_id,
+			  document->name);
+#endif  // DEBUG
 	cache_remove(server->cache, document->name);
 	database_remove(server->database, document->name);
 }

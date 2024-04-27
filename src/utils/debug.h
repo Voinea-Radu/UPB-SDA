@@ -27,10 +27,17 @@ void server_print(server_t *server, string_t prefix);
 
 void database_print(database_t *database, string_t prefix);
 
-void queue_print(queue_t *queue, string_t (*to_string_function)(void*),string_t prefix, bool should_free);
+void queue_print(queue_t *queue, string_t (*to_string_function)(void *),
+				 string_t prefix, bool should_free);
 
 void load_balancer_print(load_balancer_t *load_balancer);
 
-#endif // DEBUG
+void debug_init(void);
 
-#endif // DEBUG_H
+int debug_log(const char *format, ...);
+
+int debug_log_no_prefix(const char *format, ...);
+
+#endif  // DEBUG
+
+#endif  // DEBUG_H

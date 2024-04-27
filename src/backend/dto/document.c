@@ -10,7 +10,8 @@ document_t *document_init(string_t name, string_t content)
 	document_t *document = safe_malloc(sizeof(document_t));
 
 	document->name = create_and_copy(name, (uint (*)(void *))string_data_size);
-	document->content = create_and_copy(content, (uint (*)(void *))string_data_size);
+	document->content = create_and_copy(content,
+										(uint (*)(void *))string_data_size);
 
 	return document;
 }

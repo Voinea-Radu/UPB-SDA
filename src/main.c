@@ -14,7 +14,7 @@ int main(int argc, string_t *argv)
 {
 #if DEBUG
 	debug_init();
-#endif // DEBUG
+#endif  // DEBUG
 
 	FILE *input;
 

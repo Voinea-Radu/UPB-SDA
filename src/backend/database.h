@@ -9,7 +9,7 @@
 #include "dto/document.h"
 
 typedef struct {
-	hash_map_t *data; // HashMap<String, String>
+	hash_map_t *data;  // HashMap<String, String>
 } database_t;
 
 // ==================== Constructor(s) ====================
@@ -30,4 +30,4 @@ string_t database_get(database_t *database, string_t key);
 
 void database_remove(database_t *database, string_t key);
 
-#endif //DATABASE_H
+#endif  // DATABASE_H

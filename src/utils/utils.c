@@ -51,9 +51,11 @@ request_type_t get_request_type(string_t request_type_str)
 {
 	request_type_t type;
 
-	if (!strncmp(request_type_str, ADD_SERVER_REQUEST, strlen(ADD_SERVER_REQUEST)))
+	if (!strncmp(request_type_str, ADD_SERVER_REQUEST,
+				 strlen(ADD_SERVER_REQUEST)))
 		type = ADD_SERVER;
-	else if (!strncmp(request_type_str, REMOVE_SERVER_REQUEST, strlen(REMOVE_SERVER_REQUEST)))
+	else if (!strncmp(request_type_str, REMOVE_SERVER_REQUEST,
+					  strlen(REMOVE_SERVER_REQUEST)))
 		type = REMOVE_SERVER;
 	else if (!strncmp(request_type_str, EDIT_REQUEST, strlen(EDIT_REQUEST)))
 		type = EDIT_DOCUMENT;
@@ -69,9 +71,9 @@ void *safe_malloc(size_t size)
 {
 #if DEBUG
 	void *result = safe_calloc(size);
-#else // DEBUG
+#else  // DEBUG
 	void *result = malloc(size);
-#endif // DEBUG
+#endif  // DEBUG
 	check_or_exit(!result, MEMORY_ERROR);
 
 	return result;
@@ -110,7 +112,7 @@ void check_or_exit(bool condition, string_t message)
 
 int str_to_int(string_t str)
 {
-	return strtol(str, NULL, 10); // NOLINT(*-narrowing-conversions)
+	return strtol(str, NULL, 10);
 }
 
 void read_quoted_string(string_t buffer, int buffer_len, int *start, int *end)
@@ -169,102 +171,27 @@ void string_free(string_t *data)
 	*data = NULL;
 }
 
-#if DEBUG
-
-/**
- * This function exists for the sole reason that CLion debugger on windows igit pus
- * not printing any output unless fflush is called
- */
-int printf(const char *format, ...)
-{
-	__builtin_va_list argv;
-	__builtin_va_start(argv, format);
-
-	string_t output = safe_malloc(10000);
-
-	vsprintf(output, format, argv);
-	fprintf(stdout, "%s", output);
-
-	__builtin_va_end(argv);
-	fflush(stdout);
-
-	debug_log_no_prefix("%s", output);
-
-	free(output);
-
-	return 0;
-}
-
-void debug_init(void)
-{
-	FILE *file = fopen("debug.log", "w");
-	fclose(file);
-}
-
-int debug_log(const char *format, ...)
-{
-	__builtin_va_list argv;
-	__builtin_va_start(argv, format);
-
-	string_t output_1 = safe_malloc(10000);
-	string_t output_2 = safe_malloc(10000);
-
-	vsprintf(output_1, format, argv);
-	sprintf(output_2, "[DEBUG] %s", output_1);
-
-	debug_log_no_prefix("%s", output_2);
-
-	free(output_1);
-	free(output_2);
-
-	__builtin_va_end(argv);
-	fflush(stdout);
-
-	return 0;
-}
-
-int debug_log_no_prefix(const char *format, ...)
-{
-	FILE *file = fopen("debug.log", "a");
-
-	__builtin_va_list argv;
-	__builtin_va_start(argv, format);
-
-	string_t output = safe_malloc(10000);
-
-	vsprintf(output, format, argv);
-
-	fprintf(file, "%s", output);
-
-	free(output);
-
-	__builtin_va_end(argv);
-	fflush(stdout);
-	fclose(file);
-
-	return 0;
-}
-
-#endif // DEBUG
-
 string_t server_queued(request_type_t request_type, string_t document_name)
 {
 	string_t request_type_str = get_request_type_str(request_type);
-	string_t output = malloc(strlen(SERVER_QUEUED) + strlen(request_type_str) + strlen(document_name) + 1);
+	string_t output = malloc(strlen(SERVER_QUEUED) + strlen(request_type_str) +
+							 strlen(document_name) + 1);
 	sprintf(output, SERVER_QUEUED, request_type_str, document_name);
 	return output;
 }
 
 string_t database_entry_edited(string_t document_name)
 {
-	string_t output = malloc(strlen(DATABASE_ENTRY_EDITED) + strlen(document_name) + 1);
+	string_t output = malloc(strlen(DATABASE_ENTRY_EDITED) +
+							 strlen(document_name) + 1);
 	sprintf(output, DATABASE_ENTRY_EDITED, document_name);
 	return output;
 }
 
 string_t database_entry_created(string_t document_name)
 {
-	string_t output = malloc(strlen(DATABASE_ENTRY_CREATED) + strlen(document_name) + 1);
+	string_t output = malloc(strlen(DATABASE_ENTRY_CREATED) +
+							 strlen(document_name) + 1);
 	sprintf(output, DATABASE_ENTRY_CREATED, document_name);
 	return output;
 }
@@ -281,20 +208,24 @@ string_t log_cache_hit(string_t document_name)
 	string_t output = malloc(strlen(LOG_CACHE_HIT) + strlen(document_name) + 1);
 	sprintf(output, LOG_CACHE_HIT, document_name);
 	return output;
-
 }
 
 string_t log_cache_miss(string_t document_name)
 {
-	string_t output = malloc(strlen(LOG_CACHE_MISS) + strlen(document_name) + 1);
+	string_t output = malloc(strlen(LOG_CACHE_MISS) +
+							 strlen(document_name) + 1);
 	sprintf(output, LOG_CACHE_MISS, document_name);
 	return output;
 }
 
-string_t log_cache_miss_with_evict(string_t document_name, string_t evicted_document_name)
+string_t log_cache_miss_with_evict(string_t document_name,
+								   string_t evicted_document_name)
 {
-	string_t output = malloc(strlen(LOG_CACHE_MISS_WITH_EVICT) + strlen(document_name) + strlen(evicted_document_name) + 1);
-	sprintf(output, LOG_CACHE_MISS_WITH_EVICT, document_name, evicted_document_name);
+	string_t output = malloc(
+			strlen(LOG_CACHE_MISS_WITH_EVICT) +
+			strlen(document_name) + strlen(evicted_document_name) + 1);
+	sprintf(output, LOG_CACHE_MISS_WITH_EVICT, document_name,
+			evicted_document_name);
 	return output;
 }
 

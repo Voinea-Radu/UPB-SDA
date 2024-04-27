@@ -26,7 +26,6 @@ void init(FILE *input)
 	}
 
 	load_balancer_free(&load_balancer);
-
 }
 
 void process_next_request(FILE *input, load_balancer_t *load_balancer)
@@ -39,7 +38,7 @@ void process_next_request(FILE *input, load_balancer_t *load_balancer)
 
 #if DEBUG
 	debug_log("Command: %s", buffer);
-#endif // DEBUG
+#endif  // DEBUG
 
 	request_type_t request_type = get_request_type(buffer);
 
@@ -66,7 +65,8 @@ void process_next_request(FILE *input, load_balancer_t *load_balancer)
 void handle_add_server(string_t buffer, load_balancer_t *load_balancer)
 {
 	int server_id = str_to_int(buffer + strlen(ADD_SERVER_REQUEST) + 1);
-	int cache_size = str_to_int(strchr(buffer + strlen(ADD_SERVER_REQUEST) + 1, ' '));
+	int cache_size = str_to_int(
+			strchr(buffer + strlen(ADD_SERVER_REQUEST) + 1, ' '));
 
 	check_or_exit(cache_size < 0, "Cache size must be positive.");
 
@@ -80,7 +80,7 @@ void handle_remove_server(string_t buffer, load_balancer_t *load_balancer)
 	load_balancer_remove_server(load_balancer, server_id);
 #if DEBUG
 	debug_log("Deleted server %d\n", server_id);
-#endif // DEBUG
+#endif  // DEBUG
 }
 
 void handle_edit_document(string_t buffer, load_balancer_t *load_balancer)
@@ -98,16 +98,22 @@ void handle_edit_document(string_t buffer, load_balancer_t *load_balancer)
 
 	word_start = -1;
 	read_quoted_string(tmp_buffer, DOC_CONTENT_LENGTH, &word_start, &word_end);
-	memcpy(document_content, tmp_buffer + word_start + 1, word_end - word_start - 1);
+	memcpy(document_content, tmp_buffer + word_start + 1,
+		   word_end - word_start - 1);
 
 	while (word_end == -1) {
 		read_quoted_string(buffer, DOC_CONTENT_LENGTH, &word_start, &word_end);
-		memcpy(document_content + strlen(document_content), buffer, word_end == -1 ? strlen(buffer) : (unsigned)word_end);
+		memcpy(document_content + strlen(document_content), buffer,
+			   word_end == -1 ? strlen(buffer) : (unsigned)word_end);
 	}
 
 
-	request_t *request = request_init(EDIT_DOCUMENT, document_init(document_name, document_content), 0);
-	response_t *response = load_balancer_forward_request(load_balancer, request, false, false);
+	request_t *request = request_init(EDIT_DOCUMENT,
+									  document_init(document_name,
+													document_content),
+									  0);
+	response_t *response = load_balancer_forward_request(load_balancer,
+														 request, false, false);
 
 	document_free(&request->document);
 
@@ -129,8 +135,10 @@ void handle_get_document(string_t buffer, load_balancer_t *load_balancer)
 	read_quoted_string(buffer, REQUEST_LENGTH, &word_start, &word_end);
 	memcpy(document_name, buffer + word_start + 1, word_end - word_start - 1);
 
-	request_t *request = request_init(GET_DOCUMENT, document_init(document_name, NULL),0);
-	response_t *response = load_balancer_forward_request(load_balancer, request, false, false);
+	request_t *request = request_init(GET_DOCUMENT,
+									  document_init(document_name, NULL), 0);
+	response_t *response = load_balancer_forward_request(load_balancer,
+														 request, false, false);
 
 	response_print(response);
 

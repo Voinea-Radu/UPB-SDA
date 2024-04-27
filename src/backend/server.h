@@ -28,7 +28,8 @@ typedef struct server_t {
 
 server_t *server_init(uint cache_size, uint server_id);
 
-server_t *virtual_server_init(uint cache_size, uint server_id, server_t *real_server);
+server_t *virtual_server_init(uint cache_size, uint server_id, server_t
+*real_server);
 
 // ==================== Memory ====================
 
@@ -56,7 +57,8 @@ void server_free(server_t **server);
  *     this case, after executing each task, PRINT_RESPONSE should
  *     be called).
  */
-response_t *server_handle_request(server_t *server, request_t *request, bool execute_immediately, bool bypass_cache);
+response_t *server_handle_request(server_t *server, request_t *request,
+								  bool execute_immediately, bool bypass_cache);
 
 void execute_task_queue(server_t *server, uint actual_server_id);
 
@@ -68,4 +70,4 @@ document_t **server_get_all_documents(server_t *server, uint *size);
 
 void remove_document(server_t *server, document_t *document);
 
-#endif // SERVER_H
+#endif  // SERVER_H

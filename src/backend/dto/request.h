@@ -17,7 +17,8 @@ typedef struct {
 
 // ==================== Constructor(s) ====================
 
-request_t *request_init(request_type_t type, document_t *document, uint server_id);
+request_t *request_init(request_type_t type, document_t *document,
+						uint server_id);
 
 // ==================== Memory ====================
 
@@ -29,4 +30,4 @@ bool request_equal(request_t *request1, request_t *request2);
 
 uint request_size(__attribute__((unused)) request_t *request);
 
-#endif // REQUEST_H
+#endif  // REQUEST_H

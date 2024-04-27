@@ -29,13 +29,14 @@ typedef unsigned int uint;
 #define ADD_SERVER_REQUEST      "ADD_SERVER"
 #define REMOVE_SERVER_REQUEST   "REMOVE_SERVER"
 
-#define MEMORY_ERROR      "There was an error while allocating memory!\nExiting...\n"
+#define MEMORY_ERROR "There was an error while allocating memory!\nExiting...\n"
 
 #define LOG_RESPONSE      "[Server %d]-Response: %s\n[Server %d]-Log: %s\n\n"
 
 #define LOG_CACHE_HIT     "Cache HIT for %s"
 #define LOG_CACHE_MISS    "Cache MISS for %s"
-#define LOG_CACHE_MISS_WITH_EVICT   "Cache MISS for %s - cache entry for %s has been evicted"
+#define LOG_CACHE_MISS_WITH_EVICT "Cache MISS for %s - cache entry for %s " \
+"has been evicted"
 #define LOG_FAULT         "Document %s doesn't exist"
 #define LOG_LAZY_EXEC     "Task queue size is %d"
 

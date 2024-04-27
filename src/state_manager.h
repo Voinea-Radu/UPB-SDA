@@ -19,4 +19,4 @@ void handle_edit_document(string_t buffer, load_balancer_t *load_balancer);
 
 void handle_get_document(string_t buffer, load_balancer_t *load_balancer);
 
-#endif //STATE_MANAGER_H
+#endif  // STATE_MANAGER_H

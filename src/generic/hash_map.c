@@ -6,8 +6,11 @@
 #include "hash_map.h"
 #include "../utils/utils.h"
 
-hash_map_t *hash_map_init(uint capacity, uint (*key_hash)(void *key), bool (*key_compare)(void *key1, void *key2),
-						  uint (*key_get_size)(void *key), uint (*value_get_size)(void *value), void (*key_free)(void **key),
+hash_map_t *hash_map_init(uint capacity, uint (*key_hash)(void *key),
+						  bool (*key_compare)(void *key1, void *key2),
+						  uint (*key_get_size)(void *key),
+						  uint (*value_get_size)(void *value),
+						  void (*key_free)(void **key),
 						  void (*value_free)(void **key))
 {
 	hash_map_t *map = malloc(sizeof(hash_map_t));
@@ -125,7 +128,8 @@ void hash_map_free(hash_map_t **map)
 	*map = NULL;
 }
 
-void hash_map_print(hash_map_t *map, string_t prefix, void (*print_entry)(string_t, void *, void *))
+void hash_map_print(hash_map_t *map, string_t prefix,
+					void (*print_entry)(string_t, void *, void *))
 {
 	for (uint i = 0; i < map->capacity; ++i) {
 		hash_map_entry_t *entry = map->entries[i];
@@ -137,7 +141,7 @@ void hash_map_print(hash_map_t *map, string_t prefix, void (*print_entry)(string
 	}
 }
 
-document_t** hash_map_get_values(hash_map_t *map)
+document_t **hash_map_get_values(hash_map_t *map)
 {
 	document_t **values = safe_malloc(map->size * sizeof(document_t *));
 	uint index = 0;
@@ -147,8 +151,10 @@ document_t** hash_map_get_values(hash_map_t *map)
 
 		while (entry) {
 			values[index] = safe_malloc(sizeof(document_t));
-			values[index]->name = create_and_copy(entry->key, map->key_get_size);
-			values[index]->content = create_and_copy(entry->value, map->value_get_size);
+			values[index]->name = create_and_copy(entry->key,
+												  map->key_get_size);
+			values[index]->content = create_and_copy(entry->value,
+													 map->value_get_size);
 
 			index++;
 			entry = entry->next;

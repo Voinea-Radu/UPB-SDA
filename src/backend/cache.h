@@ -26,8 +26,8 @@
  * @param capacity 	The maximum number of elements the cache can store
  */
 typedef struct cache {
-	hash_map_t *data; // HashMap<String, String>
-	queue_t *history; // Queue<String>
+	hash_map_t *data;  // HashMap<String, String>
+	queue_t *history;  // Queue<String>
 } cache_t;
 
 // ==================== Constructor(s) ====================
@@ -84,4 +84,4 @@ void cache_remove(cache_t *cache, string_t key);
  */
 void cache_free(cache_t **cache);
 
-#endif // CACHE_H
+#endif  // CACHE_H

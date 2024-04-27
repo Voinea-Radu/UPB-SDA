@@ -10,7 +10,7 @@
 /**
  * @brief A document structure
  *
- * This structure is used to store a document. A document has a name and content.
+ * This structure is used to store a document. A document has a name and content
  */
 typedef struct {
 	string_t name;
@@ -43,4 +43,4 @@ void document_free(document_t **document);
  */
 uint document_hash(document_t *document);
 
-#endif //DOCUMENT_H
+#endif  // DOCUMENT_H

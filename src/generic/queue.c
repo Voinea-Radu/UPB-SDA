@@ -5,7 +5,9 @@
 #include "../generic/queue.h"
 #include "../utils/utils.h"
 
-queue_t *queue_init(bool (*data_compare)(void *key1, void *key2), uint (*data_get_size)(void *data), void (*data_free)(void **data))
+queue_t *queue_init(bool (*data_compare)(void *key1, void *key2),
+					uint (*data_get_size)(void *data),
+					void (*data_free)(void **data))
 {
 	queue_t *queue = safe_malloc(sizeof(queue_t));
 

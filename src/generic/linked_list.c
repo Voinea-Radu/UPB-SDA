@@ -6,7 +6,8 @@
 #include "linked_list.h"
 #include "../utils/utils.h"
 
-linked_list_t *linked_list_init(uint (*data_get_size)(void *value), bool (*data_compare)(void *data1, void *data2),
+linked_list_t *linked_list_init(uint (*data_get_size)(void *value),
+								bool (*data_compare)(void *data1, void *data2),
 								void (*data_free)(void **data))
 {
 	linked_list_t *list = malloc(sizeof(linked_list_t));
@@ -37,7 +38,7 @@ void linked_list_free(linked_list_t **list)
 	*list = NULL;
 }
 
-void* linked_list_get_at_index(linked_list_t *list, int index)
+void *linked_list_get_at_index(linked_list_t *list, int index)
 {
 	node_t *node = list->head;
 	int i = 0;
@@ -88,7 +89,6 @@ void linked_list_add_at_index(linked_list_t *list, void *data, int index)
 	}
 
 	list->size++;
-
 }
 
 void linked_list_add(linked_list_t *list, void *data)
@@ -125,7 +125,7 @@ void *linked_list_remove(linked_list_t *list, void *data)
 				list->tail = prev;
 			}
 
-			void* output = node->data;
+			void *output = node->data;
 
 			free(node);
 			list->size--;

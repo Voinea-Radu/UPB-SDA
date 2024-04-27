@@ -52,7 +52,8 @@ void load_balancer_print(load_balancer_t *load_balancer)
 string_t queued_task_to_string(request_t *request)
 {
 	string_t output = safe_malloc(sizeof(char) * 10000);
-	sprintf(output, "Request type: %s, Document name: %s, Document content: %s", get_request_type_str(request->type),
+	sprintf(output, "Request type: %s, Document name: %s, Document content: %s",
+			get_request_type_str(request->type),
 			request->document->name, request->document->content);
 	return output;
 }
@@ -72,7 +73,8 @@ void server_print(server_t *server, string_t prefix)
 	cache_print(server->cache, new_prefix);
 
 	debug_log("\t%sTask queue:\n", prefix);
-	queue_print(server->task_queue, (string_t (*)(void *))queued_task_to_string, new_prefix, true);
+	queue_print(server->task_queue, (string_t (*)(void *))queued_task_to_string,
+				new_prefix, true);
 
 	free(__new_prefix);
 	free(new_prefix);
@@ -85,10 +87,12 @@ void database_print_entry(string_t prefix, string_t key, string_t value)
 
 void database_print(database_t *database, string_t prefix)
 {
-	hash_map_print(database->data, prefix, (void (*)(string_t, void *, void *))database_print_entry);
+	hash_map_print(database->data, prefix,
+				   (void (*)(string_t, void *, void *))database_print_entry);
 }
 
-void queue_print(queue_t *queue, string_t (*to_string_function)(void *), string_t prefix, bool should_free)
+void queue_print(queue_t *queue, string_t (*to_string_function)(void *),
+				 string_t prefix, bool should_free)
 {
 	queue_node_t *node = queue->head;
 
@@ -102,6 +106,80 @@ void queue_print(queue_t *queue, string_t (*to_string_function)(void *), string_
 
 		node = node->next;
 	}
+}
+
+/**
+ * This function exists for the sole reason that CLion debugger on windows
+ * not printing any output unless fflush is called
+ */
+int printf(const char *format, ...)
+{
+	__builtin_va_list argv;
+	__builtin_va_start(argv, format);
+
+	string_t output = safe_malloc(10000);
+
+	vsprintf(output, format, argv);
+	fprintf(stdout, "%s", output);
+
+	__builtin_va_end(argv);
+	fflush(stdout);
+
+	debug_log_no_prefix("%s", output);
+
+	free(output);
+
+	return 0;
+}
+
+void debug_init(void)
+{
+	FILE *file = fopen("debug.log", "w");
+	fclose(file);
+}
+
+int debug_log(const char *format, ...)
+{
+	__builtin_va_list argv;
+	__builtin_va_start(argv, format);
+
+	string_t output_1 = safe_malloc(10000);
+	string_t output_2 = safe_malloc(10000);
+
+	vsprintf(output_1, format, argv);
+	sprintf(output_2, "[DEBUG] %s", output_1);
+
+	debug_log_no_prefix("%s", output_2);
+
+	free(output_1);
+	free(output_2);
+
+	__builtin_va_end(argv);
+	fflush(stdout);
+
+	return 0;
+}
+
+int debug_log_no_prefix(const char *format, ...)
+{
+	FILE *file = fopen("debug.log", "a");
+
+	__builtin_va_list argv;
+	__builtin_va_start(argv, format);
+
+	string_t output = safe_malloc(10000);
+
+	vsprintf(output, format, argv);
+
+	fprintf(file, "%s", output);
+
+	free(output);
+
+	__builtin_va_end(argv);
+	fflush(stdout);
+	fclose(file);
+
+	return 0;
 }
 
 #endif

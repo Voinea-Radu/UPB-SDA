@@ -27,4 +27,4 @@ void response_free(response_t **response);
 
 void response_print(response_t *response);
 
-#endif // RESPONSE_H
+#endif  // RESPONSE_H
