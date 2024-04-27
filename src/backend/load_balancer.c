@@ -47,7 +47,7 @@ void load_balancer_add_server(load_balancer_t *load_balancer, int server_id, int
 server_t* __load_balancer_add_server(load_balancer_t *load_balancer, server_t *server)
 {
 #if DEBUG
-	debug_log("Adding server %d with cache size %u and hash %u\n", server->server_id, server->cache->data->size, server->hash);
+	debug_log("Adding server %d with cache size %u and hash %u\n", server->server_id, server->cache->data->capacity, server->hash);
 #endif // DEBUG
 	node_t *current_node = load_balancer->servers->head;
 	server_t *current_server = NULL;
@@ -76,6 +76,9 @@ server_t* __load_balancer_add_server(load_balancer_t *load_balancer, server_t *s
 	load_balancer->servers_count++;
 
 	if (current_server != NULL) {
+#if DEBUG
+		debug_log("Migrating documents from server %d to server %d\n", current_server->server_id, server->server_id);
+#endif
 		execute_task_queue(current_server, current_server->server_id);
 
 		uint current_server_documents_count = 0;
