@@ -15,7 +15,7 @@ tema2: src/main.c
 	$(CC) $(CFLAGS) src/**/**/*.c src/**/*.c src/*.c src/**/**/*.h src/**/*.h src/*.h -lm -o tema2
 
 pack:
-	zip -FSr 315CA_VoineaRadu_TEMA1.zip README Makefile src/
+	zip -FSr 315CA_VoineaRadu_TEMA2.zip README README.md Makefile src/
 
 clean:
 	rm -f $(TARGETS)
