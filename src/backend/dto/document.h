@@ -10,7 +10,8 @@
 /**
  * @brief A document structure
  *
- * This structure is used to store a document. A document has a name and content
+ * @field name 	The name of the document
+ * @field content 	The content of the document
  */
 typedef struct {
 	string_t name;

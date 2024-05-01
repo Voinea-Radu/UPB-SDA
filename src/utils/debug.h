@@ -38,6 +38,8 @@ int debug_log(const char *format, ...);
 
 int debug_log_no_prefix(const char *format, ...);
 
+string_t increase_prefix(string_t prefix);
+
 #endif  // DEBUG
 
 #endif  // DEBUG_H

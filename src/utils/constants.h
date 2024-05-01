@@ -48,6 +48,13 @@ typedef unsigned int uint;
 #define DATABASE_ENTRY_EDITED    MSG_B
 #define DATABASE_ENTRY_CREATED   MSG_C
 
+/**
+ * @brief The type of a request
+ * @field ADD_SERVER 		Adds a server
+ * @field REMOVE_SERVER 	Removes a server
+ * @field EDIT_DOCUMENT 	Edits a document
+ * @field GET_DOCUMENT 		Gets a document
+ */
 typedef enum request_type {
 	ADD_SERVER,
 	REMOVE_SERVER,

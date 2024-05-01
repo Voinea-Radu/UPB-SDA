@@ -132,16 +132,6 @@ void read_quoted_string(string_t buffer, int buffer_len, int *start, int *end)
 	}
 }
 
-string_t increase_prefix(string_t prefix)
-{
-	int prefix_len = strlen(prefix);
-	string_t new_prefix = safe_malloc(prefix_len + 2);
-
-	strcat(new_prefix, "\t");
-	strcat(new_prefix, prefix);
-
-	return new_prefix;
-}
 
 void *create_and_copy_explicit(void *src, uint size)
 {
