@@ -3,3 +3,6 @@
 feed
 posts
 friends
+*.out
+*.valgrind
+check

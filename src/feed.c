@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "feed.h"
-#include "users.h"
+#include "utils/users.h"
 
 void handle_input_feed(char *input)
 {

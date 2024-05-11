@@ -30,7 +30,7 @@ social_media_feed.o:
 	$(CC) $(CFLAGS) -c -D TASK_1 -D TASK_2 -D TASK_3 -o $@ src/social_media.c
 
 users.o:
-	$(CC) $(CFLAGS) -c -o $@ src/users.c
+	$(CC) $(CFLAGS) -c -o $@ src/utils/users.c
 
 friends.o:
 	$(CC) $(CFLAGS) -c -o $@ src/friends.c

@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "friends.h"
-#include "users.h"
+#include "utils/users.h"
 
 void handle_input_friends(char *input)
 {

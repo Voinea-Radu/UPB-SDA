@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "users.h"
+#include "utils/users.h"
 #include "posts.h"
 
 void handle_input_posts(char *input)

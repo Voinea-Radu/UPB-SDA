@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "users.h"
+#include "utils/users.h"
 #include "friends.h"
 #include "posts.h"
 #include "feed.h"
