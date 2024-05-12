@@ -1,6 +1,7 @@
-/**
- * The entrypoint of the homework. Every initialization must be done here
-*/
+//
+// Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
+//
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -9,10 +10,8 @@
 #include "friends.h"
 #include "posts.h"
 #include "feed.h"
+#include "utils/debug.h"
 
-/**
- * Initializez every task based on which task we are running
-*/
 void init_tasks(void)
 {
 	#ifdef TASK_1
@@ -28,13 +27,10 @@ void init_tasks(void)
 	#endif
 }
 
-/**
- * Entrypoint of the program, compiled with different defines for each task
-*/
 int main(void)
 {
+	debug_init();
 	init_users();
-
 	init_tasks();
 
 	char *input = (char *)malloc(MAX_COMMAND_LEN);
