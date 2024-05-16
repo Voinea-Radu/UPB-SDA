@@ -16,6 +16,5 @@ posts: clean
 feed: clean
 	$(CC) $(CFLAGS) -D TASK_1 -D TASK_2 -D TASK_3 src/*.c src/*.h src/**/*.c src/**/*.h -o $@
 
-
 clean:
 	rm -rf *.o friends posts feed

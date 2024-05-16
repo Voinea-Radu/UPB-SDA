@@ -7,6 +7,18 @@
 
 #include "utils/utils.h"
 
+typedef struct post_t{
+	int id;
+	int user_id;
+	string_t title;
+
+	// likes
+	int likes_count;
+	int* likes;
+
+	struct post_t* reports;
+}post_t;
+
 void handle_input_posts(string_t input);
 
 void handle_create(string_t command);
