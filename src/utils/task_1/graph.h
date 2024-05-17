@@ -7,6 +7,7 @@
 
 #include "double_linked_list.h"
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef struct Graph {
 	size_t num_nodes;
@@ -14,7 +15,7 @@ typedef struct Graph {
 } graph_t;
 
 graph_t *graph_create(size_t num_nodes, size_t data_size,
-					  void (*free_data_function)(void **));
+					  void (*free_data_function)(void *));
 
 void graph_add_edge(graph_t *graph, size_t from, size_t to);
 

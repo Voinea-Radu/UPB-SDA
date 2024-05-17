@@ -10,6 +10,8 @@
 #include "posts.h"
 #include "feed.h"
 
+#include "utils/task_1/graph.h"
+
 /**
  * Initializez every task based on which task we are running
 */
@@ -37,6 +39,8 @@ int main(void)
 
 	init_tasks();
 
+	graph_t *friends_graph = graph_create(MAX_PEOPLE, sizeof(uint16_t), free);
+
 	char *input = (char *)malloc(MAX_COMMAND_LEN);
 	while (1) {
 		input = fgets(input, MAX_COMMAND_LEN, stdin);
@@ -46,7 +50,7 @@ int main(void)
 			break;
 
 		#ifdef TASK_1
-		handle_input_friends(input);
+		handle_input_friends(input, friends_graph);
 		#endif
 
 		#ifdef TASK_2

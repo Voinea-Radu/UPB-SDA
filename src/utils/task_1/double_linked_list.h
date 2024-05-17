@@ -22,7 +22,7 @@ typedef struct {
 	size_t size;
 	size_t data_size;
 
-	void (*free_data_function)(void **);
+	void (*free_data_function)(void *);
 } double_linked_list_t;
 
 dll_node_t *dll_node_alloc(void);

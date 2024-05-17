@@ -5,7 +5,7 @@
 #include "graph.h"
 
 graph_t *graph_create(size_t num_nodes, size_t data_size,
-					  void (*free_data_function)(void **)) {
+					  void (*free_data_function)(void *)) {
 	graph_t *graph = malloc(sizeof(graph_t));
 
 	graph->num_nodes = num_nodes;
@@ -27,8 +27,7 @@ bool graph_has_edge(graph_t *graph, size_t from, size_t to) {
 	dll_node_t *node = dll_get_head(from_list);
 
 	while (node != NULL) {
-//		TODO: Modify this with what structure you have in the graph
-		int node_data = *(int *)node->data;
+		uint16_t node_data = *(uint16_t *)node->data;
 
 		if (node_data == to)
 			return true;
@@ -45,8 +44,7 @@ void graph_remove_edge(graph_t *graph, size_t from, size_t to) {
 	size_t index = 0;
 
 	while (node != NULL) {
-//		TODO: Modify this with what structure you have in the graph
-		int node_data = *(int *)node->data;
+		uint16_t node_data = *(uint16_t *)node->data;
 
 		if (node_data == to) {
 			dll_remove_nth_node(from_list, index);

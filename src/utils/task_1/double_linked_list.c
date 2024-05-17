@@ -189,7 +189,7 @@ void dll_list_free(double_linked_list_t *list) {
 		dll_node_t *to_del = curr_node;
 		curr_node = curr_node->next;
 
-		list->free_data_function(&(to_del->data));
+		list->free_data_function(to_del->data);
 
 		free(to_del);
 		to_del = NULL;
