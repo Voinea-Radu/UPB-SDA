@@ -8,7 +8,7 @@
 
 #include "utils/users.h"
 #include "friends.h"
-#include "posts.h"
+#include "task2/task2.h"
 #include "feed.h"
 #include "utils/debug.h"
 

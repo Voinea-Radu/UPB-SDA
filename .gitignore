@@ -7,3 +7,4 @@ friends
 *.valgrind
 check
 debug.log
+debug.in
