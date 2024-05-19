@@ -24,7 +24,7 @@ void database_add_post(database_t *database, post_t *post)
 	linked_list_add(database->posts, post);
 }
 
-void database_add_repost_to_repost(post_t *post, uint32_t original_repost_id, post_t *repost)
+void __add_repost_to_repost(post_t *post, uint32_t original_repost_id, post_t *repost)
 {
 	node_t *current = post->reposts->head;
 
@@ -36,7 +36,7 @@ void database_add_repost_to_repost(post_t *post, uint32_t original_repost_id, po
 			return;
 		}
 
-		database_add_repost_to_repost(current_post, original_repost_id, repost);
+		__add_repost_to_repost(current_post, original_repost_id, repost);
 
 		current = current->next;
 	}
@@ -63,7 +63,7 @@ void database_add_repost(database_t *database, uint32_t original_post_id, uint32
 				return;
 			}
 
-			database_add_repost_to_repost(post, original_repost_id, repost);
+			__add_repost_to_repost(post, original_repost_id, repost);
 			return;
 		}
 
@@ -115,7 +115,7 @@ bool __iterate_posts(linked_list_t *post_list, uint32_t post_id, void (*callback
 	return false;
 }
 
-void print_reposts(database_t *database, uint32_t post_id, uint32_t repost_id)
+void database_print_reposts(database_t *database, uint32_t post_id, uint32_t repost_id)
 {
 	node_t *current = database->posts->head;
 
@@ -136,5 +136,66 @@ void print_reposts(database_t *database, uint32_t post_id, uint32_t repost_id)
 	}
 }
 
+uint32_t __print_common_repost(post_t *post, uint32_t repost_id1, uint32_t repost_id2)
+{
+	uint32_t result = 0;
+
+	if (post->id == repost_id1) {
+		result = 0b10;
+	}
+
+	if (post->id == repost_id2) {
+		result = 0b01;
+	}
+
+	node_t *current = post->reposts->head;
+
+	while (current != NULL) {
+		post_t *current_post = (post_t *)current->data;
+
+		result = result | __print_common_repost(current_post, repost_id1, repost_id2);
+
+		if (result == 0b111) {
+			return 0b111;
+		}
+
+		if (result == 0b11) {
+			printf("The first common repost of %d and %d is %d\n", repost_id1, repost_id2, post->id);
+			return 0b111;
+		}
+
+		current = current->next;
+	}
+
+	return result;
+}
+
+bool __get_common_reposts(linked_list_t *list, uint32_t post_id, uint32_t repost_id1, uint32_t repost_id2)
+{
+	node_t *current = list->head;
+
+	while (current != NULL) {
+		post_t *post = (post_t *)current->data;
+
+		if (post->id == post_id) {
+			__print_common_repost(post, repost_id1, repost_id2);
+			return true;
+		}
+
+		bool result = __get_common_reposts(post->reposts, post_id, repost_id1, repost_id2);
+
+		if (result) {
+			return true;
+		}
+
+		current = current->next;
+	}
+	return false;
+}
+
+void database_get_common_reposts(database_t *database, uint32_t post_id, uint32_t repost_id1, uint32_t repost_id2)
+{
+	__get_common_reposts(database->posts, post_id, repost_id1, repost_id2);
+}
 
 

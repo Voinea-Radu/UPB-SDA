@@ -134,13 +134,22 @@ void handle_get_reposts(database_t *database, string_t command)
 
 	debug_log("Printing reposts for post with id %d and repost: %d\n", post_id, repost_id);
 
-	print_reposts(database, post_id, repost_id);
+	database_print_reposts(database, post_id, repost_id);
 }
 
 void handle_common_repost(database_t *database, string_t command)
 {
-	database = database;
+	string_t post_id_str = strtok(command, " ");
+	string_t repost_id_1_str = strtok(NULL, " ");
+	string_t repost_id_2_str = strtok(NULL, " ");
+
+	uint32_t post_id = strtol(post_id_str, NULL, 10);
+	uint32_t repost_id_1 = strtol(repost_id_1_str, NULL, 10);
+	uint32_t repost_id_2 = strtol(repost_id_2_str, NULL, 10);
+
 	debug_log("%s\n", command);
+
+	database_get_common_reposts(database, post_id, repost_id_1, repost_id_2);
 }
 
 void handle_like(database_t *database, string_t command)

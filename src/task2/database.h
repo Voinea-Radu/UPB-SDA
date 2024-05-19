@@ -17,8 +17,6 @@ database_t *database_init();
 
 void database_add_post(database_t *database, post_t *post);
 
-void database_add_repost_to_repost(post_t *post, uint32_t original_repost_id, post_t *repost);
-
 /**
  * @param database 				The database
  * @param original_post_id 		The original post id
@@ -27,6 +25,7 @@ void database_add_repost_to_repost(post_t *post, uint32_t original_repost_id, po
  */
 void database_add_repost(database_t *database, uint32_t original_post_id, uint32_t original_repost_id, uint32_t user_id);
 
-void print_reposts(database_t *database, uint32_t post_id, uint32_t repost_id);
+void database_print_reposts(database_t *database, uint32_t post_id, uint32_t repost_id);
 
+void database_get_common_reposts(database_t *database, uint32_t post_id, uint32_t repost_id1, uint32_t repost_id2);
 #endif // DATABASE_H
