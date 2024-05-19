@@ -42,8 +42,8 @@ void handle_input_posts(char *input)
 		hash_map_put(commands_map, "like", handle_like);
 		hash_map_put(commands_map, "ratio", handle_ratio);
 		hash_map_put(commands_map, "delete", handle_delete);
-		hash_map_put(commands_map, "get-likes", handle_get_reposts);
-		hash_map_put(commands_map, "get-reposts", handle_get_likes);
+		hash_map_put(commands_map, "get-likes", handle_get_likes);
+		hash_map_put(commands_map, "get-reposts", handle_get_reposts );
 	}
 
 	if (NULL == database) {
@@ -66,7 +66,10 @@ void handle_input_posts(char *input)
 	int offset = strlen(command) + 1;
 
 	command = strdup(input);
-	command[strlen(command) - 1] = '\0';
+
+	if(command[strlen(command) - 1] == '\n'){
+		command[strlen(command) - 1] = '\0';
+	}
 	command += offset;
 	handler(database, command);
 
@@ -80,25 +83,26 @@ void handle_input_posts(char *input)
 
 void handle_create(database_t *database, string_t command)
 {
+	debug_log("create %s\n", command);
+
 	string_t username = strtok(command, " ");
 	string_t message = strtok(NULL, "\n");
 
-	debug_log("Creating post: username:%s message:%s\n", username, message);
+	debug_log("Creating post: username: %s | message: %s\n", username, message);
 
 	post_t *post = post_init(0, get_user_id(username), message);
 
 	database_add_post(database, post);
+	printf("Created %s for %s\n", message, username);
 }
 
 void handle_repost(database_t *database, string_t command)
 {
-	database = database;
+	debug_log("repost %s\n", command);
 
 	string_t username = strtok(command, " ");
 	string_t post_id_str = strtok(NULL, " ");
 	string_t repost_id_str = strtok(NULL, " ");
-
-	debug_log("Creating repost: username:%s post_id:%s repost_id:%s\n", username, post_id_str, repost_id_str);
 
 	uint32_t user_id = get_user_id(username);
 	uint32_t post_id = strtol(post_id_str, NULL, 10);
@@ -108,7 +112,29 @@ void handle_repost(database_t *database, string_t command)
 		repost_id = strtol(repost_id_str, NULL, 10);
 	}
 
+	debug_log("Creating repost: username: %s | post_id: %d | repost_id: %d\n", username, post_id, repost_id);
+
 	database_add_repost(database, post_id, repost_id, user_id);
+	printf("Created repost #%d for %s\n", database->next_post_id - 1, username);
+}
+
+void handle_get_reposts(database_t *database, string_t command)
+{
+	debug_log("get_reposts %s\n", command);
+
+	string_t post_id_str = strtok(command, " ");
+	string_t repost_id_str = strtok(NULL, " ");
+
+	uint32_t post_id = strtol(post_id_str, NULL, 10);
+	uint32_t repost_id = 0;
+
+	if (NULL != repost_id_str) {
+		repost_id = strtol(repost_id_str, NULL, 10);
+	}
+
+	debug_log("Printing reposts for post with id %d and repost: %d\n", post_id, repost_id);
+
+	print_reposts(database, post_id, repost_id);
 }
 
 void handle_common_repost(database_t *database, string_t command)
@@ -135,11 +161,6 @@ void handle_delete(database_t *database, string_t command)
 	debug_log("%s\n", command);
 }
 
-void handle_get_reposts(database_t *database, string_t command)
-{
-	database = database;
-	debug_log("%s\n", command);
-}
 
 void handle_get_likes(database_t *database, string_t command)
 {

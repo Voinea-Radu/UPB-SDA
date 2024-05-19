@@ -2,6 +2,7 @@
 // Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
 //
 
+#include <string.h>
 #include "debug.h"
 
 #if DEBUG
@@ -79,5 +80,17 @@ int debug_log_no_prefix(const char *format, ...)
 
 	return 0;
 }
+
+string_t increase_prefix(string_t prefix)
+{
+	int prefix_len = strlen(prefix);
+	string_t new_prefix = safe_malloc(prefix_len + 2);
+
+	strcat(new_prefix, "\t");
+	strcat(new_prefix, prefix);
+
+	return new_prefix;
+}
+
 
 #endif  // DEBUG

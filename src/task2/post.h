@@ -11,13 +11,13 @@
 
 typedef struct {
 	uint32_t id;
-	uint32_t user_id;
+	uint16_t user_id;
 	string_t title;
 
 	linked_list_t *likes; // list<int> / list<user_id>
 	linked_list_t *reposts; // list<post_t>
 } post_t;
 
-post_t *post_init(uint32_t id, uint32_t user_id, string_t title);
+post_t *post_init(uint32_t id, uint16_t user_id, string_t title);
 
 #endif // POST_H

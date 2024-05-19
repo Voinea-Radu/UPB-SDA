@@ -31,4 +31,6 @@ void linked_list_print_prefixed(linked_list_t *list, string_t prefix, void (*pri
 
 void linked_list_print(linked_list_t *list, void (*print)(void *data));
 
+void for_each(linked_list_t *list, void (*callback)(void *data));
+
 #endif // LINKED_LIST_H

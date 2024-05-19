@@ -7,7 +7,7 @@
 #include "../utils/utils.h"
 
 
-post_t *post_init(uint32_t id, uint32_t user_id, string_t title)
+post_t *post_init(uint32_t id, uint16_t user_id, string_t title)
 {
 	post_t *post = safe_malloc(sizeof(post_t));
 

@@ -93,3 +93,13 @@ void linked_list_print(linked_list_t *list, void (*print)(void *data))
 		current = current->next;
 	}
 }
+
+void for_each(linked_list_t *list, void (*callback)(void *data))
+{
+	node_t *current = list->head;
+
+	while (current != NULL) {
+		callback(current->data);
+		current = current->next;
+	}
+}

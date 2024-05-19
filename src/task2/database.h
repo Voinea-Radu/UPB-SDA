@@ -27,6 +27,6 @@ void database_add_repost_to_repost(post_t *post, uint32_t original_repost_id, po
  */
 void database_add_repost(database_t *database, uint32_t original_post_id, uint32_t original_repost_id, uint32_t user_id);
 
-string_t increase_prefix(string_t prefix);
+void print_reposts(database_t *database, uint32_t post_id, uint32_t repost_id);
 
 #endif // DATABASE_H

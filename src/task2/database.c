@@ -6,6 +6,7 @@
 #include <string.h>
 #include "database.h"
 #include "../utils/utils.h"
+#include "../utils/users.h"
 
 database_t *database_init()
 {
@@ -68,16 +69,72 @@ void database_add_repost(database_t *database, uint32_t original_post_id, uint32
 
 		current = current->next;
 	}
-
 }
 
-string_t increase_prefix(string_t prefix)
+void __print_repost(post_t *post)
 {
-	int prefix_len = strlen(prefix);
-	string_t new_prefix = safe_malloc(prefix_len + 2);
+	printf("Repost #%d by %s\n", post->id, get_username(post->user_id));
 
-	strcat(new_prefix, "\t");
-	strcat(new_prefix, prefix);
-
-	return new_prefix;
+	for_each(post->reposts, (void (*)(void *))__print_repost);
 }
+
+void __print_reposts(post_t *post)
+{
+	printf("%s - Post by %s\n", post->title, get_username(post->user_id));
+
+	for_each(post->reposts, (void (*)(void *))__print_repost);
+}
+
+void __print_reposts_of_reposts(post_t *post)
+{
+	printf("Repost #%d by %s\n", post->id, get_username(post->user_id));
+
+	for_each(post->reposts, (void (*)(void *))__print_repost);
+}
+
+bool __iterate_posts(linked_list_t *post_list, uint32_t post_id, void (*callback)(post_t *))
+{
+	node_t *current = post_list->head;
+
+	while (current != NULL) {
+		post_t *post = (post_t *)current->data;
+
+		if (post->id == post_id) {
+			callback(post);
+			return true;
+		}
+
+		bool result = __iterate_posts(post->reposts, post_id, callback);
+
+		if (result) {
+			return true;
+		}
+
+		current = current->next;
+	}
+	return false;
+}
+
+void print_reposts(database_t *database, uint32_t post_id, uint32_t repost_id)
+{
+	node_t *current = database->posts->head;
+
+	while (current != NULL) {
+		post_t *post = (post_t *)current->data;
+
+		if (post->id == post_id) {
+			if (repost_id == 0) {
+				__print_reposts(post);
+				return;
+			}
+
+			__iterate_posts(database->posts, repost_id, (void (*)(post_t *))__print_reposts_of_reposts);
+			return;
+		}
+
+		current = current->next;
+	}
+}
+
+
+
