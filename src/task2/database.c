@@ -266,4 +266,51 @@ void database_get_like_count(database_t *database, uint32_t post_id, uint32_t re
 	__get_like_count(database->posts, post_id, repost_id, false);
 }
 
+void __get_ratio(linked_list_t *list, uint32_t *current_max, uint32_t *current_max_id)
+{
+	node_t *current = list->head;
+	while (current != NULL) {
+		post_t *post = (post_t *)current->data;
+		uint32_t likes_count = post->likes->size;
+
+		if (likes_count > *current_max) {
+			*current_max = likes_count;
+			*current_max_id = post->id;
+		}
+
+		if (likes_count == *current_max) {
+			if (post->id < *current_max_id) {
+				*current_max_id = post->id;
+			}
+		}
+
+		__get_ratio(post->reposts, current_max, current_max_id);
+		current = current->next;
+	}
+}
+
+void database_get_ratio(database_t *database, uint32_t post_id)
+{
+	node_t *current = database->posts->head;
+	while (current != NULL) {
+		post_t *post = (post_t *)current->data;
+		if (post->id == post_id) {
+			uint32_t original_post_likes_count = post->likes->size;
+			uint32_t reposts_likes_count = 0;
+			uint32_t most_liked_repost_id = 0;
+
+			__get_ratio(post->reposts, &reposts_likes_count, &most_liked_repost_id);
+
+			if (original_post_likes_count >= reposts_likes_count) {
+				printf("The original post is the highest rated\n");
+			} else {
+				printf("Post %d got ratio'd by repost %d\n", post->id, most_liked_repost_id);
+			}
+
+			return;
+		}
+		current = current->next;
+	}
+}
+
 

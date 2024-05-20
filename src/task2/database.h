@@ -33,4 +33,6 @@ void database_toggle_like(database_t *database, uint16_t user_id, uint32_t post_
 
 void database_get_like_count(database_t *database, uint32_t post_id, uint32_t repost_id);
 
+void database_get_ratio(database_t *database, uint32_t post_id);
+
 #endif // DATABASE_H

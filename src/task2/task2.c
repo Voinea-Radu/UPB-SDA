@@ -181,18 +181,6 @@ void handle_like(database_t *database, string_t command)
 	database_toggle_like(database, user_id, post_id, repost_id);
 }
 
-void handle_ratio(database_t *database, string_t command)
-{
-	database = database;
-	debug_log("%s", command);
-}
-
-void handle_delete(database_t *database, string_t command)
-{
-	database = database;
-	debug_log("%s\n", command);
-}
-
 
 void handle_get_likes(database_t *database, string_t command)
 {
@@ -209,4 +197,22 @@ void handle_get_likes(database_t *database, string_t command)
 	debug_log("Getting likes: post_id: %d | repost_id: %d\n", post_id, repost_id);
 
 	database_get_like_count(database, post_id, repost_id);
+}
+
+void handle_ratio(database_t *database, string_t command)
+{
+	string_t post_id_str = strtok(command, " ");
+
+	uint32_t post_id = strtol(post_id_str, NULL, 10);
+
+	debug_log("Getting ratio: post_id: %d\n", post_id);
+
+	database_get_ratio(database, post_id);
+
+}
+
+void handle_delete(database_t *database, string_t command)
+{
+	database = database;
+	debug_log("%s\n", command);
 }
