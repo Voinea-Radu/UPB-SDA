@@ -6,24 +6,24 @@
 #define POSTS_H
 
 #include "../utils/utils.h"
-#include "database.h"
+#include "../generic/linked_list.h"
 
 void handle_input_posts(string_t input);
 
-void handle_create(database_t *database, string_t command);
+void handle_create(linked_list_t *posts, string_t command);
 
-void handle_repost(database_t *database, string_t command);
+void handle_repost(linked_list_t *posts, string_t command);
 
-void handle_common_repost(database_t *database, string_t command);
+void handle_common_repost(linked_list_t *posts, string_t command);
 
-void handle_like(database_t *database, string_t command);
+void handle_like(linked_list_t *posts, string_t command);
 
-void handle_ratio(database_t *database, string_t command);
+void handle_ratio(linked_list_t *posts, string_t command);
 
-void handle_delete(database_t *database, string_t command);
+void handle_delete(linked_list_t *posts, string_t command);
 
-void handle_get_reposts(database_t *database, string_t command);
+void handle_get_reposts(linked_list_t *posts, string_t command);
 
-void handle_get_likes(database_t *database, string_t command);
+void handle_get_likes(linked_list_t *posts, string_t command);
 
 #endif // POSTS_H

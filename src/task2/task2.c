@@ -11,14 +11,12 @@
 #include "../generic/hash_map.h"
 #include "../utils/utils.h"
 #include "../utils/debug.h"
-#include "database.h"
-
 
 
 void handle_input_posts(char *input)
 {
 	static hash_map_t *commands_map = NULL;
-	static database_t *database = NULL;
+	static linked_list_t *database = NULL;
 
 	if (NULL == commands_map) {
 		commands_map = hash_map_init(10, (uint (*)(void *))string_hash, (bool (*)(void *, void *))string_equals);
@@ -33,7 +31,7 @@ void handle_input_posts(char *input)
 	}
 
 	if (NULL == database) {
-		database = database_init();
+		database = linked_list_init(free_post, compare_post);
 	}
 
 	string_t command = strdup(input);
@@ -43,7 +41,7 @@ void handle_input_posts(char *input)
 		return;
 	}
 
-	void (*handler)(database_t *, string_t) = hash_map_get(commands_map, command);
+	void (*handler)(linked_list_t *, string_t) = hash_map_get(commands_map, command);
 
 	if (NULL == handler) {
 		return;
@@ -67,7 +65,7 @@ void handle_input_posts(char *input)
 #endif
 }
 
-void handle_create(database_t *database, string_t command)
+void handle_create(linked_list_t *posts, string_t command)
 {
 	string_t username = strtok(command, " ");
 	string_t message = strtok(NULL, "\n");
@@ -76,13 +74,13 @@ void handle_create(database_t *database, string_t command)
 	debug_log("Creating post: username: %s | message: %s\n", username, message);
 #endif
 
-	post_t *post = post_init(0, get_user_id(username), message);
+	post_t *post = post_init(0, get_user_id(username), message, false);
+	posts_add_post(posts, post);
 
-	database_add_post(database, post);
-	printf("Created %s for %s\n", message, username);
+	printf("Created %s for %s\n", message, username); // TODO move string to constants
 }
 
-void handle_repost(database_t *database, string_t command)
+void handle_repost(linked_list_t *posts, string_t command)
 {
 	string_t username = strtok(command, " ");
 	string_t post_id_str = strtok(NULL, " ");
@@ -100,11 +98,11 @@ void handle_repost(database_t *database, string_t command)
 	debug_log("Creating repost: username: %s | post_id: %d | repost_id: %d\n", username, post_id, repost_id);
 #endif
 
-	database_add_repost(database, post_id, repost_id, user_id);
-	printf("Created repost #%d for %s\n", database->next_post_id - 1, username);
+	post_t *post = posts_add_repost(posts, post_id, repost_id, user_id);
+	printf("Created repost #%d for %s\n", post->id, username); // TODO move string to constants
 }
 
-void handle_get_reposts(database_t *database, string_t command)
+void handle_get_reposts(linked_list_t *posts, string_t command)
 {
 	string_t post_id_str = strtok(command, " ");
 	string_t repost_id_str = strtok(NULL, " ");
@@ -120,10 +118,10 @@ void handle_get_reposts(database_t *database, string_t command)
 	debug_log("Printing reposts for post with id %d and repost: %d\n", post_id, repost_id);
 #endif
 
-	database_print_reposts(database, post_id, repost_id);
+	post_print_reposts(posts, post_id, repost_id);
 }
 
-void handle_common_repost(database_t *database, string_t command)
+void handle_common_repost(linked_list_t *posts, string_t command)
 {
 	string_t post_id_str = strtok(command, " ");
 	string_t repost_id_1_str = strtok(NULL, " ");
@@ -137,10 +135,12 @@ void handle_common_repost(database_t *database, string_t command)
 	debug_log("%s\n", command);
 #endif
 
-	database_get_common_reposts(database, post_id, repost_id_1, repost_id_2);
+	uint32_t common_repost_id = post_get_common_repost(posts, post_id, repost_id_1, repost_id_2);
+
+	printf("The first common repost of %d and %d is %d\n", repost_id_1, repost_id_2, common_repost_id); // TODO move string to constants
 }
 
-void handle_like(database_t *database, string_t command)
+void handle_like(linked_list_t *posts, string_t command)
 {
 	string_t username = strtok(command, " ");
 	string_t post_id_str = strtok(NULL, " ");
@@ -158,11 +158,10 @@ void handle_like(database_t *database, string_t command)
 	debug_log("Creating like: username: %s | post_id: %d | repost_id: %d\n", username, post_id, repost_id);
 #endif
 
-	database_toggle_like(database, user_id, post_id, repost_id);
+	post_toggle_like(posts, user_id, post_id, repost_id);
 }
 
-
-void handle_get_likes(database_t *database, string_t command)
+void handle_get_likes(linked_list_t *posts, string_t command)
 {
 	string_t post_id_str = strtok(command, " ");
 	string_t repost_id_str = strtok(NULL, " ");
@@ -178,10 +177,16 @@ void handle_get_likes(database_t *database, string_t command)
 	debug_log("Getting likes: post_id: %d | repost_id: %d\n", post_id, repost_id);
 #endif
 
-	database_get_like_count(database, post_id, repost_id);
+	post_t* post = post_get(posts, post_id, repost_id);
+
+	if (repost_id != 0) {
+		printf("Repost #%d has %d likes\n", post->id, post->likes->size);
+	} else {
+		printf("Post %s has %d likes\n", post->title, post->likes->size);
+	}
 }
 
-void handle_ratio(database_t *database, string_t command)
+void handle_ratio(linked_list_t *posts, string_t command)
 {
 	string_t post_id_str = strtok(command, " ");
 
@@ -191,11 +196,17 @@ void handle_ratio(database_t *database, string_t command)
 	debug_log("Getting ratio: post_id: %d\n", post_id);
 #endif
 
-	database_get_ratio(database, post_id);
+	uint32_t ratio_post_id = post_get_ratio(posts, post_id);
 
+	if (ratio_post_id == 0xffffffff) {
+		printf("The original post is the highest rated\n");
+		return;
+	}
+
+	printf("Post %d got ratio'd by repost %d\n", post_id, ratio_post_id);
 }
 
-void handle_delete(database_t *database, string_t command)
+void handle_delete(linked_list_t *posts, string_t command)
 {
 	string_t post_id_str = strtok(command, " ");
 	string_t repost_id_str = strtok(NULL, " ");
@@ -211,5 +222,5 @@ void handle_delete(database_t *database, string_t command)
 	debug_log("Deleting post: post_id: %d | repost_id: %d\n", post_id, repost_id);
 #endif
 
-	database_delete(database, post_id, repost_id);
+	post_delete(posts, post_id, repost_id);
 }
