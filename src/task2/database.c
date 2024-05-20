@@ -313,4 +313,35 @@ void database_get_ratio(database_t *database, uint32_t post_id)
 	}
 }
 
+void __delete_post(linked_list_t *list, uint32_t post_id, uint32_t repost_id, bool is_repost)
+{
+	node_t *current = list->head;
 
+	while (current != NULL) {
+		post_t *post = (post_t *)current->data;
+
+		if (post->id == post_id) {
+			if (repost_id == 0) {
+				if(is_repost) {
+					printf("Deleted repost #%d of post %s\n", post->id, post->title);
+				} else {
+					printf("Deleted post %s\n", post->title);
+				}
+				linked_list_remove(list, post);
+				return;
+			}
+
+			__delete_post(post->reposts, repost_id, 0, true);
+			return;
+		}
+
+		__delete_post(post->reposts, post_id, repost_id, is_repost);
+
+		current = current->next;
+	}
+}
+
+void database_delete(database_t *database, uint32_t post_id, uint32_t repost_id)
+{
+	__delete_post(database->posts, post_id, repost_id, false);
+}

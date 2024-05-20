@@ -213,6 +213,17 @@ void handle_ratio(database_t *database, string_t command)
 
 void handle_delete(database_t *database, string_t command)
 {
-	database = database;
-	debug_log("%s\n", command);
+	string_t post_id_str = strtok(command, " ");
+	string_t repost_id_str = strtok(NULL, " ");
+
+	uint32_t post_id = strtol(post_id_str, NULL, 10);
+	uint32_t repost_id = 0;
+
+	if (NULL != repost_id_str) {
+		repost_id = strtol(repost_id_str, NULL, 10);
+	}
+
+	debug_log("Deleting post: post_id: %d | repost_id: %d\n", post_id, repost_id);
+
+	database_delete(database, post_id, repost_id);
 }

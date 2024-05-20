@@ -35,4 +35,6 @@ void database_get_like_count(database_t *database, uint32_t post_id, uint32_t re
 
 void database_get_ratio(database_t *database, uint32_t post_id);
 
+void database_delete(database_t *database, uint32_t post_id, uint32_t repost_id);
+
 #endif // DATABASE_H
