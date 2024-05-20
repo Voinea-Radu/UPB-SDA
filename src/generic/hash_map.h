@@ -6,6 +6,7 @@
 #define HASH_MAP_H
 
 #include <sys/types.h>
+#include <stdint-gcc.h>
 #include <stdbool.h>
 
 typedef struct hash_node_t {
@@ -15,14 +16,14 @@ typedef struct hash_node_t {
 } hash_node_t;
 
 typedef struct {
-	int size;
+	uint32_t size;
 	hash_node_t **nodes;
 
-	uint (*hash_function)(void *);
+	uint32_t (*hash_function)(void *);
 	bool (*compare_keys)(void *, void*);
 } hash_map_t;
 
-hash_map_t *hash_map_init(int size, uint (*hash_function)(void *), bool (*compare_keys)(void *, void*));
+hash_map_t *hash_map_init(uint32_t size, uint32_t (*hash_function)(void *), bool (*compare_keys)(void *, void*));
 
 void hash_map_put(hash_map_t *map, void *key, void *value);
 

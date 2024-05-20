@@ -13,19 +13,29 @@
 #include "../utils/debug.h"
 #include "database.h"
 
-void print_post(post_t *post, string_t prefix)
+void print_username(string_t prefix, uint16_t *user_id)
 {
-	if (NULL == prefix) {
-		prefix = strdup("");
+	uint16_t id = *user_id;
+	id = id;
+	debug_log("%s%s\n", prefix, get_username(*user_id));
+}
+
+void print_post(string_t prefix, post_t *post)
+{
+	if (strlen(prefix) == 0) {
 		debug_log("Post %d: %s by %s\n", post->id, post->title, get_username(post->user_id));
 	} else {
 		debug_log("%sReposed by %s\n", prefix, get_username(post->user_id));
 	}
 
+	debug_log("%sLikes: %d\n", prefix, post->likes->size);
+
+	prefix = increase_prefix(prefix);
+	linked_list_print_prefixed(post->likes, prefix, (void (*)(string_t, void *))print_username);
+
 	if (post->reposts->size != 0) {
 		debug_log("%sReposts:\n", prefix);
-		prefix = increase_prefix(prefix);
-		linked_list_print_prefixed(post->reposts, prefix, (void (*)(void *, string_t))print_post);
+		linked_list_print_prefixed(post->reposts, prefix, (void (*)(string_t, void *))print_post);
 	}
 }
 
@@ -43,7 +53,7 @@ void handle_input_posts(char *input)
 		hash_map_put(commands_map, "ratio", handle_ratio);
 		hash_map_put(commands_map, "delete", handle_delete);
 		hash_map_put(commands_map, "get-likes", handle_get_likes);
-		hash_map_put(commands_map, "get-reposts", handle_get_reposts );
+		hash_map_put(commands_map, "get-reposts", handle_get_reposts);
 	}
 
 	if (NULL == database) {
@@ -67,7 +77,7 @@ void handle_input_posts(char *input)
 
 	command = strdup(input);
 
-	if(command[strlen(command) - 1] == '\n'){
+	if (command[strlen(command) - 1] == '\n') {
 		command[strlen(command) - 1] = '\0';
 	}
 	command += offset;
@@ -76,7 +86,7 @@ void handle_input_posts(char *input)
 #if DEBUG
 	debug_log("\n");
 	debug_log("Database: \n");
-	linked_list_print_prefixed(database->posts, NULL, (void (*)(void *, string_t))print_post);
+	linked_list_print_prefixed(database->posts, "", (void (*)(string_t, void *))print_post);
 	debug_log("\n");
 #endif
 }
@@ -154,8 +164,21 @@ void handle_common_repost(database_t *database, string_t command)
 
 void handle_like(database_t *database, string_t command)
 {
-	database = database;
-	debug_log("%s\n", command);
+	string_t username = strtok(command, " ");
+	string_t post_id_str = strtok(NULL, " ");
+	string_t repost_id_str = strtok(NULL, " ");
+
+	uint32_t user_id = get_user_id(username);
+	uint32_t post_id = strtol(post_id_str, NULL, 10);
+	uint32_t repost_id = 0;
+
+	if (NULL != repost_id_str) {
+		repost_id = strtol(repost_id_str, NULL, 10);
+	}
+
+	debug_log("Creating like: username: %s | post_id: %d | repost_id: %d\n", username, post_id, repost_id);
+
+	database_toggle_like(database, user_id, post_id, repost_id);
 }
 
 void handle_ratio(database_t *database, string_t command)
@@ -173,6 +196,17 @@ void handle_delete(database_t *database, string_t command)
 
 void handle_get_likes(database_t *database, string_t command)
 {
-	database = database;
-	debug_log("%s\n", command);
+	string_t post_id_str = strtok(command, " ");
+	string_t repost_id_str = strtok(NULL, " ");
+
+	uint32_t post_id = strtol(post_id_str, NULL, 10);
+	uint32_t repost_id = 0;
+
+	if (NULL != repost_id_str) {
+		repost_id = strtol(repost_id_str, NULL, 10);
+	}
+
+	debug_log("Getting likes: post_id: %d | repost_id: %d\n", post_id, repost_id);
+
+	database_get_like_count(database, post_id, repost_id);
 }

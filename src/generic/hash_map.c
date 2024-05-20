@@ -5,9 +5,10 @@
 #include "hash_map.h"
 #include "../utils/utils.h"
 
-hash_map_t *hash_map_init(int size, uint (*hash_function)(void *), bool (*compare_keys)(void *, void*))
+hash_map_t *hash_map_init(uint32_t size, uint (*hash_function)(void *), bool (*compare_keys)(void *, void *))
 {
 	hash_map_t *map = safe_malloc(sizeof(hash_map_t));
+
 	map->size = size;
 	map->nodes = safe_calloc(size * sizeof(hash_node_t *));
 	map->hash_function = hash_function;
@@ -18,7 +19,7 @@ hash_map_t *hash_map_init(int size, uint (*hash_function)(void *), bool (*compar
 
 void hash_map_put(hash_map_t *map, void *key, void *value)
 {
-	uint index = map->hash_function(key) % map->size;
+	uint32_t index = map->hash_function(key) % map->size;
 	hash_node_t *node = safe_malloc(sizeof(hash_node_t));
 	node->key = key;
 	node->value = value;
@@ -63,7 +64,7 @@ void hash_map_delete(hash_map_t *map, void *key)
 
 void hash_map_free(hash_map_t *map)
 {
-	for (int i = 0; i < map->size; i++) {
+	for (uint32_t i = 0; i < map->size; i++) {
 		hash_node_t *node = map->nodes[i];
 		while (node != NULL) {
 			hash_node_t *next = node->next;

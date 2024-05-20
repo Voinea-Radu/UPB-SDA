@@ -13,7 +13,7 @@ database_t *database_init()
 	database_t *database = safe_malloc(sizeof(database_t));
 
 	database->next_post_id = 1;
-	database->posts = linked_list_init();
+	database->posts = linked_list_init(free_post, compare_post);
 
 	return database;
 }
@@ -50,13 +50,7 @@ void database_add_repost(database_t *database, uint32_t original_post_id, uint32
 		post_t *post = (post_t *)current->data;
 
 		if (post->id == original_post_id) {
-			post_t *repost = safe_malloc(sizeof(post_t));
-
-			repost->id = database->next_post_id++;
-			repost->user_id = user_id;
-			repost->title = post->title;
-			repost->likes = linked_list_init();
-			repost->reposts = linked_list_init();
+			post_t *repost = post_init(database->next_post_id++, user_id, strdup(post->title));
 
 			if (original_repost_id == 0) {
 				linked_list_add(post->reposts, repost);
@@ -196,6 +190,80 @@ bool __get_common_reposts(linked_list_t *list, uint32_t post_id, uint32_t repost
 void database_get_common_reposts(database_t *database, uint32_t post_id, uint32_t repost_id1, uint32_t repost_id2)
 {
 	__get_common_reposts(database->posts, post_id, repost_id1, repost_id2);
+}
+
+void __toggle_like(linked_list_t *list, uint16_t __user_id, uint32_t post_id, uint32_t repost_id, bool is_repost)
+{
+	node_t *current = list->head;
+
+	while (current != NULL) {
+		post_t *post = (post_t *)current->data;
+
+		if (post->id == post_id) {
+			if (repost_id == 0) {
+				uint32_t *user_id = safe_malloc(sizeof(uint32_t));
+				*user_id = __user_id;
+
+				if (linked_list_contains(post->likes, user_id)) {
+					if (is_repost) {
+						printf("User %s unliked repost %s\n", get_username(__user_id), post->title);
+					} else {
+						printf("User %s unliked post %s\n", get_username(__user_id), post->title);
+					}
+					linked_list_remove(post->likes, user_id);
+					return;
+				}
+				if (is_repost) {
+					printf("User %s liked repost %s\n", get_username(__user_id), post->title);
+				} else {
+					printf("User %s liked post %s\n", get_username(__user_id), post->title);
+				}
+
+				linked_list_add(post->likes, user_id);
+				return;
+			}
+
+			__toggle_like(post->reposts, __user_id, repost_id, 0, true);
+			return;
+		}
+
+		__toggle_like(post->reposts, __user_id, post_id, repost_id, is_repost);
+
+		current = current->next;
+	}
+}
+
+void database_toggle_like(database_t *database, uint16_t user_id, uint32_t post_id, uint32_t repost_id)
+{
+	__toggle_like(database->posts, user_id, post_id, repost_id, false);
+}
+
+void __get_like_count(linked_list_t *list, uint32_t post_id, uint32_t repost_id, bool is_repost)
+{
+	node_t *current = list->head;
+	while (current != NULL) {
+		post_t *post = (post_t *)current->data;
+		if (post->id == post_id) {
+			if (repost_id == 0) {
+				if (is_repost) {
+					printf("Repost #%d has %d likes\n", post->id, post->likes->size);
+				} else {
+					printf("Post %s has %d likes\n", post->title, post->likes->size);
+				}
+				return;
+			}
+			__get_like_count(post->reposts, repost_id, 0, true);
+			return;
+		}
+		__get_like_count(post->reposts, post_id, repost_id, is_repost);
+		current = current->next;
+	}
+}
+
+
+void database_get_like_count(database_t *database, uint32_t post_id, uint32_t repost_id)
+{
+	__get_like_count(database->posts, post_id, repost_id, false);
 }
 
 

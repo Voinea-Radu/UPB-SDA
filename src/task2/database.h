@@ -28,4 +28,9 @@ void database_add_repost(database_t *database, uint32_t original_post_id, uint32
 void database_print_reposts(database_t *database, uint32_t post_id, uint32_t repost_id);
 
 void database_get_common_reposts(database_t *database, uint32_t post_id, uint32_t repost_id1, uint32_t repost_id2);
+
+void database_toggle_like(database_t *database, uint16_t user_id, uint32_t post_id, uint32_t repost_id);
+
+void database_get_like_count(database_t *database, uint32_t post_id, uint32_t repost_id);
+
 #endif // DATABASE_H

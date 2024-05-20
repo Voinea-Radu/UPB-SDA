@@ -20,4 +20,8 @@ typedef struct {
 
 post_t *post_init(uint32_t id, uint16_t user_id, string_t title);
 
+void free_post(void *data);
+
+bool compare_post(void *data1, void *data2);
+
 #endif // POST_H

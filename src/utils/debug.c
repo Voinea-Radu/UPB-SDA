@@ -88,6 +88,7 @@ string_t increase_prefix(string_t prefix)
 
 	strcat(new_prefix, "\t");
 	strcat(new_prefix, prefix);
+	new_prefix[prefix_len + 1] = '\0';
 
 	return new_prefix;
 }

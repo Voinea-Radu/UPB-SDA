@@ -76,3 +76,15 @@ bool string_equals(string_t string1, string_t string2)
 {
 	return strcmp(string1, string2) == 0;
 }
+
+void free_int(__attribute__((unused)) void *data)
+{
+
+}
+
+bool compare_int(void *data1, void *data2)
+{
+	int data1_int = *(int *)data1;
+	int data2_int = *(int *)data2;
+	return data1_int == data2_int;
+}
