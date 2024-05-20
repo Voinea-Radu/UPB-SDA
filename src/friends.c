@@ -134,6 +134,15 @@ void get_suggestions(char *name, graph_t *graph) {
 	}
 }
 
+uint16_t get_number_of_friends(uint16_t id, graph_t *graph) {
+	if (id == MAX_UINT16) {
+		printf("User not found\n");
+		return 0;
+	}
+
+	return graph->adjacency_list[id]->size;
+}
+
 void handle_input_friends(char *input, graph_t *friends_graph) {
 	char *commands = strdup(input);
 	char *cmd = strtok(commands, "\n ");
@@ -161,15 +170,14 @@ void handle_input_friends(char *input, graph_t *friends_graph) {
 
 		get_distance(name1, name2, friends_graph);
 	} else if (!strcmp(cmd, "friends")) {
-		(void)cmd;
+		char *name = strtok(NULL, "\n ");
+		uint16_t id = get_user_id(name);
+
+		uint16_t number_of_friends = get_number_of_friends(id, friends_graph);
+		printf("%s has %hu friends\n", name, number_of_friends);
 	} else if (!strcmp(cmd, "popular")) {
 		(void)cmd;
 	} else if (!strcmp(cmd, "common")) {
 		(void)cmd;
-	} else if (!strcmp(cmd, "friends")) {
-		(void)cmd;
-	} else if (!strcmp(cmd, "popular")) {
-		(void)cmd;
-		// TODO: Add function
 	}
 }
