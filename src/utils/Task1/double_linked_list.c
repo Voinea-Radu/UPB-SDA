@@ -210,7 +210,9 @@ dll_node_t *dll_list_add_sorted(double_linked_list_t *list, void *value,
 								int (*cmp)(void *, void *)) {
 	dll_node_t *new_node = dll_node_alloc();
 
-	new_node->data = value;
+	new_node->data = malloc(list->data_size);
+
+	memcpy(new_node->data, value, list->data_size);
 
 	dll_node_t *curr_node = dll_get_head(list);
 	dll_node_t *prev = NULL;

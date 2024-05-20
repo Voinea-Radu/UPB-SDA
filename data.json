@@ -6,7 +6,7 @@
         "name": "Distance",
         "status": "3",
         "log": "Added connection Emil - Adrian\nAdded connection Adrian - Octav\nAdded connection Octav - Rodica\nThe distance between Emil - Rodica is 3\nAdded connection Emil - Daiana\nAdded connection Emil - Maria\nAdded connection Emil - Tiberiu\nThe distance between Emil - Octav is 2\nThere is no way to get from Emil to Frederic\nThe distance between Emil - Rodica is 3\nThe distance between Emil - Adrian is 1\nThe distance between Emil - Tiberiu is 1\n",
-        "time_normal": 0.000403873,
+        "time_normal": 0.002827783,
         "time_valgrind": 0.0,
         "timeout": 30000,
         "test_score": 3
@@ -16,7 +16,7 @@
         "name": "Distance Complex",
         "status": "3",
         "log": "Added connection Andrada - Lica\nAdded connection Lica - Lidia\nAdded connection Lidia - Dumitra\nAdded connection Dumitra - Viorica\nAdded connection Viorica - Cerasela\nAdded connection Cerasela - Florenta\nAdded connection Florenta - Claudia\nAdded connection Claudia - Haralamb\nAdded connection Haralamb - Crina\nAdded connection Crina - Arina\nAdded connection Arina - Betina\nAdded connection Betina - Gratiela\nAdded connection Gratiela - Amza\nAdded connection Amza - Albertina\nAdded connection Albertina - Olivia\nThe distance between Andrada - Olivia is 15\nAdded connection Andrada - Malina\nAdded connection Andrada - Ludovica\nAdded connection Andrada - Marina\nAdded connection Andrada - Codrut\nAdded connection Eliza - Artemisa\nAdded connection Andrada - Natalia\nAdded connection Andrada - Mirabela\nAdded connection Andrada - Anastasia\nAdded connection Andrada - Iosefina\nAdded connection Andrada - Florenta\nAdded connection Andrada - Augustina\nAdded connection Andrada - Marius\nAdded connection Andrada - Mihnea\nAdded connection Andrada - Ilarion\nAdded connection Andrada - Ilinca\nThe distance between Andrada - Olivia is 10\nThe distance between Andrada - Mihnea is 1\nThe distance between Andrada - Haralamb is 3\nThe distance between Andrada - Augustina is 1\nThe distance between Andrada - Dumitra is 3\nThe distance between Andrada - Lidia is 2\nThe distance between Andrada - Florenta is 1\nThe distance between Andrada - Lidia is 2\nThe distance between Andrada - Augustina is 1\nThe distance between Andrada - Ilarion is 1\nAdded connection Lucretiu - Iris\nAdded connection Iris - Lorin\nAdded connection Lorin - Aglaia\nAdded connection Aglaia - Irina\nAdded connection Irina - Vasilica\nAdded connection Vasilica - Narcis\nAdded connection Narcis - Clementina\nAdded connection Clementina - Marilena\nAdded connection Marilena - Catinca\nAdded connection Catinca - Felix\nThe distance between Lucretiu - Felix is 10\nAdded connection Lucretiu - Elvira\nAdded connection Elvira - Denis\nAdded connection Denis - Miruna\nAdded connection Miruna - Felix\nThe distance between Lucretiu - Felix is 4\nRemoved connection Miruna - Felix\nThe distance between Lucretiu - Felix is 10\n",
-        "time_normal": 0.000522895,
+        "time_normal": 0.006833339,
         "time_valgrind": 0.0,
         "timeout": 30000,
         "test_score": 3
@@ -24,9 +24,9 @@
       {
         "id": 2,
         "name": "Suggestion",
-        "status": "0",
-        "log": "Added connection Ioana - Maricica\nAdded connection Maricica - Iosif\nAdded connection Maricica - Natalia\nAdded connection Maricica - Silvian\nAdded connection Maricica - Milena\nAdded connection Maricica - Decebal\n",
-        "time_normal": 0.000394285,
+        "status": "3",
+        "log": "Added connection Ioana - Maricica\nAdded connection Maricica - Iosif\nAdded connection Maricica - Natalia\nAdded connection Maricica - Silvian\nAdded connection Maricica - Milena\nAdded connection Maricica - Decebal\nSuggestions for Ioana:\nIosif\nNatalia\nMilena\nSilvian\nDecebal\n",
+        "time_normal": 0.00271908,
         "time_valgrind": 0.0,
         "timeout": 30000,
         "test_score": 3
@@ -34,9 +34,9 @@
       {
         "id": 3,
         "name": "Suggestion Complex",
-        "status": "0",
-        "log": "Added connection Sinica - Romanita\nAdded connection Romanita - Fiodor\nAdded connection Romanita - Cristofor\nAdded connection Romanita - Cerasela\nAdded connection Romanita - Dimitrina\nAdded connection Romanita - Aurel\nAdded connection Romanita - Banel\nAdded connection Romanita - Miron\nAdded connection Romanita - Dafina\nAdded connection Romanita - Nidia\nAdded connection Romanita - Didina\nAdded connection Miron - Nidia\nAdded connection Dimitrina - Fiodor\nAdded connection Aurel - Cristofor\nAdded connection Cristofor - Banel\nAdded connection Sinica - Miron\nAdded connection Nidia - Sinica\nAdded connection Cerasela - Dafina\nAdded connection Sinica - Cristofor\nAdded connection Dimitrina - Nidia\n",
-        "time_normal": 0.000391061,
+        "status": "3",
+        "log": "Added connection Sinica - Romanita\nAdded connection Romanita - Fiodor\nAdded connection Romanita - Cristofor\nAdded connection Romanita - Cerasela\nAdded connection Romanita - Dimitrina\nAdded connection Romanita - Aurel\nSuggestions for Sinica:\nDimitrina\nCristofor\nFiodor\nAurel\nCerasela\nAdded connection Romanita - Banel\nAdded connection Romanita - Miron\nAdded connection Romanita - Dafina\nAdded connection Romanita - Nidia\nAdded connection Romanita - Didina\nAdded connection Miron - Nidia\nAdded connection Dimitrina - Fiodor\nAdded connection Aurel - Cristofor\nAdded connection Cristofor - Banel\nAdded connection Sinica - Miron\nAdded connection Nidia - Sinica\nAdded connection Cerasela - Dafina\nAdded connection Sinica - Cristofor\nAdded connection Dimitrina - Nidia\nSuggestions for Dimitrina:\nDafina\nDidina\nMiron\nBanel\nSinica\nCristofor\nAurel\nCerasela\nSuggestions for Cerasela:\nDimitrina\nDidina\nMiron\nBanel\nSinica\nCristofor\nFiodor\nAurel\nNidia\nSuggestions for Fiodor:\nDafina\nDidina\nMiron\nBanel\nSinica\nCristofor\nAurel\nCerasela\nNidia\nSuggestions for Dafina:\nDimitrina\nDidina\nMiron\nBanel\nSinica\nCristofor\nFiodor\nAurel\nNidia\nSuggestions for Banel:\nDafina\nDimitrina\nDidina\nMiron\nSinica\nFiodor\nAurel\nCerasela\nNidia\n",
+        "time_normal": 0.007206827,
         "time_valgrind": 0.0,
         "timeout": 30000,
         "test_score": 3
@@ -46,7 +46,7 @@
         "name": "Common",
         "status": "0",
         "log": "Added connection Andrei - Florin\nAdded connection Florin - Ilie\nAdded connection Florin - Anastasia\nAdded connection Florin - Agnos\nAdded connection Florin - Octaviana\nAdded connection Florin - Rica\nAdded connection Anastasia - Octaviana\nAdded connection Ilie - Octaviana\nAdded connection Agnos - Octaviana\n",
-        "time_normal": 0.000374559,
+        "time_normal": 0.006763682,
         "time_valgrind": 0.0,
         "timeout": 30000,
         "test_score": 3
@@ -56,7 +56,7 @@
         "name": "Common Complex",
         "status": "0",
         "log": "Added connection Florian - Olivia\nAdded connection Olivia - Adelina\nAdded connection Letitia - Frederic\nAdded connection Olivia - Elena\nAdded connection Olivia - Romeo\nAdded connection Olivia - Luca\nAdded connection Letitia - Elena\nAdded connection Letitia - Florian\nAdded connection Veta - Teohari\nAdded connection Ileana - Laurentiu\nAdded connection Grigore - Teodora\nAdded connection Albert - Emanoil\nAdded connection Flavia - Olivia\nAdded connection Flavia - Teodora\nAdded connection Flavia - Romeo\nAdded connection Flavia - Elena\nAdded connection Letitia - Ileana\nAdded connection Elena - Veta\nAdded connection Luca - Flavia\nAdded connection Flavia - Emanoil\nAdded connection Emanoil - Teodora\nAdded connection Veta - Emanoil\n",
-        "time_normal": 0.00041228,
+        "time_normal": 0.002084615,
         "time_valgrind": 0.0,
         "timeout": 30000,
         "test_score": 3
@@ -66,7 +66,7 @@
         "name": "Popular",
         "status": "0",
         "log": "Added connection Mina - Ionut\nAdded connection Ionut - Iurie\nAdded connection Ionut - Crina\nAdded connection Ionut - Marga\nAdded connection Ionut - Nicu\nAdded connection Ionut - Cristea\nAdded connection Cezar - Ica\nAdded connection Cezar - Oliviu\nAdded connection Cezar - Antonie\nAdded connection Cezar - Norica\nAdded connection Cezar - Clementina\nAdded connection Cezar - Aurelian\nAdded connection Cezar - Lucia\nAdded connection Cezar - Ivan\nAdded connection Tincuta - Filofteia\nAdded connection Tincuta - Iurie\nAdded connection Tincuta - Dorian\nAdded connection Tincuta - Gregorian\nAdded connection Tincuta - Camelia\nAdded connection Tincuta - Robertina\nAdded connection Tincuta - Ludovica\nAdded connection Tincuta - Irinel\nAdded connection Ionut - Cezar\n",
-        "time_normal": 0.000494055,
+        "time_normal": 0.005473156,
         "time_valgrind": 0.0,
         "timeout": 30000,
         "test_score": 3
@@ -76,7 +76,7 @@
         "name": "Popular Complex",
         "status": "0",
         "log": "Added connection Emilia - George\nAdded connection George - Ludovic\nAdded connection George - Matei\nAdded connection George - Sever\nAdded connection George - Anamaria\nAdded connection George - Alis\nAdded connection George - Panagachie\nAdded connection George - Clarisa\nAdded connection George - Eugen\nAdded connection George - Theodor\nAdded connection Aneta - Andrei\nAdded connection Aneta - Raducu\nAdded connection Aneta - Georgiana\nAdded connection Aneta - Ducu\nAdded connection Aneta - Anghelina\nAdded connection Aneta - Lacramioara\nAdded connection Aneta - Adelaida\nAdded connection Aneta - Vasile\nAdded connection Aneta - Jenel\nAdded connection Alida - Dan\nAdded connection Alida - Letitia\nAdded connection Alida - Traian\nAdded connection Alida - Stancu\nAdded connection Alida - Petronela\nAdded connection George - Aneta\nAdded connection Albert - Ana\nAdded connection Horatiu - Rafael\nAdded connection Tinca - Sever\nAdded connection Venera - Veta\nAdded connection Vladimir - Mariuca\nAdded connection Zaharia - Dominic\nAdded connection Zaharia - Tudor\nAdded connection Zaharia - Beatrice\nAdded connection Doriana - Daciana\nAdded connection Doriana - Codrina\nAdded connection Doriana - Gratian\nAdded connection Zaharia - Doriana\n",
-        "time_normal": 0.000394936,
+        "time_normal": 0.005386982,
         "time_valgrind": 0.0,
         "timeout": 30000,
         "test_score": 3
@@ -85,8 +85,8 @@
         "id": 8,
         "name": "Friends Complex 1",
         "status": "0",
-        "log": "Added connection Vasilica - Catrinel\nAdded connection Catrinel - David\nAdded connection David - Emanuil\nThe distance between Vasilica - Emanuil is 3\nAdded connection Vasilica - Ieremia\nAdded connection Vasilica - Blanduzia\nAdded connection Vasilica - Adela\nThe distance between Vasilica - Catrinel is 1\nThe distance between Vasilica - Catrinel is 1\nThe distance between Vasilica - Catrinel is 1\nThere is no way to get from Vasilica to Constanta\nThe distance between Vasilica - Ieremia is 1\nAdded connection Basarab - Roxana\nAdded connection Roxana - Erica\nAdded connection Roxana - Sidonia\nAdded connection Roxana - Didina\nAdded connection Roxana - Rodica\nAdded connection Roxana - Livia\nAdded connection Brandusa - George\nAdded connection George - Ica\nAdded connection George - Fabian\nAdded connection George - Dimitrina\nAdded connection George - Marga\nAdded connection George - Cazimir\nAdded connection Brandusa - Dimitrina\nAdded connection Dimitrina - Ica\nAdded connection Fabian - Dimitrina\nAdded connection Ducu - Smaranda\nAdded connection Smaranda - Haralambie\nAdded connection Smaranda - Evelina\nAdded connection Smaranda - Heracleea\nAdded connection Smaranda - Marcheta\nAdded connection Smaranda - Angela\nAdded connection Smaranda - Teohari\nAdded connection Smaranda - Vladimir\nAdded connection Smaranda - Octavia\nAdded connection Anica - Benone\nAdded connection Anica - Dafina\nAdded connection Anica - Eftimie\nAdded connection Vladimir - Xenia\nAdded connection Vladimir - Sanda\nAdded connection Vladimir - Sidonia\nAdded connection Vladimir - Marinela\nAdded connection Vladimir - Corina\nAdded connection Vladimir - Ieremia\nAdded connection Vladimir - Lucretiu\nAdded connection Vladimir - Vicentiu\nAdded connection Smaranda - Anica\n",
-        "time_normal": 0.000460192,
+        "log": "Added connection Vasilica - Catrinel\nAdded connection Catrinel - David\nAdded connection David - Emanuil\nThe distance between Vasilica - Emanuil is 3\nAdded connection Vasilica - Ieremia\nAdded connection Vasilica - Blanduzia\nAdded connection Vasilica - Adela\nThe distance between Vasilica - Catrinel is 1\nThe distance between Vasilica - Catrinel is 1\nThe distance between Vasilica - Catrinel is 1\nThere is no way to get from Vasilica to Constanta\nThe distance between Vasilica - Ieremia is 1\nAdded connection Basarab - Roxana\nAdded connection Roxana - Erica\nAdded connection Roxana - Sidonia\nAdded connection Roxana - Didina\nAdded connection Roxana - Rodica\nAdded connection Roxana - Livia\nSuggestions for Basarab:\nLivia\nDidina\nRodica\nErica\nSidonia\nAdded connection Brandusa - George\nAdded connection George - Ica\nAdded connection George - Fabian\nAdded connection George - Dimitrina\nAdded connection George - Marga\nAdded connection George - Cazimir\nAdded connection Brandusa - Dimitrina\nAdded connection Dimitrina - Ica\nAdded connection Fabian - Dimitrina\nAdded connection Ducu - Smaranda\nAdded connection Smaranda - Haralambie\nAdded connection Smaranda - Evelina\nAdded connection Smaranda - Heracleea\nAdded connection Smaranda - Marcheta\nAdded connection Smaranda - Angela\nAdded connection Smaranda - Teohari\nAdded connection Smaranda - Vladimir\nAdded connection Smaranda - Octavia\nAdded connection Anica - Benone\nAdded connection Anica - Dafina\nAdded connection Anica - Eftimie\nAdded connection Vladimir - Xenia\nAdded connection Vladimir - Sanda\nAdded connection Vladimir - Sidonia\nAdded connection Vladimir - Marinela\nAdded connection Vladimir - Corina\nAdded connection Vladimir - Ieremia\nAdded connection Vladimir - Lucretiu\nAdded connection Vladimir - Vicentiu\nAdded connection Smaranda - Anica\n",
+        "time_normal": 0.002410955,
         "time_valgrind": 0.0,
         "timeout": 30000,
         "test_score": 3
@@ -95,8 +95,8 @@
         "id": 9,
         "name": "Friends Complex 2",
         "status": "0",
-        "log": "Added connection Eftimie - Ludovica\nAdded connection Ludovica - Henrieta\nAdded connection Henrieta - Irinel\nAdded connection Irinel - Cerasela\nAdded connection Cerasela - Malina\nAdded connection Malina - Constantina\nAdded connection Constantina - Cedrin\nAdded connection Cedrin - Amelia\nAdded connection Amelia - Flavia\nAdded connection Flavia - Ionela\nAdded connection Ionela - Iosefina\nAdded connection Iosefina - Laurian\nAdded connection Laurian - Eugen\nAdded connection Eugen - Antoaneta\nAdded connection Antoaneta - Letitia\nThe distance between Eftimie - Letitia is 15\nAdded connection Eftimie - Cristian\nAdded connection Eftimie - Sandu\nAdded connection Eftimie - Olga\nAdded connection Iustin - Anemona\nAdded connection Eftimie - Sinica\nAdded connection Eftimie - Alexandru\nAdded connection Eftimie - Darius\nAdded connection Eftimie - Xenia\nAdded connection Eftimie - Henrieta\nAdded connection Eftimie - Grigore\nAdded connection Eftimie - Horea\nAdded connection Eftimie - Rafael\nAdded connection Eftimie - Corina\nAdded connection Eftimie - Voichita\nAdded connection Eftimie - Amza\nThe distance between Eftimie - Sandu is 1\nThere is no way to get from Eftimie to Anemona\nThe distance between Eftimie - Constantina is 5\nThere is no way to get from Eftimie to Beatrice\nThe distance between Eftimie - Ludovica is 1\nThe distance between Eftimie - Darius is 1\nThe distance between Eftimie - Grigore is 1\nThe distance between Eftimie - Henrieta is 1\nThe distance between Eftimie - Henrieta is 1\nThe distance between Eftimie - Amelia is 7\nAdded connection Daciana - Marcu\nAdded connection Marcu - Henrieta\nAdded connection Henrieta - Zina\nAdded connection Zina - Radu\nAdded connection Radu - Timea\nAdded connection Timea - Iacob\nAdded connection Iacob - Felix\nAdded connection Felix - Magdalena\nAdded connection Magdalena - Eusebia\nAdded connection Eusebia - Ivona\nThe distance between Daciana - Ivona is 10\nAdded connection Daciana - Leontin\nAdded connection Leontin - Ruxandra\nAdded connection Ruxandra - Caius\nAdded connection Caius - Ivona\nThe distance between Daciana - Ivona is 4\nRemoved connection Caius - Ivona\nThe distance between Daciana - Ivona is 10\nAdded connection Bartolomeu - Vasile\nAdded connection Vasile - Iosif\nAdded connection Vasile - Ioanina\nAdded connection Vasile - Dumitra\nAdded connection Aristita - Olimpia\nAdded connection Vasile - Valter\nAdded connection Vasile - Emil\nAdded connection Niculina - Florentina\nAdded connection Vasile - Vicentiu\nAdded connection Vasile - Panagachie\nAdded connection Vasile - Nichifor\nAdded connection Aristita - Vicentiu\nAdded connection Dumitra - Niculina\nAdded connection Iosif - Vicentiu\nAdded connection Dumitra - Emil\nAdded connection Bartolomeu - Ioanina\nAdded connection Florentina - Vicentiu\nAdded connection Niculina - Ioanina\nAdded connection Niculina - Emil\nAdded connection Iosif - Bartolomeu\nAdded connection Niculina - Vicentiu\nAdded connection Paulina - Tudor\nAdded connection Tudor - Haralambie\nAdded connection Elodia - Cristobal\nAdded connection Tudor - Mihnea\nAdded connection Tudor - Florian\nAdded connection Tudor - Narcis\nAdded connection Narcis - Cristobal\nAdded connection Tudor - Cristobal\nAdded connection Florian - Cristobal\nAdded connection Florin - Lucia\nAdded connection Ion - Betina\nAdded connection Zaharia - Renata\nAdded connection Eva - Mihnea\nAdded connection Ortansa - Nicusor\nAdded connection Eva - Betina\nAdded connection Tudor - Ortansa\nAdded connection Mihnea - Florin\nAdded connection Ortansa - Florian\nAdded connection Zaharia - Betina\nAdded connection Elodia - Ortansa\nAdded connection Tudor - Lucia\nAdded connection Eva - Narcis\nAdded connection Ion - Elodia\nAdded connection Florian - Renata\nAdded connection Sava - Panagachie\nAdded connection Panagachie - Basarab\nAdded connection Panagachie - Ruxandra\nAdded connection Panagachie - Vasilica\nAdded connection Panagachie - Loredana\nAdded connection Panagachie - Relu\nAdded connection Panagachie - Mioara\nAdded connection Panagachie - Dumitru\nAdded connection Panagachie - Adam\nAdded connection Constantina - Zoe\nAdded connection Constantina - Saveta\nAdded connection Constantina - Aura\nAdded connection Constantina - Emanuil\nAdded connection Constantina - Paul\nAdded connection Constantina - Roxana\nAdded connection Zoe - Cristina\nAdded connection Zoe - Dorin\nAdded connection Zoe - Aura\nAdded connection Zoe - Petronela\nAdded connection Zoe - Mircea\nAdded connection Zoe - Anamaria\nAdded connection Zoe - Agripina\nAdded connection Iolanda - Rozalia\nAdded connection Zoe - Tudor\nAdded connection Panagachie - Constantina\nAdded connection Alberta - Marius\nAdded connection Dida - Sidonia\nAdded connection Flavia - Zamfira\nAdded connection Julia - Lica\nAdded connection Sebastian - Gica\nAdded connection Stancu - Olivia\nAdded connection Stancu - Nicodim\nAdded connection Stancu - Felicia\nAdded connection Blanduzia - Lorin\nAdded connection Blanduzia - Ducu\nAdded connection Blanduzia - Angel\nAdded connection Stancu - Blanduzia\n",
-        "time_normal": 0.000737554,
+        "log": "Added connection Eftimie - Ludovica\nAdded connection Ludovica - Henrieta\nAdded connection Henrieta - Irinel\nAdded connection Irinel - Cerasela\nAdded connection Cerasela - Malina\nAdded connection Malina - Constantina\nAdded connection Constantina - Cedrin\nAdded connection Cedrin - Amelia\nAdded connection Amelia - Flavia\nAdded connection Flavia - Ionela\nAdded connection Ionela - Iosefina\nAdded connection Iosefina - Laurian\nAdded connection Laurian - Eugen\nAdded connection Eugen - Antoaneta\nAdded connection Antoaneta - Letitia\nThe distance between Eftimie - Letitia is 15\nAdded connection Eftimie - Cristian\nAdded connection Eftimie - Sandu\nAdded connection Eftimie - Olga\nAdded connection Iustin - Anemona\nAdded connection Eftimie - Sinica\nAdded connection Eftimie - Alexandru\nAdded connection Eftimie - Darius\nAdded connection Eftimie - Xenia\nAdded connection Eftimie - Henrieta\nAdded connection Eftimie - Grigore\nAdded connection Eftimie - Horea\nAdded connection Eftimie - Rafael\nAdded connection Eftimie - Corina\nAdded connection Eftimie - Voichita\nAdded connection Eftimie - Amza\nThe distance between Eftimie - Sandu is 1\nThere is no way to get from Eftimie to Anemona\nThe distance between Eftimie - Constantina is 5\nThere is no way to get from Eftimie to Beatrice\nThe distance between Eftimie - Ludovica is 1\nThe distance between Eftimie - Darius is 1\nThe distance between Eftimie - Grigore is 1\nThe distance between Eftimie - Henrieta is 1\nThe distance between Eftimie - Henrieta is 1\nThe distance between Eftimie - Amelia is 7\nAdded connection Daciana - Marcu\nAdded connection Marcu - Henrieta\nAdded connection Henrieta - Zina\nAdded connection Zina - Radu\nAdded connection Radu - Timea\nAdded connection Timea - Iacob\nAdded connection Iacob - Felix\nAdded connection Felix - Magdalena\nAdded connection Magdalena - Eusebia\nAdded connection Eusebia - Ivona\nThe distance between Daciana - Ivona is 10\nAdded connection Daciana - Leontin\nAdded connection Leontin - Ruxandra\nAdded connection Ruxandra - Caius\nAdded connection Caius - Ivona\nThe distance between Daciana - Ivona is 4\nRemoved connection Caius - Ivona\nThe distance between Daciana - Ivona is 10\nAdded connection Bartolomeu - Vasile\nAdded connection Vasile - Iosif\nAdded connection Vasile - Ioanina\nAdded connection Vasile - Dumitra\nAdded connection Aristita - Olimpia\nAdded connection Vasile - Valter\nSuggestions for Bartolomeu:\nIosif\nIoanina\nDumitra\nValter\nAdded connection Vasile - Emil\nAdded connection Niculina - Florentina\nAdded connection Vasile - Vicentiu\nAdded connection Vasile - Panagachie\nAdded connection Vasile - Nichifor\nAdded connection Aristita - Vicentiu\nAdded connection Dumitra - Niculina\nAdded connection Iosif - Vicentiu\nAdded connection Dumitra - Emil\nAdded connection Bartolomeu - Ioanina\nAdded connection Florentina - Vicentiu\nAdded connection Niculina - Ioanina\nAdded connection Niculina - Emil\nAdded connection Iosif - Bartolomeu\nAdded connection Niculina - Vicentiu\nSuggestions for Vasile:\nAristita\nFlorentina\nNiculina\nSuggestions for Valter:\nEmil\nIosif\nIoanina\nPanagachie\nBartolomeu\nDumitra\nNichifor\nVicentiu\nSuggestions for Panagachie:\nEmil\nIosif\nIoanina\nBartolomeu\nDumitra\nNichifor\nVicentiu\nValter\nSuggestions for Vicentiu:\nEmil\nOlimpia\nIoanina\nPanagachie\nBartolomeu\nDumitra\nNichifor\nValter\nSuggestions for Panagachie:\nEmil\nIosif\nIoanina\nBartolomeu\nDumitra\nNichifor\nVicentiu\nValter\nAdded connection Paulina - Tudor\nAdded connection Tudor - Haralambie\nAdded connection Elodia - Cristobal\nAdded connection Tudor - Mihnea\nAdded connection Tudor - Florian\nAdded connection Tudor - Narcis\nAdded connection Narcis - Cristobal\nAdded connection Tudor - Cristobal\nAdded connection Florian - Cristobal\nAdded connection Florin - Lucia\nAdded connection Ion - Betina\nAdded connection Zaharia - Renata\nAdded connection Eva - Mihnea\nAdded connection Ortansa - Nicusor\nAdded connection Eva - Betina\nAdded connection Tudor - Ortansa\nAdded connection Mihnea - Florin\nAdded connection Ortansa - Florian\nAdded connection Zaharia - Betina\nAdded connection Elodia - Ortansa\nAdded connection Tudor - Lucia\nAdded connection Eva - Narcis\nAdded connection Ion - Elodia\nAdded connection Florian - Renata\nAdded connection Sava - Panagachie\nAdded connection Panagachie - Basarab\nAdded connection Panagachie - Ruxandra\nAdded connection Panagachie - Vasilica\nAdded connection Panagachie - Loredana\nAdded connection Panagachie - Relu\nAdded connection Panagachie - Mioara\nAdded connection Panagachie - Dumitru\nAdded connection Panagachie - Adam\nAdded connection Constantina - Zoe\nAdded connection Constantina - Saveta\nAdded connection Constantina - Aura\nAdded connection Constantina - Emanuil\nAdded connection Constantina - Paul\nAdded connection Constantina - Roxana\nAdded connection Zoe - Cristina\nAdded connection Zoe - Dorin\nAdded connection Zoe - Aura\nAdded connection Zoe - Petronela\nAdded connection Zoe - Mircea\nAdded connection Zoe - Anamaria\nAdded connection Zoe - Agripina\nAdded connection Iolanda - Rozalia\nAdded connection Zoe - Tudor\nAdded connection Panagachie - Constantina\nAdded connection Alberta - Marius\nAdded connection Dida - Sidonia\nAdded connection Flavia - Zamfira\nAdded connection Julia - Lica\nAdded connection Sebastian - Gica\nAdded connection Stancu - Olivia\nAdded connection Stancu - Nicodim\nAdded connection Stancu - Felicia\nAdded connection Blanduzia - Lorin\nAdded connection Blanduzia - Ducu\nAdded connection Blanduzia - Angel\nAdded connection Stancu - Blanduzia\n",
+        "time_normal": 0.005674927,
         "time_valgrind": 0.0,
         "timeout": 30000,
         "test_score": 3
@@ -108,7 +108,7 @@
         "name": "Post/Repost",
         "status": "0",
         "log": "",
-        "time_normal": 0.000415419,
+        "time_normal": 0.005018518,
         "time_valgrind": 0.0,
         "timeout": 30000,
         "test_score": 3
@@ -118,7 +118,7 @@
         "name": "Post/Repost Complex",
         "status": "0",
         "log": "",
-        "time_normal": 0.000435903,
+        "time_normal": 0.006789472,
         "time_valgrind": 0.0,
         "timeout": 30000,
         "test_score": 3
@@ -128,7 +128,7 @@
         "name": "LCA",
         "status": "0",
         "log": "",
-        "time_normal": 0.000338161,
+        "time_normal": 0.00271402,
         "time_valgrind": 0.0,
         "timeout": 30000,
         "test_score": 3
@@ -138,8 +138,8 @@
         "name": "LCA Complex",
         "status": "0",
         "log": "",
-        "time_normal": 0.000339701,
-        "time_valgrind": 0.0,
+        "time_normal": 0.006395675,
+        "time_valgrind": 0.525942169,
         "timeout": 30000,
         "test_score": 3
       },
@@ -148,8 +148,8 @@
         "name": "Like",
         "status": "0",
         "log": "",
-        "time_normal": 0.000315737,
-        "time_valgrind": 0.0,
+        "time_normal": 0.002719553,
+        "time_valgrind": 0.500347985,
         "timeout": 30000,
         "test_score": 3
       },
@@ -158,8 +158,8 @@
         "name": "Like Complex",
         "status": "0",
         "log": "",
-        "time_normal": 0.000323711,
-        "time_valgrind": 0.0,
+        "time_normal": 0.006319894,
+        "time_valgrind": 0.522122689,
         "timeout": 30000,
         "test_score": 3
       },
@@ -168,8 +168,8 @@
         "name": "Ratio",
         "status": "0",
         "log": "",
-        "time_normal": 0.00036558,
-        "time_valgrind": 0.0,
+        "time_normal": 0.002654167,
+        "time_valgrind": 0.542856017,
         "timeout": 30000,
         "test_score": 3
       },
@@ -178,8 +178,8 @@
         "name": "Ratio Complex",
         "status": "0",
         "log": "",
-        "time_normal": 0.000325565,
-        "time_valgrind": 0.0,
+        "time_normal": 0.006441115,
+        "time_valgrind": 0.486387423,
         "timeout": 30000,
         "test_score": 3
       },
@@ -188,8 +188,8 @@
         "name": "Posts Complex 1",
         "status": "0",
         "log": "",
-        "time_normal": 0.000420081,
-        "time_valgrind": 0.0,
+        "time_normal": 0.002770894,
+        "time_valgrind": 0.525384617,
         "timeout": 30000,
         "test_score": 3
       },
@@ -198,8 +198,8 @@
         "name": "Posts Complex 2",
         "status": "0",
         "log": "",
-        "time_normal": 0.000343895,
-        "time_valgrind": 0.0,
+        "time_normal": 0.006629747,
+        "time_valgrind": 0.473593406,
         "timeout": 30000,
         "test_score": 3
       }
@@ -211,7 +211,7 @@
         "status": "ERROR",
         "log": "No such file or directory (os error 2)",
         "time_normal": 0.0,
-        "time_valgrind": 0.0,
+        "time_valgrind": 0.007519951,
         "timeout": 30000,
         "test_score": 3
       },
@@ -221,7 +221,7 @@
         "status": "ERROR",
         "log": "No such file or directory (os error 2)",
         "time_normal": 0.0,
-        "time_valgrind": 0.0,
+        "time_valgrind": 0.008078724,
         "timeout": 30000,
         "test_score": 3
       },
@@ -231,7 +231,7 @@
         "status": "ERROR",
         "log": "No such file or directory (os error 2)",
         "time_normal": 0.0,
-        "time_valgrind": 0.0,
+        "time_valgrind": 0.009807926,
         "timeout": 30000,
         "test_score": 3
       },
@@ -241,7 +241,7 @@
         "status": "ERROR",
         "log": "No such file or directory (os error 2)",
         "time_normal": 0.0,
-        "time_valgrind": 0.0,
+        "time_valgrind": 0.002463682,
         "timeout": 30000,
         "test_score": 3
       },
@@ -251,7 +251,7 @@
         "status": "ERROR",
         "log": "No such file or directory (os error 2)",
         "time_normal": 0.0,
-        "time_valgrind": 0.0,
+        "time_valgrind": 0.001687746,
         "timeout": 30000,
         "test_score": 3
       },
@@ -261,7 +261,7 @@
         "status": "ERROR",
         "log": "No such file or directory (os error 2)",
         "time_normal": 0.0,
-        "time_valgrind": 0.0,
+        "time_valgrind": 0.001695641,
         "timeout": 30000,
         "test_score": 3
       },
@@ -271,7 +271,7 @@
         "status": "ERROR",
         "log": "No such file or directory (os error 2)",
         "time_normal": 0.0,
-        "time_valgrind": 0.0,
+        "time_valgrind": 0.001324664,
         "timeout": 30000,
         "test_score": 3
       },
@@ -281,7 +281,7 @@
         "status": "ERROR",
         "log": "No such file or directory (os error 2)",
         "time_normal": 0.0,
-        "time_valgrind": 0.0,
+        "time_valgrind": 0.001427661,
         "timeout": 30000,
         "test_score": 3
       },
@@ -301,7 +301,7 @@
         "status": "ERROR",
         "log": "No such file or directory (os error 2)",
         "time_normal": 0.0,
-        "time_valgrind": 0.0,
+        "time_valgrind": 0.003115358,
         "timeout": 30000,
         "test_score": 3
       }

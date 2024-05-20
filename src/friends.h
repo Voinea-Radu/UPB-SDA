@@ -3,6 +3,7 @@
 
 #define MAX_COMMAND_LEN 100
 #define MAX_PEOPLE 550
+#define MAX_UINT16 65535
 
 #include "utils/Task1/graph.h"
 
