@@ -10,7 +10,7 @@
 #include "posts.h"
 #include "feed.h"
 
-#include "utils/task_1/graph.h"
+#include "utils/Task1/graph.h"
 
 /**
  * Initializez every task based on which task we are running

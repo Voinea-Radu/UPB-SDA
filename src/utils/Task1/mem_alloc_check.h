@@ -5,6 +5,8 @@
 #ifndef MEM_ALLOC_CHECK_H
 #define MEM_ALLOC_CHECK_H
 
+#include <errno.h>
+
 #define DIE(assertion, call_description)                                      \
     do {                                                                      \
         if (assertion) {                                                      \

@@ -4,7 +4,8 @@
 #define MAX_COMMAND_LEN 100
 #define MAX_PEOPLE 550
 
-#include "utils/task_1/graph.h"
+#include "utils/Task1/graph.h"
+
 
 /**
  * Function that handles the calling of every command from task 1

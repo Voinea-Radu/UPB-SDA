@@ -63,3 +63,56 @@ void graph_free(graph_t *graph) {
 	free(graph->adjacency_list);
 	free(graph);
 }
+
+int16_t graph_get_distance(graph_t *graph, uint16_t curr_node, uint16_t find_node)
+{
+	int *dist = calloc(graph->num_nodes, sizeof(int));
+	int *visited = calloc(graph->num_nodes, sizeof(int));
+	queue_t *q = queue_create(sizeof(uint16_t), NULL);
+
+	queue_enqueue(q, &curr_node);
+	visited[curr_node] = 1;
+	dist[curr_node] = 0;
+
+	while (!queue_is_empty(q)) {
+		size_t node = *(size_t *)queue_front(q);
+		dll_node_t* removed =  queue_dequeue(q);
+//		char *user = get_user_name(node);
+//		printf("user: %s\n", user);
+
+		double_linked_list_t *neighbours = graph->adjacency_list[node];
+		dll_node_t *curr = dll_get_head(neighbours);
+
+		while (curr) {
+			size_t neighbour = *(size_t *)curr->data;
+
+			char *neighbour_user = get_user_name(neighbour);
+
+			if (!visited[neighbour]) {
+				visited[neighbour] = 1;
+				dist[neighbour] = dist[node] + 1;
+				queue_enqueue(q, &neighbour);
+			}
+
+			if (neighbour == find_node) {
+				int ret = dist[neighbour];
+
+//				printf("user: %s\n", get_user_name(neighbour));
+
+//				free(dist);
+//				free(visited);
+//				queue_free(q);
+
+				return ret;
+			}
+
+			curr = curr->next;
+		}
+	}
+
+	free(dist);
+	free(visited);
+	queue_free(q);
+
+	return -1;
+}
