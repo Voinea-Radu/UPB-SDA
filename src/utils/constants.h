@@ -10,7 +10,7 @@
 typedef char *string_t;
 typedef unsigned int uint;
 
-#define DEBUG 1
+#define DEBUG 0
 
 #define MEMORY_ERROR "There was an error while allocating memory!\nExiting...\n"
 

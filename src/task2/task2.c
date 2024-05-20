@@ -13,31 +13,7 @@
 #include "../utils/debug.h"
 #include "database.h"
 
-void print_username(string_t prefix, uint16_t *user_id)
-{
-	uint16_t id = *user_id;
-	id = id;
-	debug_log("%s%s\n", prefix, get_username(*user_id));
-}
 
-void print_post(string_t prefix, post_t *post)
-{
-	if (strlen(prefix) == 0) {
-		debug_log("Post %d: %s by %s\n", post->id, post->title, get_username(post->user_id));
-	} else {
-		debug_log("%sReposed by %s\n", prefix, get_username(post->user_id));
-	}
-
-	debug_log("%sLikes: %d\n", prefix, post->likes->size);
-
-	prefix = increase_prefix(prefix);
-	linked_list_print_prefixed(post->likes, prefix, (void (*)(string_t, void *))print_username);
-
-	if (post->reposts->size != 0) {
-		debug_log("%sReposts:\n", prefix);
-		linked_list_print_prefixed(post->reposts, prefix, (void (*)(string_t, void *))print_post);
-	}
-}
 
 void handle_input_posts(char *input)
 {
@@ -93,12 +69,12 @@ void handle_input_posts(char *input)
 
 void handle_create(database_t *database, string_t command)
 {
-	debug_log("create %s\n", command);
-
 	string_t username = strtok(command, " ");
 	string_t message = strtok(NULL, "\n");
 
+#if DEBUG
 	debug_log("Creating post: username: %s | message: %s\n", username, message);
+#endif
 
 	post_t *post = post_init(0, get_user_id(username), message);
 
@@ -108,8 +84,6 @@ void handle_create(database_t *database, string_t command)
 
 void handle_repost(database_t *database, string_t command)
 {
-	debug_log("repost %s\n", command);
-
 	string_t username = strtok(command, " ");
 	string_t post_id_str = strtok(NULL, " ");
 	string_t repost_id_str = strtok(NULL, " ");
@@ -122,7 +96,9 @@ void handle_repost(database_t *database, string_t command)
 		repost_id = strtol(repost_id_str, NULL, 10);
 	}
 
+#if DEBUG
 	debug_log("Creating repost: username: %s | post_id: %d | repost_id: %d\n", username, post_id, repost_id);
+#endif
 
 	database_add_repost(database, post_id, repost_id, user_id);
 	printf("Created repost #%d for %s\n", database->next_post_id - 1, username);
@@ -130,8 +106,6 @@ void handle_repost(database_t *database, string_t command)
 
 void handle_get_reposts(database_t *database, string_t command)
 {
-	debug_log("get_reposts %s\n", command);
-
 	string_t post_id_str = strtok(command, " ");
 	string_t repost_id_str = strtok(NULL, " ");
 
@@ -142,7 +116,9 @@ void handle_get_reposts(database_t *database, string_t command)
 		repost_id = strtol(repost_id_str, NULL, 10);
 	}
 
+#if DEBUG
 	debug_log("Printing reposts for post with id %d and repost: %d\n", post_id, repost_id);
+#endif
 
 	database_print_reposts(database, post_id, repost_id);
 }
@@ -157,7 +133,9 @@ void handle_common_repost(database_t *database, string_t command)
 	uint32_t repost_id_1 = strtol(repost_id_1_str, NULL, 10);
 	uint32_t repost_id_2 = strtol(repost_id_2_str, NULL, 10);
 
+#if DEBUG
 	debug_log("%s\n", command);
+#endif
 
 	database_get_common_reposts(database, post_id, repost_id_1, repost_id_2);
 }
@@ -176,7 +154,9 @@ void handle_like(database_t *database, string_t command)
 		repost_id = strtol(repost_id_str, NULL, 10);
 	}
 
+#if DEBUG
 	debug_log("Creating like: username: %s | post_id: %d | repost_id: %d\n", username, post_id, repost_id);
+#endif
 
 	database_toggle_like(database, user_id, post_id, repost_id);
 }
@@ -194,7 +174,9 @@ void handle_get_likes(database_t *database, string_t command)
 		repost_id = strtol(repost_id_str, NULL, 10);
 	}
 
+#if DEBUG
 	debug_log("Getting likes: post_id: %d | repost_id: %d\n", post_id, repost_id);
+#endif
 
 	database_get_like_count(database, post_id, repost_id);
 }
@@ -205,7 +187,9 @@ void handle_ratio(database_t *database, string_t command)
 
 	uint32_t post_id = strtol(post_id_str, NULL, 10);
 
+#if DEBUG
 	debug_log("Getting ratio: post_id: %d\n", post_id);
+#endif
 
 	database_get_ratio(database, post_id);
 
@@ -223,7 +207,9 @@ void handle_delete(database_t *database, string_t command)
 		repost_id = strtol(repost_id_str, NULL, 10);
 	}
 
+#if DEBUG
 	debug_log("Deleting post: post_id: %d | repost_id: %d\n", post_id, repost_id);
+#endif
 
 	database_delete(database, post_id, repost_id);
 }

@@ -29,7 +29,9 @@ void init_tasks(void)
 
 int main(void)
 {
+#if DEBUG
 	debug_init();
+#endif
 	init_users();
 	init_tasks();
 

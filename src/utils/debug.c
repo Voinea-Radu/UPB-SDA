@@ -4,6 +4,7 @@
 
 #include <string.h>
 #include "debug.h"
+#include "users.h"
 
 #if DEBUG
 
@@ -91,6 +92,32 @@ string_t increase_prefix(string_t prefix)
 	new_prefix[prefix_len + 1] = '\0';
 
 	return new_prefix;
+}
+
+void print_username(string_t prefix, uint16_t *user_id)
+{
+	uint16_t id = *user_id;
+	id = id;
+	debug_log("%s%s\n", prefix, get_username(*user_id));
+}
+
+void print_post(string_t prefix, post_t *post)
+{
+	if (strlen(prefix) == 0) {
+		debug_log("Post %d: %s by %s\n", post->id, post->title, get_username(post->user_id));
+	} else {
+		debug_log("%sReposed by %s\n", prefix, get_username(post->user_id));
+	}
+
+	debug_log("%sLikes: %d\n", prefix, post->likes->size);
+
+	prefix = increase_prefix(prefix);
+	linked_list_print_prefixed(post->likes, prefix, (void (*)(string_t, void *))print_username);
+
+	if (post->reposts->size != 0) {
+		debug_log("%sReposts:\n", prefix);
+		linked_list_print_prefixed(post->reposts, prefix, (void (*)(string_t, void *))print_post);
+	}
 }
 
 
