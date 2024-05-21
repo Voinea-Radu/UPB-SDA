@@ -21,6 +21,9 @@ graph_t *graph_create(size_t num_nodes, size_t data_size,
 
 void graph_add_edge(graph_t *graph, size_t from, size_t to);
 
+void graph_add_edge_sorted(graph_t *graph, size_t from, size_t to,
+						   int (*cmp)(void *, void *));
+
 bool graph_has_edge(graph_t *graph, size_t from, size_t to);
 
 void graph_remove_edge(graph_t *graph, size_t from, size_t to);

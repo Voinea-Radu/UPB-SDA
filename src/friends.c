@@ -7,17 +7,21 @@
 
 #include "utils/Task1/graph.h"
 
+int cmp_ids(void *a, void *b) {
+	return *(uint16_t *)b - *(uint16_t *)a;
+}
+
 void add_friend(char *name1, char *name2, graph_t *graph) {
 	uint16_t id1 = get_user_id(name1);
 	uint16_t id2 = get_user_id(name2);
 
-	if ((id1 == MAX_UINT16) || (id2 == 65535)) {
+	if ((id1 == MAX_UINT16) || (id2 == MAX_UINT16)) {
 		printf("User not found\n");
 		return;
 	}
 
-	graph_add_edge(graph, id1, id2);
-	graph_add_edge(graph, id2, id1);
+	graph_add_edge_sorted(graph, id1, id2, cmp_ids);
+	graph_add_edge_sorted(graph, id2, id1, cmp_ids);
 
 	printf("Added connection %s - %s\n", name1, name2);
 }
@@ -54,10 +58,6 @@ void get_distance(char *name1, char *name2, graph_t *graph) {
 		printf("The distance between %s - %s is %d\n", name1, name2, distance);
 }
 
-int cmp_ids(void *a, void *b) {
-	return *(uint16_t *)b - *(uint16_t *)a;
-}
-
 double_linked_list_t *__get_suggestions(graph_t *graph, uint16_t starting_id) {
 	double_linked_list_t *suggestions = dll_list_init(sizeof(uint16_t), free);
 
@@ -69,6 +69,7 @@ double_linked_list_t *__get_suggestions(graph_t *graph, uint16_t starting_id) {
 	double_linked_list_t *from_list = graph->adjacency_list[starting_id];
 	dll_node_t *curr = dll_get_head(from_list);
 
+//	Get the friends of the starting user
 	while (curr != NULL) {
 		uint16_t curr_data = *(uint16_t *)curr->data;
 
@@ -80,6 +81,7 @@ double_linked_list_t *__get_suggestions(graph_t *graph, uint16_t starting_id) {
 		curr = curr->next;
 	}
 
+// 	Get the friends of the friends
 	while (!queue_is_empty(q)) {
 		uint16_t node = *(uint16_t *)queue_front(q);
 		// TODO: free it
@@ -143,6 +145,59 @@ uint16_t get_number_of_friends(uint16_t id, graph_t *graph) {
 	return graph->adjacency_list[id]->size;
 }
 
+double_linked_list_t *get_common(uint16_t id1, uint16_t id2, graph_t *graph) {
+	double_linked_list_t *common = dll_list_init(sizeof(uint16_t), free);
+
+	double_linked_list_t *from_list1 = graph->adjacency_list[id1];
+	double_linked_list_t *from_list2 = graph->adjacency_list[id2];
+
+	dll_node_t *curr1 = dll_get_head(from_list1);
+	dll_node_t *curr2 = dll_get_head(from_list2);
+
+	while (curr1 != NULL && curr2 != NULL) {
+		id1 = *(uint16_t *)curr1->data;
+		id2 = *(uint16_t *)curr2->data;
+
+		if (id1 == id2) {
+			dll_list_add_sorted(common, &id1, cmp_ids);
+			curr1 = curr1->next;
+			curr2 = curr2->next;
+		} else if (id1 < id2) {
+			curr1 = curr1->next;
+		} else {
+			curr2 = curr2->next;
+		}
+	}
+
+	return common;
+}
+
+void common_friends(char *name1, char *name2, graph_t *graph)
+{
+	uint16_t id1 = get_user_id(name1);
+	uint16_t id2 = get_user_id(name2);
+
+	double_linked_list_t *common_friends = get_common(id1, id2, graph);
+
+
+	if (dll_is_empty(common_friends))
+		printf("No common friends for %s and %s\n", name1, name2);
+	else {
+		printf("The common friends between %s and %s are:\n", name1, name2);
+
+		dll_node_t *curr_node = dll_get_head(common_friends);
+
+		for (size_t i = 0; i < common_friends->size; i++) {
+			uint16_t *id = curr_node->data;
+			char *user = get_user_name(*id);
+
+			printf("%s\n", user);
+
+			curr_node = curr_node->next;
+		}
+	}
+}
+
 void handle_input_friends(char *input, graph_t *friends_graph) {
 	char *commands = strdup(input);
 	char *cmd = strtok(commands, "\n ");
@@ -178,6 +233,9 @@ void handle_input_friends(char *input, graph_t *friends_graph) {
 	} else if (!strcmp(cmd, "popular")) {
 		(void)cmd;
 	} else if (!strcmp(cmd, "common")) {
-		(void)cmd;
+		char *name1 = strtok(NULL, " ");
+		char *name2 = strtok(NULL, "\n ");
+
+		common_friends(name1, name2, friends_graph);
 	}
 }

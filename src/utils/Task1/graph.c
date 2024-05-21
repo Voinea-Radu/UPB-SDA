@@ -22,6 +22,12 @@ void graph_add_edge(graph_t *graph, size_t from, size_t to) {
 	dll_add_nth_node(from_list, dll_get_size(from_list), &to);
 }
 
+void graph_add_edge_sorted(graph_t *graph, size_t from, size_t to,
+						   int (*cmp)(void *, void *)) {
+	double_linked_list_t *from_list = graph->adjacency_list[from];
+	dll_list_add_sorted(from_list, &to, cmp);
+}
+
 bool graph_has_edge(graph_t *graph, size_t from, size_t to) {
 	double_linked_list_t *from_list = graph->adjacency_list[from];
 	dll_node_t *node = dll_get_head(from_list);
@@ -64,8 +70,8 @@ void graph_free(graph_t *graph) {
 	free(graph);
 }
 
-int16_t graph_get_distance(graph_t *graph, uint16_t curr_node, uint16_t find_node)
-{
+int16_t
+graph_get_distance(graph_t *graph, uint16_t curr_node, uint16_t find_node) {
 	int *dist = calloc(graph->num_nodes, sizeof(int));
 	int *visited = calloc(graph->num_nodes, sizeof(int));
 	queue_t *q = queue_create(sizeof(uint16_t), NULL);
@@ -76,7 +82,7 @@ int16_t graph_get_distance(graph_t *graph, uint16_t curr_node, uint16_t find_nod
 
 	while (!queue_is_empty(q)) {
 		size_t node = *(size_t *)queue_front(q);
-		dll_node_t* removed =  queue_dequeue(q);
+		dll_node_t *removed = queue_dequeue(q);
 //		char *user = get_user_name(node);
 //		printf("user: %s\n", user);
 
