@@ -1,5 +1,18 @@
 #include "friends.h"
 #include "utils/constants.h"
+#include "generic/linked_list.h"
+#include "utils/utils.h"
+
+graph_t *get_all_friends()
+{
+	static graph_t *friends_graph = NULL;
+
+	if (friends_graph == NULL) {
+		friends_graph = graph_create(MAX_PEOPLE, sizeof(uint16_t), free);
+	}
+
+	return friends_graph;
+}
 
 int cmp_ids(void *a, void *b)
 {
@@ -38,8 +51,7 @@ void remove_friend(char *name1, char *name2, graph_t *graph)
 	printf("Removed connection %s - %s\n", name1, name2);
 }
 
-uint16_t
-__get_distance(graph_t *graph, uint16_t curr_node, uint16_t find_node)
+uint16_t __get_distance(graph_t *graph, uint16_t curr_node, uint16_t find_node)
 {
 	uint16_t *dist = calloc(graph->num_nodes, sizeof(uint16_t));
 	queue_t *q = queue_create(sizeof(uint16_t), free);
@@ -326,3 +338,9 @@ void handle_input_friends(const char *input, graph_t *friends_graph)
 		common_friends(name1, name2, friends_graph);
 	}
 }
+
+double_linked_list_t *get_friends(graph_t *friends, uint16_t id)
+{
+	return friends->adjacency_list[id];
+}
+

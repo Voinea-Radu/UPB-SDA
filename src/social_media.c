@@ -58,8 +58,6 @@ int main(void)
 
 	char *input = malloc(MAX_COMMAND_LEN);
 
-	graph_t *friends_graph = graph_create(MAX_PEOPLE, sizeof(uint16_t), free);
-
 	while (1) {
 		char *result = fgets(input, MAX_COMMAND_LEN, stdin);
 
@@ -68,7 +66,7 @@ int main(void)
 			break;
 
 #ifdef TASK_1
-		handle_input_friends(input, friends_graph);
+		handle_input_friends(input, get_all_friends());
 #endif
 
 #ifdef TASK_2
@@ -82,7 +80,7 @@ int main(void)
 
 	free(input);
 	__free_tasks();
-	graph_free(friends_graph);
+	graph_free(get_all_friends());
 	free_users();
 
 	return 0;
