@@ -36,6 +36,7 @@ dll_node_t *queue_dequeue(queue_t *q) {
 
 void queue_enqueue(queue_t *q, void *new_data) {
 	dll_node_t *new_node = dll_node_alloc();
+
 	new_node->data = malloc(q->buff->data_size);
 	memcpy(new_node->data, new_data, q->buff->data_size);
 

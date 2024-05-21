@@ -30,6 +30,4 @@ void graph_remove_edge(graph_t *graph, size_t from, size_t to);
 
 void graph_free(graph_t *graph);
 
-int16_t graph_get_distance(graph_t *graph, uint16_t curr_node, uint16_t find_node);
-
 #endif /* GRAPH_H */

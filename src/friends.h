@@ -5,8 +5,12 @@
 #define MAX_PEOPLE 550
 #define MAX_UINT16 65535
 
-#include "utils/Task1/graph.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
+#include "utils/users.h"
+#include "utils/Task1/graph.h"
 
 /**
  * Function that handles the calling of every command from task 1

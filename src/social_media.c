@@ -13,7 +13,7 @@
 #include "utils/Task1/graph.h"
 
 /**
- * Initializez every task based on which task we are running
+ * Initializes every task based on which task we are running
 */
 void init_tasks(void)
 {
