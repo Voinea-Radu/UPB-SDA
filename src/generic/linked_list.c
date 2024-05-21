@@ -42,7 +42,7 @@ void linked_list_remove(linked_list_t *list, void *data)
 	node_t *previous = NULL;
 
 	while (current != NULL) {
-		bool result = list->compare(current->data,data);
+		bool result = list->compare(current->data, data);
 
 		if (result) {
 			if (previous == NULL) {

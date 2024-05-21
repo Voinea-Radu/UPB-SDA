@@ -5,7 +5,8 @@
 #include "graph.h"
 
 graph_t *graph_create(size_t num_nodes, size_t data_size,
-					  void (*free_data_function)(void *)) {
+					  void (*free_data_function)(void *))
+{
 	graph_t *graph = malloc(sizeof(graph_t));
 
 	graph->num_nodes = num_nodes;
@@ -17,18 +18,21 @@ graph_t *graph_create(size_t num_nodes, size_t data_size,
 	return graph;
 }
 
-void graph_add_edge(graph_t *graph, size_t from, size_t to) {
+void graph_add_edge(graph_t *graph, size_t from, size_t to)
+{
 	double_linked_list_t *from_list = graph->adjacency_list[from];
 	dll_add_nth_node(from_list, dll_get_size(from_list), &to);
 }
 
 void graph_add_edge_sorted(graph_t *graph, size_t from, size_t to,
-						   int (*cmp)(void *, void *)) {
+						   int (*cmp)(void *, void *))
+{
 	double_linked_list_t *from_list = graph->adjacency_list[from];
 	dll_list_add_sorted(from_list, &to, cmp);
 }
 
-bool graph_has_edge(graph_t *graph, size_t from, size_t to) {
+bool graph_has_edge(graph_t *graph, size_t from, size_t to)
+{
 	double_linked_list_t *from_list = graph->adjacency_list[from];
 	dll_node_t *node = dll_get_head(from_list);
 
@@ -44,7 +48,8 @@ bool graph_has_edge(graph_t *graph, size_t from, size_t to) {
 	return false;
 }
 
-void graph_remove_edge(graph_t *graph, size_t from, size_t to) {
+void graph_remove_edge(graph_t *graph, size_t from, size_t to)
+{
 	double_linked_list_t *from_list = graph->adjacency_list[from];
 	dll_node_t *node = dll_get_head(from_list);
 	size_t index = 0;
@@ -64,7 +69,8 @@ void graph_remove_edge(graph_t *graph, size_t from, size_t to) {
 	}
 }
 
-void graph_free(graph_t *graph) {
+void graph_free(graph_t *graph)
+{
 	for (size_t i = 0; i < graph->num_nodes; i++)
 		dll_list_free(graph->adjacency_list[i]);
 

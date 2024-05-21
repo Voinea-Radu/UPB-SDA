@@ -67,9 +67,9 @@ int main(void)
 		if (!result)
 			break;
 
-		#ifdef TASK_1
+#ifdef TASK_1
 		handle_input_friends(input, friends_graph);
-		#endif
+#endif
 
 #ifdef TASK_2
 		handle_input_posts(input);

@@ -24,5 +24,5 @@ void handle_input_feed(char *input)
 		// TODO: Add function
 	else if (!strcmp(cmd, "common-groups"))
 		(void)cmd;
-		// TODO: Add function
+	// TODO: Add function
 }
