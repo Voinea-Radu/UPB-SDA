@@ -33,8 +33,7 @@ void init_tasks(void)
 /**
  * Entrypoint of the program, compiled with different defines for each task
 */
-int main(void)
-{
+int main(void) {
 	init_users();
 
 	init_tasks();
@@ -43,10 +42,10 @@ int main(void)
 
 	char *input = (char *)malloc(MAX_COMMAND_LEN);
 	while (1) {
-		input = fgets(input, MAX_COMMAND_LEN, stdin);
+		void *error = fgets(input, MAX_COMMAND_LEN, stdin);
 
-		// If fgets returns null, we reached EOF
-		if (!input)
+		// If fgets returns NULL, we reached EOF
+		if (!error)
 			break;
 
 		#ifdef TASK_1
@@ -61,6 +60,12 @@ int main(void)
 		handle_input_feed(input);
 		#endif
 	}
+
+	free(input);
+
+	graph_free(friends_graph);
+
+	free_users();
 
 	return 0;
 }

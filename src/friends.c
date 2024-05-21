@@ -220,14 +220,14 @@ void most_popular(char *name, graph_t *graph) {
 
 	if (most_id == starting_id)
 		printf("%s is the most popular\n", name);
-	else
-		printf("%s is the most popular friend of %s\n", get_user_name(most_id),
-			   name);
+	else {
+		char *most_name = get_user_name(most_id);
+		printf("%s is the most popular friend of %s\n", most_name, name);
+	}
 }
 
 void handle_input_friends(char *input, graph_t *friends_graph) {
-	char *commands = strdup(input);
-	char *cmd = strtok(commands, "\n ");
+	char *cmd = strtok(input, "\n ");
 
 	if (!cmd)
 		return;

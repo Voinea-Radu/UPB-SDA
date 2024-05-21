@@ -53,7 +53,9 @@ void graph_remove_edge(graph_t *graph, size_t from, size_t to) {
 		uint16_t node_data = *(uint16_t *)node->data;
 
 		if (node_data == to) {
-			dll_remove_nth_node(from_list, index);
+			dll_node_t *to_free = dll_remove_nth_node(from_list, index);
+			free(to_free->data);
+			free(to_free);
 			break;
 		}
 
@@ -72,30 +74,26 @@ void graph_free(graph_t *graph) {
 
 int16_t
 graph_get_distance(graph_t *graph, uint16_t curr_node, uint16_t find_node) {
-	int *dist = calloc(graph->num_nodes, sizeof(int));
-	int *visited = calloc(graph->num_nodes, sizeof(int));
-	queue_t *q = queue_create(sizeof(uint16_t), NULL);
+	uint16_t *dist = calloc(graph->num_nodes, sizeof(uint16_t));
+	queue_t *q = queue_create(sizeof(uint16_t), free);
 
 	queue_enqueue(q, &curr_node);
-	visited[curr_node] = 1;
 	dist[curr_node] = 0;
 
 	while (!queue_is_empty(q)) {
-		size_t node = *(size_t *)queue_front(q);
+		uint16_t node = *(uint16_t *)queue_front(q);
 		dll_node_t *removed = queue_dequeue(q);
-//		char *user = get_user_name(node);
-//		printf("user: %s\n", user);
+
+		free(removed->data);
+		free(removed);
 
 		double_linked_list_t *neighbours = graph->adjacency_list[node];
 		dll_node_t *curr = dll_get_head(neighbours);
 
 		while (curr) {
-			size_t neighbour = *(size_t *)curr->data;
+			uint16_t neighbour = *(uint16_t *)curr->data;
 
-			char *neighbour_user = get_user_name(neighbour);
-
-			if (!visited[neighbour]) {
-				visited[neighbour] = 1;
+			if (!dist[neighbour]) {
 				dist[neighbour] = dist[node] + 1;
 				queue_enqueue(q, &neighbour);
 			}
@@ -103,11 +101,8 @@ graph_get_distance(graph_t *graph, uint16_t curr_node, uint16_t find_node) {
 			if (neighbour == find_node) {
 				int ret = dist[neighbour];
 
-//				printf("user: %s\n", get_user_name(neighbour));
-
-//				free(dist);
-//				free(visited);
-//				queue_free(q);
+				free(dist);
+				queue_free(q);
 
 				return ret;
 			}
@@ -117,7 +112,6 @@ graph_get_distance(graph_t *graph, uint16_t curr_node, uint16_t find_node) {
 	}
 
 	free(dist);
-	free(visited);
 	queue_free(q);
 
 	return -1;
