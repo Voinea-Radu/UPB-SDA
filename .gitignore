@@ -6,3 +6,6 @@ friends
 *.out
 *.valgrind
 check
+debug.log
+debug.in
+out.log

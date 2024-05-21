@@ -19,4 +19,4 @@ uint16_t get_user_id(char *name);
  * @param id - The id of a user
  * @return the name of a user, of NULL if not found
 */
-char *get_user_name(uint16_t id);
+char *get_username(uint16_t id);
