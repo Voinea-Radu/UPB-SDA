@@ -172,13 +172,11 @@ double_linked_list_t *get_common(uint16_t id1, uint16_t id2, graph_t *graph) {
 	return common;
 }
 
-void common_friends(char *name1, char *name2, graph_t *graph)
-{
+void common_friends(char *name1, char *name2, graph_t *graph) {
 	uint16_t id1 = get_user_id(name1);
 	uint16_t id2 = get_user_id(name2);
 
 	double_linked_list_t *common_friends = get_common(id1, id2, graph);
-
 
 	if (dll_is_empty(common_friends))
 		printf("No common friends for %s and %s\n", name1, name2);
@@ -196,6 +194,35 @@ void common_friends(char *name1, char *name2, graph_t *graph)
 			curr_node = curr_node->next;
 		}
 	}
+}
+
+void most_popular(char *name, graph_t *graph) {
+	uint16_t starting_id = get_user_id(name);
+
+	uint16_t most_id = starting_id;
+	uint16_t most_friends = get_number_of_friends(most_id, graph);
+
+	double_linked_list_t *friends = graph->adjacency_list[most_id];
+
+	dll_node_t *curr = dll_get_head(friends);
+
+	while (curr != NULL) {
+		uint16_t curr_id = *(uint16_t *)curr->data;
+		uint16_t curr_friends = get_number_of_friends(curr_id, graph);
+
+		if (curr_friends > most_friends) {
+			most_id = curr_id;
+			most_friends = curr_friends;
+		}
+
+		curr = curr->next;
+	}
+
+	if (most_id == starting_id)
+		printf("%s is the most popular\n", name);
+	else
+		printf("%s is the most popular friend of %s\n", get_user_name(most_id),
+			   name);
 }
 
 void handle_input_friends(char *input, graph_t *friends_graph) {
@@ -231,7 +258,9 @@ void handle_input_friends(char *input, graph_t *friends_graph) {
 		uint16_t number_of_friends = get_number_of_friends(id, friends_graph);
 		printf("%s has %hu friends\n", name, number_of_friends);
 	} else if (!strcmp(cmd, "popular")) {
-		(void)cmd;
+		char *name = strtok(NULL, "\n ");
+
+		most_popular(name, friends_graph);
 	} else if (!strcmp(cmd, "common")) {
 		char *name1 = strtok(NULL, " ");
 		char *name2 = strtok(NULL, "\n ");
