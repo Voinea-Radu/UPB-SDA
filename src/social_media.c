@@ -40,7 +40,7 @@ void __free_tasks(void)
 #endif
 
 #ifdef TASK_2
-	handle_input_posts(NULL);
+	posts_free_memory(get_all_posts());
 #endif
 
 #ifdef TASK_3

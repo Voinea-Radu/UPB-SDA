@@ -12,25 +12,26 @@
 #include "../utils/utils.h"
 #include "../utils/debug.h"
 
-// Private methods
-void free_memory(linked_list_t *posts);
-
-void free_memory(linked_list_t *posts)
+void posts_free_memory(linked_list_t *posts)
 {
 	if (posts != NULL) {
 		linked_list_free(posts);
 	}
 }
 
+linked_list_t *get_all_posts(){
+	static linked_list_t *posts = NULL;
+
+	if (NULL == posts) {
+		posts = linked_list_init((void (*)(void *))free_post, compare_post);
+	}
+
+	return posts;
+}
+
 void handle_input_posts(char *command)
 {
 	static hash_map_t *commands_map = NULL;
-	static linked_list_t *posts = NULL;
-
-	if (command == NULL) {
-		free_memory(posts);
-		return;
-	}
 
 	if (NULL == commands_map) {
 		commands_map = hash_map_init(10, (uint (*)(void *))string_hash, (bool (*)(void *, void *))string_equals);
@@ -44,9 +45,6 @@ void handle_input_posts(char *command)
 		hash_map_put(commands_map, "get-reposts", handle_get_reposts);
 	}
 
-	if (NULL == posts) {
-		posts = linked_list_init((void (*)(void *))free_post, compare_post);
-	}
 
 	string_t result = strtok(command, " ");
 
@@ -62,7 +60,7 @@ void handle_input_posts(char *command)
 
 	string_t arguments = strtok(NULL, "\n");
 
-	handler(posts, arguments);
+	handler(get_all_posts(), arguments);
 
 #if DEBUG
 	debug_log("\n");
