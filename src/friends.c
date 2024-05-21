@@ -85,7 +85,9 @@ double_linked_list_t *__get_suggestions(graph_t *graph, uint16_t starting_id) {
 	while (!queue_is_empty(q)) {
 		uint16_t node = *(uint16_t *)queue_front(q);
 		// TODO: free it
-		dll_node_t *removed = queue_dequeue(q);
+		dll_node_t *to_free = queue_dequeue(q);
+		free(to_free->data);
+		free(to_free);
 
 		double_linked_list_t *from_list = graph->adjacency_list[node];
 		dll_node_t *curr = dll_get_head(from_list);
@@ -134,6 +136,8 @@ void get_suggestions(char *name, graph_t *graph) {
 			curr_node = curr_node->next;
 		}
 	}
+
+	dll_list_free(suggestions);
 }
 
 uint16_t get_number_of_friends(uint16_t id, graph_t *graph) {
@@ -194,6 +198,8 @@ void common_friends(char *name1, char *name2, graph_t *graph) {
 			curr_node = curr_node->next;
 		}
 	}
+
+	dll_list_free(common_friends);
 }
 
 void most_popular(char *name, graph_t *graph) {
