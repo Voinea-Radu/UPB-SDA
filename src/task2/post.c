@@ -18,9 +18,9 @@ uint64_t __compute_common_repost(post_t *post, uint32_t repost_id_1, uint32_t re
 
 void free_post(post_t *post)
 {
-	//free(post->title);
-	//linked_list_free(post->likes);
-	//linked_list_free(post->reposts);
+	free(post->title);
+	linked_list_free(post->likes);
+	linked_list_free(post->reposts);
 	free(post);
 }
 
@@ -176,9 +176,10 @@ void post_toggle_like(linked_list_t *posts, uint16_t user_id, uint32_t post_id, 
 		linked_list_remove(post->likes, user_id_ptr);
 		if (post->is_repost) {
 			printf("User %s unliked repost %s\n", get_username(user_id), post->title);
-			return;
+		} else {
+			printf("User %s unliked post %s\n", get_username(user_id), post->title);
 		}
-		printf("User %s unliked post %s\n", get_username(user_id), post->title);
+		free(user_id_ptr);
 		return;
 	}
 

@@ -85,7 +85,7 @@ void free_int(uint32_t *data)
 
 bool compare_int(void *data1, void *data2)
 {
-	int data1_int = *(int *)data1;
-	int data2_int = *(int *)data2;
+	int data1_int = *(uint16_t* )data1;
+	int data2_int = *(uint16_t *)data2;
 	return data1_int == data2_int;
 }

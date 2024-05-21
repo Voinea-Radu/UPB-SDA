@@ -42,7 +42,9 @@ void linked_list_remove(linked_list_t *list, void *data)
 	node_t *previous = NULL;
 
 	while (current != NULL) {
-		if (list->compare(current->data, data)) {
+		bool result = list->compare(current->data,data);
+
+		if (result) {
 			if (previous == NULL) {
 				list->head = current->next;
 			} else {
@@ -53,7 +55,9 @@ void linked_list_remove(linked_list_t *list, void *data)
 				list->tail = previous;
 			}
 
+			list->free(current->data);
 			free(current);
+
 			list->size--;
 			return;
 		}
@@ -70,7 +74,8 @@ void linked_list_free(linked_list_t *list)
 
 	while (current != NULL) {
 		next = current->next;
-		list->free(current);
+		list->free(current->data);
+		free(current);
 		current = next;
 	}
 

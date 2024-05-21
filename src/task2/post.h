@@ -18,7 +18,7 @@ typedef struct {
 
 	bool is_repost;
 
-	linked_list_t *likes; // list<int> / list<user_id>
+	linked_list_t *likes; 	// list<int> / list<user_id>
 	linked_list_t *reposts; // list<post_t>
 } post_t;
 
