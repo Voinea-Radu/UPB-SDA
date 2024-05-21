@@ -59,7 +59,7 @@ void free_users(void)
 	if (!users)
 		return;
 
-	for (uint16_t i = 0; i < users_number; i++)
+	for (uint16_t i = 0; i < users_count; i++)
 		free(users[i]);
 
 	free(users);

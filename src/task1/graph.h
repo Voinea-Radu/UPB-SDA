@@ -9,7 +9,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "queue.h"
-#include "../users.h"
+#include "../utils/users.h"
 
 typedef struct Graph {
 	size_t num_nodes;

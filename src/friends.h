@@ -10,7 +10,7 @@
 #include <string.h>
 
 #include "utils/users.h"
-#include "utils/Task1/graph.h"
+#include "task1/graph.h"
 
 /**
  * Function that handles the calling of every command from task 1

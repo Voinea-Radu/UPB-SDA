@@ -167,7 +167,7 @@ void suggestions(char *name, graph_t *graph) {
 
 		for (size_t i = 0; i < suggestions->size; i++) {
 			uint16_t *id = curr_node->data;
-			char *user = get_user_name(*id);
+			char *user = get_username(*id);
 
 			printf("%s\n", user);
 
@@ -229,7 +229,7 @@ void common_friends(char *name1, char *name2, graph_t *graph) {
 
 		for (size_t i = 0; i < common_friends->size; i++) {
 			uint16_t *id = curr_node->data;
-			char *user = get_user_name(*id);
+			char *user = get_username(*id);
 
 			printf("%s\n", user);
 
@@ -265,7 +265,7 @@ void most_popular(char *name, graph_t *graph) {
 	if (most_popular_id == starting_id)
 		printf("%s is the most popular\n", name);
 	else {
-		char *most_name = get_user_name(most_popular_id);
+		char *most_name = get_username(most_popular_id);
 		printf("%s is the most popular friend of %s\n", most_name, name);
 	}
 }
