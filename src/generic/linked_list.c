@@ -5,7 +5,7 @@
 #include "linked_list.h"
 #include "../utils/utils.h"
 
-linked_list_t *linked_list_init(void (*free)(void *), bool (*compare)(void*, void*))
+linked_list_t *linked_list_init(void (*free)(void *), bool (*compare)(void *, void *))
 {
 	linked_list_t *list = safe_malloc(sizeof(linked_list_t));
 
@@ -70,18 +70,19 @@ void linked_list_free(linked_list_t *list)
 
 	while (current != NULL) {
 		next = current->next;
-		free(current);
+		list->free(current);
 		current = next;
 	}
 
 	free(list);
 }
 
-void linked_list_print_prefixed(linked_list_t *list, string_t prefix, void (*print)(string_t, void*)){
+void linked_list_print_prefixed(linked_list_t *list, string_t prefix, void (*print)(string_t, void *))
+{
 	node_t *current = list->head;
 
 	while (current != NULL) {
-		void* data = current->data;
+		void *data = current->data;
 		print(prefix, data);
 		current = current->next;
 	}

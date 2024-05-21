@@ -16,10 +16,12 @@ void __compute_post_ratio(linked_list_t *list, uint32_t *current_max, uint32_t *
 
 uint64_t __compute_common_repost(post_t *post, uint32_t repost_id_1, uint32_t repost_id_2);
 
-void free_post(void *data)
+void free_post(post_t *post)
 {
-	data = data;
-	// TODO
+	//free(post->title);
+	//linked_list_free(post->likes);
+	//linked_list_free(post->reposts);
+	free(post);
 }
 
 bool compare_post(void *data1, void *data2)
@@ -63,8 +65,8 @@ post_t *post_init(uint32_t id, uint16_t user_id, string_t title, bool is_repost)
 
 	post->is_repost = is_repost;
 
-	post->likes = linked_list_init(free_int, compare_int);
-	post->reposts = linked_list_init(free_post, compare_post);
+	post->likes = linked_list_init((void (*)(void *))free_int, compare_int);
+	post->reposts = linked_list_init((void (*)(void *))free_post, compare_post);
 
 	return post;
 }

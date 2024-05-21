@@ -12,11 +12,25 @@
 #include "../utils/utils.h"
 #include "../utils/debug.h"
 
+// Private methods
+void free_memory(linked_list_t *posts);
 
-void handle_input_posts(char *input)
+void free_memory(linked_list_t *posts)
+{
+	if (posts != NULL) {
+		linked_list_free(posts);
+	}
+}
+
+void handle_input_posts(char *command)
 {
 	static hash_map_t *commands_map = NULL;
-	static linked_list_t *database = NULL;
+	static linked_list_t *posts = NULL;
+
+	if (command == NULL) {
+		free_memory(posts);
+		return;
+	}
 
 	if (NULL == commands_map) {
 		commands_map = hash_map_init(10, (uint (*)(void *))string_hash, (bool (*)(void *, void *))string_equals);
@@ -30,14 +44,13 @@ void handle_input_posts(char *input)
 		hash_map_put(commands_map, "get-reposts", handle_get_reposts);
 	}
 
-	if (NULL == database) {
-		database = linked_list_init(free_post, compare_post);
+	if (NULL == posts) {
+		posts = linked_list_init((void (*)(void *))free_post, compare_post);
 	}
 
-	string_t command = strdup(input);
-	strtok(command, " ");
+	string_t result = strtok(command, " ");
 
-	if (NULL == command) {
+	if (NULL == result) {
 		return;
 	}
 
@@ -47,20 +60,14 @@ void handle_input_posts(char *input)
 		return;
 	}
 
-	int offset = strlen(command) + 1;
+	string_t arguments = strtok(NULL, "\n");
 
-	command = strdup(input);
-
-	if (command[strlen(command) - 1] == '\n') {
-		command[strlen(command) - 1] = '\0';
-	}
-	command += offset;
-	handler(database, command);
+	handler(posts, arguments);
 
 #if DEBUG
 	debug_log("\n");
 	debug_log("Database: \n");
-	linked_list_print_prefixed(database->posts, "", (void (*)(string_t, void *))print_post);
+	linked_list_print_prefixed(posts->posts, "", (void (*)(string_t, void *))print_post);
 	debug_log("\n");
 #endif
 }
@@ -68,7 +75,7 @@ void handle_input_posts(char *input)
 void handle_create(linked_list_t *posts, string_t command)
 {
 	string_t username = strtok(command, " ");
-	string_t message = strtok(NULL, "\n");
+	string_t message = strdup(strtok(NULL, "\n"));
 
 #if DEBUG
 	debug_log("Creating post: username: %s | message: %s\n", username, message);
@@ -177,7 +184,7 @@ void handle_get_likes(linked_list_t *posts, string_t command)
 	debug_log("Getting likes: post_id: %d | repost_id: %d\n", post_id, repost_id);
 #endif
 
-	post_t* post = post_get(posts, post_id, repost_id);
+	post_t *post = post_get(posts, post_id, repost_id);
 
 	if (repost_id != 0) {
 		printf("Repost #%d has %d likes\n", post->id, post->likes->size);

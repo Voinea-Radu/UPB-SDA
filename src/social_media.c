@@ -12,19 +12,40 @@
 #include "feed.h"
 #include "utils/debug.h"
 
-void init_tasks(void)
+// Private methods
+void __init_tasks(void);
+
+void __free_tasks(void);
+
+
+void __init_tasks(void)
 {
-	#ifdef TASK_1
+#ifdef TASK_1
 
-	#endif
+#endif
 
-	#ifdef TASK_2
+#ifdef TASK_2
 
-	#endif
+#endif
 
-	#ifdef TASK_3
+#ifdef TASK_3
 
-	#endif
+#endif
+}
+
+void __free_tasks(void)
+{
+#ifdef TASK_1
+
+#endif
+
+#ifdef TASK_2
+	handle_input_posts(NULL);
+#endif
+
+#ifdef TASK_3
+
+#endif
 }
 
 int main(void)
@@ -33,28 +54,30 @@ int main(void)
 	debug_init();
 #endif
 	init_users();
-	init_tasks();
+	__init_tasks();
 
-	char *input = (char *)malloc(MAX_COMMAND_LEN);
+	char *input = malloc(MAX_COMMAND_LEN);
 	while (1) {
-		input = fgets(input, MAX_COMMAND_LEN, stdin);
+		char *result = fgets(input, MAX_COMMAND_LEN, stdin);
 
-		// If fgets returns null, we reached EOF
-		if (!input)
+		if (!result)
 			break;
 
-		#ifdef TASK_1
+#ifdef TASK_1
 		handle_input_friends(input);
-		#endif
+#endif
 
-		#ifdef TASK_2
+#ifdef TASK_2
 		handle_input_posts(input);
-		#endif
+#endif
 
-		#ifdef TASK_3
+#ifdef TASK_3
 		handle_input_feed(input);
-		#endif
+#endif
 	}
+
+	free(input);
+	__free_tasks();
 
 	return 0;
 }

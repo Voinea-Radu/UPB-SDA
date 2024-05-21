@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include <stdint-gcc.h>
 #include "utils.h"
 
 void *safe_malloc(size_t size)
@@ -77,9 +78,9 @@ bool string_equals(string_t string1, string_t string2)
 	return strcmp(string1, string2) == 0;
 }
 
-void free_int(__attribute__((unused)) void *data)
+void free_int(uint32_t *data)
 {
-
+	free(data);
 }
 
 bool compare_int(void *data1, void *data2)
