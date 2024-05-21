@@ -1,4 +1,5 @@
 #include "friends.h"
+#include "utils/constants.h"
 
 int cmp_ids(void *a, void *b)
 {
@@ -281,9 +282,10 @@ void most_popular(char *name, graph_t *graph)
 	}
 }
 
-void handle_input_friends(char *input, graph_t *friends_graph)
+void handle_input_friends(const char *input, graph_t *friends_graph)
 {
-	char *cmd = strtok(input, "\n ");
+	string_t command = strdup(input);
+	char *cmd = strtok(command, "\n ");
 
 	if (!cmd)
 		return;

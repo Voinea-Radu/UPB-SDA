@@ -29,9 +29,10 @@ linked_list_t *get_all_posts(){
 	return posts;
 }
 
-void handle_input_posts(char *command)
+void handle_input_posts(const char* input)
 {
 	static hash_map_t *commands_map = NULL;
+	string_t command = strdup(input);
 
 	if (NULL == commands_map) {
 		commands_map = hash_map_init(10, (uint (*)(void *))string_hash, (bool (*)(void *, void *))string_equals);
@@ -44,7 +45,6 @@ void handle_input_posts(char *command)
 		hash_map_put(commands_map, "get-likes", handle_get_likes);
 		hash_map_put(commands_map, "get-reposts", handle_get_reposts);
 	}
-
 
 	string_t result = strtok(command, " ");
 

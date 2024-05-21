@@ -17,6 +17,6 @@
  *
  * Please add any necessary parameters to the functions
 */
-void handle_input_friends(char *input, graph_t *friends_graph);
+void handle_input_friends(const char *input, graph_t *friends_graph);
 
 #endif // FRIENDS_H
