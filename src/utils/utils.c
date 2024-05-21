@@ -78,6 +78,10 @@ bool string_equals(string_t string1, string_t string2)
 	return strcmp(string1, string2) == 0;
 }
 
+void free_na(__attribute__((unused)) void **data)
+{
+}
+
 void free_int(uint16_t *data)
 {
 	free(data);

@@ -86,7 +86,7 @@ void friends_repost(string_t username, uint32_t post_id)
 
 	double_linked_list_t *__friends = get_friends(get_all_friends(), user_id);
 
-	linked_list_t *friends = linked_list_init((void (*)(void *))free_int, compare_int);
+	linked_list_t *friends = linked_list_init((void (*)(void *))free_na, compare_int);
 
 	dll_node_t *current = __friends->head;
 
@@ -96,5 +96,7 @@ void friends_repost(string_t username, uint32_t post_id)
 	}
 
 	__print_reposting_friends(post->reposts, friends);
+
+	linked_list_free(friends);
 }
 

@@ -337,6 +337,8 @@ void handle_input_friends(const char *input, graph_t *friends_graph)
 
 		common_friends(name1, name2, friends_graph);
 	}
+
+	free(command);
 }
 
 double_linked_list_t *get_friends(graph_t *friends, uint16_t id)

@@ -49,12 +49,14 @@ void handle_input_posts(const char* input)
 	string_t result = strtok(command, " ");
 
 	if (NULL == result) {
+		free(command);
 		return;
 	}
 
 	void (*handler)(linked_list_t *, string_t) = hash_map_get(commands_map, command);
 
 	if (NULL == handler) {
+		free(command);
 		return;
 	}
 
@@ -68,6 +70,8 @@ void handle_input_posts(const char* input)
 	linked_list_print_prefixed(posts->posts, "", (void (*)(string_t, void *))print_post);
 	debug_log("\n");
 #endif
+
+	free(command);
 }
 
 void handle_create(linked_list_t *posts, string_t command)
