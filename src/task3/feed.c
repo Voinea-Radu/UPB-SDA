@@ -8,10 +8,10 @@
 #include "feed.h"
 #include "../utils/users.h"
 #include "../utils/constants.h"
-#include "../friends.h"
+#include "../task1/friends.h"
 #include "../task2/task2.h"
 #include "../task2/post.h"
-#include "../task1/stack.h"
+#include "../generic/stack.h"
 
 void print_profile(string_t username);
 void __print_reposting_friends(linked_list_t *posts, linked_list_t *friends);

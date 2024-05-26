@@ -13,8 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "utils/users.h"
-#include "task1/graph.h"
+#include "../utils/users.h"
+#include "../generic/graph.h"
 
 /**
  * Function that handles the calling of every command from task 1

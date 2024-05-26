@@ -10,7 +10,7 @@
 #include <stdint-gcc.h>
 #include "../utils/constants.h"
 #include "../generic/linked_list.h"
-#include "../task1/double_linked_list.h"
+#include "../generic/double_linked_list.h"
 
 typedef struct {
 	uint32_t id;

@@ -7,7 +7,7 @@
 #include <string.h>
 
 #include "utils/users.h"
-#include "friends.h"
+#include "task1/friends.h"
 #include "task2/task2.h"
 #include "task3/feed.h"
 #include "utils/debug.h"
