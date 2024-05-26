@@ -51,8 +51,8 @@ uint32_t post_get_ratio(linked_list_t *posts, uint32_t post_id);
 
 void post_delete(linked_list_t *posts, uint32_t post_id, uint32_t repost_id);
 
-void
-posts_get_by_user_id(linked_list_t *posts, double_linked_list_t **curr_feed,
+double_linked_list_t *
+posts_get_by_user_id(linked_list_t *posts, double_linked_list_t *friends,
 					 uint16_t user_id, uint16_t limit);
 
 #endif // POST_H

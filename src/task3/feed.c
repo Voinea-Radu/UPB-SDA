@@ -55,23 +55,16 @@ void show_feed(graph_t *friends_graph, char *name, int size) {
 
 	linked_list_t *posts = get_all_posts();
 
-	double_linked_list_t *feed = NULL;
-
 	double_linked_list_t *friends = friends_graph->adjacency_list[id];
 
-	dll_node_t *curr = dll_get_head(friends);
-	while (curr) {
-		uint16_t friend_id = *(uint16_t *)curr->data;
-		posts_get_by_user_id(posts, &feed, friend_id, size);
-		curr = curr->next;
-	}
+	double_linked_list_t *feed = posts_get_by_user_id(posts, friends, id, size);
 
 	dll_node_t *curr_node = dll_get_head(feed);
 	for (size_t i = 0; i < feed->size; i++) {
 		post_t *post = curr_node->data;
 
 		char *username = get_username(post->user_id);
-		printf("%s: \"%s\"\n", username, post->title);
+		printf("%s: %s\n", username, post->title);
 		curr_node = curr_node->next;
 	}
 }

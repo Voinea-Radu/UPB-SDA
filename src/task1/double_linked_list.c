@@ -287,8 +287,9 @@ dll_node_t *
 dll_list_add_sorted_with_limit(double_linked_list_t *list, void *value,
 							   int (*cmp)(void *, void *), size_t limit) {
 	dll_node_t *new_node = dll_node_alloc();
-	new_node->data = malloc(list->data_size);
-	memcpy(new_node->data, value, list->data_size);
+	new_node->data = value;
+//	In this situation, we do not need to copy the data
+//	memcpy(new_node->data, value, list->data_size);
 
 	dll_node_t *curr_node = dll_get_head(list);
 	dll_node_t *prev = NULL;

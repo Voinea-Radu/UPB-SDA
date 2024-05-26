@@ -259,26 +259,41 @@ void post_delete(linked_list_t *posts, uint32_t post_id, uint32_t repost_id) {
 }
 
 int cmp_post_recent(void *a, void *b) {
-	post_t *post_a = *(post_t **)a;
-	post_t *post_b = *(post_t **)b;
+	post_t *post_a = a;
+	post_t *post_b = b;
 
 	return post_a->id - post_b->id;
 }
 
-void
-posts_get_by_user_id(linked_list_t *posts, double_linked_list_t **curr_feed,
+double_linked_list_t *
+posts_get_by_user_id(linked_list_t *posts, double_linked_list_t *friends,
 					 uint16_t user_id, uint16_t limit) {
-	if (*curr_feed == NULL)
-		*curr_feed = dll_list_init(sizeof(post_t), free_post);
+	double_linked_list_t *feed = dll_list_init(sizeof(post_t *), free_post);
 
 	node_t *current = posts->head;
 	while (current != NULL) {
 		post_t *post = (post_t *)current->data;
 
 		if (post->user_id == user_id) {
-			dll_list_add_sorted_with_limit(*curr_feed, post, cmp_post_recent,
-										   limit);
+			dll_list_add_sorted_with_limit(feed, post, cmp_post_recent, limit);
+
+			current = current->next;
+			continue;
 		}
+
+		dll_node_t *current_friend = friends->head;
+		for (size_t i = 0; i < friends->size; i++) {
+			uint16_t friend_id = *(uint16_t *)current_friend->data;
+			if (friend_id == post->user_id) {
+				dll_list_add_sorted_with_limit(feed, post, cmp_post_recent,
+											   limit);
+				break;
+			}
+			current_friend = current_friend->next;
+		}
+
 		current = current->next;
 	}
+
+	return feed;
 }
