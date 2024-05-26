@@ -100,7 +100,6 @@ void print_profile(string_t username) {
 
 	__get_all_posts_for_user(get_all_posts(), id,output, &output_size);
 
-	// sort output
 	for (uint32_t i = 0; i < output_size; i++) {
 		for (uint32_t j = i + 1; j < output_size; j++) {
 			if (output[i] > output[j]) {
