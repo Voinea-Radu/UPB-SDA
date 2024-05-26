@@ -18,3 +18,7 @@ feed: clean
 
 clean:
 	rm -rf *.o friends posts feed
+
+pack:
+	zip -FSr 315CA_VoineaRadu_TEMA3.zip README Makefile src/
+	zip -FSr 315CA_ComanAndrei_TEMA3.zip README Makefile src/

@@ -11,3 +11,4 @@ debug.in
 out.log
 .checkpatch-camelcase.git.
 style.log
+*.zip
