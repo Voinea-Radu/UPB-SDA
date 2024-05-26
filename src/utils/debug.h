@@ -20,6 +20,11 @@ string_t increase_prefix(string_t prefix);
 
 void print_post(string_t prefix, post_t *post);
 
+void linked_list_print_prefixed(linked_list_t *list, string_t prefix,
+								void (*print)(string_t, void *));
+
+void linked_list_print(linked_list_t *list, void (*print)(void *));
+
 #endif  // DEBUG
 
 #endif  // DEBUG_H

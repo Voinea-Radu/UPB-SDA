@@ -10,7 +10,7 @@
 
 void posts_free_memory(linked_list_t *posts);
 
-linked_list_t *get_all_posts();
+linked_list_t *get_all_posts(void);
 
 void handle_input_posts(const char *input);
 

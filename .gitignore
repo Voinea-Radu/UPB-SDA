@@ -9,3 +9,5 @@ check
 debug.log
 debug.in
 out.log
+.checkpatch-camelcase.git.
+style.log

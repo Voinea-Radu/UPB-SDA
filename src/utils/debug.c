@@ -104,7 +104,8 @@ void print_username(string_t prefix, uint16_t *user_id)
 void print_post(string_t prefix, post_t *post)
 {
 	if (strlen(prefix) == 0) {
-		debug_log("Post %d: %s by %s\n", post->id, post->title, get_username(post->user_id));
+		debug_log("Post %d: %s by %s\n", post->id, post->title,
+				  get_username(post->user_id));
 	} else {
 		debug_log("%sReposed by %s\n", prefix, get_username(post->user_id));
 	}
@@ -112,13 +113,14 @@ void print_post(string_t prefix, post_t *post)
 	debug_log("%sLikes: %d\n", prefix, post->likes->size);
 
 	prefix = increase_prefix(prefix);
-	linked_list_print_prefixed(post->likes, prefix, (void (*)(string_t, void *))print_username);
+	linked_list_print_prefixed(post->likes, prefix,
+							   (void (*)(string_t, void *))print_username);
 
 	if (post->reposts->size != 0) {
 		debug_log("%sReposts:\n", prefix);
-		linked_list_print_prefixed(post->reposts, prefix, (void (*)(string_t, void *))print_post);
+		linked_list_print_prefixed(post->reposts, prefix,
+								   (void (*)(string_t, void *))print_post);
 	}
 }
-
 
 #endif  // DEBUG

@@ -10,7 +10,8 @@ static string_t *users;
 
 static uint16_t users_count;
 
-void init_users(void) {
+void init_users(void)
+{
 	FILE *users_db = fopen(db_path, "r");
 
 	if (!users_db) {
@@ -34,7 +35,8 @@ void init_users(void) {
 	fclose(users_db);
 }
 
-uint16_t get_user_id(char *name) {
+uint16_t get_user_id(char *name)
+{
 	if (!users)
 		return -1;
 
@@ -45,14 +47,16 @@ uint16_t get_user_id(char *name) {
 	return -1;
 }
 
-char *get_username(uint16_t id) {
+char *get_username(uint16_t id)
+{
 	if (id >= users_count)
 		return NULL;
 
 	return users[id];
 }
 
-void free_users(void) {
+void free_users(void)
+{
 	if (!users)
 		return;
 

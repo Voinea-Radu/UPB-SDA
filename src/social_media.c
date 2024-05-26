@@ -17,7 +17,8 @@ void __init_tasks(void);
 
 void __free_tasks(void);
 
-void __init_tasks(void) {
+void __init_tasks(void)
+{
 #ifdef TASK_1
 
 #endif
@@ -31,7 +32,8 @@ void __init_tasks(void) {
 #endif
 }
 
-void __free_tasks(void) {
+void __free_tasks(void)
+{
 #ifdef TASK_1
 
 #endif
@@ -45,7 +47,8 @@ void __free_tasks(void) {
 #endif
 }
 
-int main(void) {
+int main(void)
+{
 #if DEBUG
 	debug_init();
 #endif

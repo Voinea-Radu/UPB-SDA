@@ -25,6 +25,6 @@ void handle_input_friends(const char *input, graph_t *friends_graph);
 
 double_linked_list_t *get_friends(graph_t *friends, uint16_t id);
 
-graph_t *get_all_friends();
+graph_t *get_all_friends(void);
 
 #endif // FRIENDS_H

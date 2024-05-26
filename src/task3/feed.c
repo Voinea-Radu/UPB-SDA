@@ -14,20 +14,24 @@
 #include "../generic/stack.h"
 
 void print_profile(string_t username);
+
 void __print_reposting_friends(linked_list_t *posts, linked_list_t *friends);
+
 void friends_repost(string_t username, uint32_t post_id);
+
 void __get_all_posts_for_user(linked_list_t *posts, uint16_t user_id,
 							  uint32_t *output, uint32_t *size);
 
 void show_feed(graph_t *friends_graph, char *name, int size);
+
 void find_clique(graph_t *friends_graph, char *name);
 
-void handle_input_feed(char *input) {
+void handle_input_feed(char *input)
+{
 	char *command = strtok(input, "\n ");
 
-	if (!command) {
+	if (!command)
 		return;
-	}
 
 	if (!strcmp(command, "feed")) {
 		char *name = strtok(NULL, "\n ");
@@ -56,7 +60,8 @@ void handle_input_feed(char *input) {
 	}
 }
 
-void show_feed(graph_t *friends_graph, char *name, int size) {
+void show_feed(graph_t *friends_graph, char *name, int size)
+{
 	uint16_t id = get_user_id(name);
 	if (id == MAX_UINT16) {
 		printf("User not found\n");
@@ -85,22 +90,23 @@ void show_feed(graph_t *friends_graph, char *name, int size) {
 }
 
 void __get_all_posts_for_user(linked_list_t *posts, uint16_t user_id,
-							  uint32_t *output, uint32_t *size) {
+							  uint32_t *output, uint32_t *size)
+{
 	node_t *current = posts->head;
 
-	while (current != NULL) {
+	while (current) {
 		post_t *post = (post_t *)current->data;
 
-		if (post->user_id == user_id) {
+		if (post->user_id == user_id)
 			output[(*size)++] = post->id;
-		}
 
 		__get_all_posts_for_user(post->reposts, user_id, output, size);
 		current = current->next;
 	}
 }
 
-void print_profile(string_t username) {
+void print_profile(string_t username)
+{
 	uint16_t id = get_user_id(username);
 	uint32_t *output = safe_malloc(get_all_posts()->size + 10);
 	uint32_t output_size = 0;
@@ -119,32 +125,32 @@ void print_profile(string_t username) {
 
 	for (uint32_t i = 0; i < output_size; i++) {
 		post_t *post = post_get(get_all_posts(), output[i], 0);
-		if (post->is_repost) {
+		if (post->is_repost)
 			printf("Reposted: %s\n", post->title);
-		} else {
+		else
 			printf("Posted: %s\n", post->title);
-		}
 	}
 
 	free(output);
 }
 
-void __print_reposting_friends(linked_list_t *posts, linked_list_t *friends) {
+void __print_reposting_friends(linked_list_t *posts, linked_list_t *friends)
+{
 	node_t *current = posts->head;
-	while (current != NULL) {
+	while (current) {
 		post_t *post = (post_t *)current->data;
 		uint16_t user_id = post->user_id;
 
-		if (linked_list_contains(friends, &user_id)) {
+		if (linked_list_contains(friends, &user_id))
 			printf("%s\n", get_username(user_id));
-		}
 
 		__print_reposting_friends(post->reposts, friends);
 		current = current->next;
 	}
 }
 
-void friends_repost(string_t username, uint32_t post_id) {
+void friends_repost(string_t username, uint32_t post_id)
+{
 	uint16_t user_id = get_user_id(username);
 	post_t *post = post_get(get_all_posts(), post_id, 0);
 
@@ -155,7 +161,7 @@ void friends_repost(string_t username, uint32_t post_id) {
 
 	dll_node_t *current = __friends->head;
 
-	while (current != NULL) {
+	while (current) {
 		linked_list_add(friends, current->data);
 		current = current->next;
 	}
@@ -165,12 +171,14 @@ void friends_repost(string_t username, uint32_t post_id) {
 	linked_list_free(friends);
 }
 
-int compare_uint16(void *a, void *b) {
+int compare_uint16(void *a, void *b)
+{
 	return *(uint16_t *)b - *(uint16_t *)a;
 }
 
 void check_if_bigger(double_linked_list_t **clique,
-					 double_linked_list_t *curr_clique) {
+					 double_linked_list_t *curr_clique)
+{
 	if (curr_clique->size > (*clique)->size) {
 		dll_list_free(*clique);
 		*clique = dll_list_init(sizeof(uint16_t), free);
@@ -188,7 +196,8 @@ void dfs_recursive(graph_t *friends_graph, bool *visited,
 				   double_linked_list_t **clique,
 				   double_linked_list_t *possible_clique,
 				   double_linked_list_t *checked_users, uint16_t current,
-				   bool *done) {
+				   bool *done)
+{
 	visited[current] = true;
 	stack_t *stack = stack_init(sizeof(uint16_t), free);
 
@@ -208,7 +217,7 @@ void dfs_recursive(graph_t *friends_graph, bool *visited,
 		bool found = false;
 
 		while (1) {
-			if (curr_friend_node == NULL)
+			if (!curr_friend_node)
 				break;
 
 			uint16_t friend = *(uint16_t *)curr_friend_node->data;
@@ -225,9 +234,8 @@ void dfs_recursive(graph_t *friends_graph, bool *visited,
 				continue;
 			}
 
-			if (in_clique < friend) {
+			if (in_clique < friend)
 				break;
-			}
 		}
 
 		if (!found) {
@@ -242,9 +250,8 @@ void dfs_recursive(graph_t *friends_graph, bool *visited,
 		curr_clique_node = curr_clique_node->next;
 	}
 
-	if (possible_clique->size == 0) {
+	if (possible_clique->size == 0)
 		return;
-	}
 
 	dll_list_add_sorted(checked_users, &current, compare_uint16);
 	check_if_bigger(clique, checked_users);
@@ -307,7 +314,8 @@ void dfs_recursive(graph_t *friends_graph, bool *visited,
 	stack_free(stack);
 }
 
-void find_clique(graph_t *friends_graph, char *name) {
+void find_clique(graph_t *friends_graph, char *name)
+{
 	uint16_t id = get_user_id(name);
 	if (id == MAX_UINT16) {
 		printf("User not found\n");

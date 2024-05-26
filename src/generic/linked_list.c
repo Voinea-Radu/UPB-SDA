@@ -6,7 +6,9 @@
 #include "../utils/utils.h"
 
 linked_list_t *
-linked_list_init(void (*free)(void *), bool (*compare)(void *, void *)) {
+linked_list_init(void (*free)(void *data), bool (*compare)(void *data1,
+														   void *data2))
+{
 	linked_list_t *list = safe_malloc(sizeof(linked_list_t));
 
 	list->head = NULL;
@@ -19,7 +21,8 @@ linked_list_init(void (*free)(void *), bool (*compare)(void *, void *)) {
 	return list;
 }
 
-void linked_list_add(linked_list_t *list, void *data) {
+void linked_list_add(linked_list_t *list, void *data)
+{
 	node_t *node = safe_malloc(sizeof(node_t));
 	node->data = data;
 	node->next = NULL;
@@ -35,23 +38,22 @@ void linked_list_add(linked_list_t *list, void *data) {
 	list->size++;
 }
 
-void linked_list_remove(linked_list_t *list, void *data) {
+void linked_list_remove(linked_list_t *list, void *data)
+{
 	node_t *current = list->head;
 	node_t *previous = NULL;
 
-	while (current != NULL) {
+	while (current) {
 		bool result = list->compare(current->data, data);
 
 		if (result) {
-			if (previous == NULL) {
+			if (!previous)
 				list->head = current->next;
-			} else {
+			else
 				previous->next = current->next;
-			}
 
-			if (current == list->tail) {
+			if (current == list->tail)
 				list->tail = previous;
-			}
 
 			list->free(current->data);
 			free(current);
@@ -65,11 +67,12 @@ void linked_list_remove(linked_list_t *list, void *data) {
 	}
 }
 
-void linked_list_free(linked_list_t *list) {
+void linked_list_free(linked_list_t *list)
+{
 	node_t *current = list->head;
 	node_t *next = NULL;
 
-	while (current != NULL) {
+	while (current) {
 		next = current->next;
 		list->free(current->data);
 		free(current);
@@ -80,41 +83,44 @@ void linked_list_free(linked_list_t *list) {
 }
 
 void linked_list_print_prefixed(linked_list_t *list, string_t prefix,
-								void (*print)(string_t, void *)) {
+								void (*print)(string_t, void *))
+{
 	node_t *current = list->head;
 
-	while (current != NULL) {
+	while (current) {
 		void *data = current->data;
 		print(prefix, data);
 		current = current->next;
 	}
 }
 
-void linked_list_print(linked_list_t *list, void (*print)(void *data)) {
+void linked_list_print(linked_list_t *list, void (*print)(void *data))
+{
 	node_t *current = list->head;
 
-	while (current != NULL) {
+	while (current) {
 		print(current->data);
 		current = current->next;
 	}
 }
 
-void for_each(linked_list_t *list, void (*callback)(void *data)) {
+void for_each(linked_list_t *list, void (*callback)(void *data))
+{
 	node_t *current = list->head;
 
-	while (current != NULL) {
+	while (current) {
 		callback(current->data);
 		current = current->next;
 	}
 }
 
-bool linked_list_contains(linked_list_t *list, void *data) {
+bool linked_list_contains(linked_list_t *list, void *data)
+{
 	node_t *current = list->head;
 
-	while (current != NULL) {
-		if (list->compare(current->data, data)) {
+	while (current) {
+		if (list->compare(current->data, data))
 			return true;
-		}
 
 		current = current->next;
 	}

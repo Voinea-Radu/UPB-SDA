@@ -5,11 +5,10 @@
 #ifndef DOUBLE_LINKED_LIST_H
 #define DOUBLE_LINKED_LIST_H
 
-#include "mem_alloc_check.h"    // for DIE
-#include <stdlib.h>        // for malloc, calloc
-#include <stdbool.h>    // for bool
-#include <stdio.h>        // for printf
-#include <string.h>        // for memcpy
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
 
 typedef struct dll_node_t {
 	void *data;
@@ -22,7 +21,7 @@ typedef struct {
 	size_t size;
 	size_t data_size;
 
-	void (*free_data_function)(void *);
+	void (*free_data_function)(void *data);
 } double_linked_list_t;
 
 dll_node_t *dll_node_alloc(void);
@@ -33,13 +32,9 @@ size_t dll_get_size(double_linked_list_t *list);
 
 bool dll_is_empty(double_linked_list_t *list);
 
-void dll_add_nth_node(double_linked_list_t *list, size_t n, const void *data);
-
 dll_node_t *dll_remove_nth_node(double_linked_list_t *list, size_t n);
 
 dll_node_t *dll_get_head(double_linked_list_t *list);
-
-dll_node_t *dll_get_tail(double_linked_list_t *list);
 
 dll_node_t *dll_remove_head(double_linked_list_t *list);
 
@@ -51,18 +46,14 @@ void dll_add_tail(double_linked_list_t *list, dll_node_t *node);
 
 void dll_add_tail_value(double_linked_list_t *list, void *value);
 
-void dll_refresh_node(double_linked_list_t *list, dll_node_t *node);
-
 void dll_list_free(double_linked_list_t *list);
 
 dll_node_t *dll_list_add_sorted(double_linked_list_t *list, void *value,
-								int (*cmp)(void *, void *));
+								int (*cmp)(void *data1, void *data2));
 
 dll_node_t *
 dll_list_add_sorted_with_limit(double_linked_list_t *list, void *value,
-							   int (*cmp)(void *, void *), size_t limit);
-
-dll_node_t *dll_list_remove_custom(double_linked_list_t *list, void *value,
-								   int (*cmp)(void *, void *));
+							   int (*cmp)(void *data1, void *data2),
+							   size_t limit);
 
 #endif /* DOUBLE_LINKED_LIST_H */
