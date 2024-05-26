@@ -17,7 +17,6 @@ void stack_push(stack_t *stack, void *data) {
 	dll_add_head(stack->list, data);
 }
 
-// TODO: review this free
 void *stack_pop(stack_t *stack) {
 	dll_node_t *node = dll_remove_head(stack->list);
 	void *data = node->data;

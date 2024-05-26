@@ -242,7 +242,6 @@ void dfs_recursive(graph_t *friends_graph, bool *visited,
 		curr_clique_node = curr_clique_node->next;
 	}
 
-//	TODO: free everything
 	if (possible_clique->size == 0) {
 		return;
 	}

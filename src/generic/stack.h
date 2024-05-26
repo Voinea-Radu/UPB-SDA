@@ -15,7 +15,6 @@ stack_t *stack_init(size_t data_size, void (*free_data_function)(void *));
 
 void stack_push(stack_t *stack, void *data);
 
-// TODO: review this free
 void *stack_pop(stack_t *stack);
 
 bool stack_is_empty(stack_t *stack);
