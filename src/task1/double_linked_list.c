@@ -314,7 +314,7 @@ dll_list_add_sorted_with_limit(double_linked_list_t *list, void *value,
 	while (curr_node) {
 		int cmp_val = cmp(curr_node->data, new_node->data);
 
-		if (cmp_val >= 0) {
+		if (cmp_val > 0) {
 			prev = curr_node;
 			curr_node = curr_node->next;
 			continue;
@@ -341,7 +341,7 @@ dll_list_add_sorted_with_limit(double_linked_list_t *list, void *value,
 
 		if (list->size > limit) {
 			dll_node_t *to_remove = dll_remove_tail(list);
-			list->free_data_function(to_remove->data);
+//			list->free_data_function(to_remove->data);
 			free(to_remove);
 		}
 
@@ -350,7 +350,7 @@ dll_list_add_sorted_with_limit(double_linked_list_t *list, void *value,
 
 	if (!curr_node) {
 		if (list->size > limit) {
-			list->free_data_function(new_node->data);
+//			list->free_data_function(new_node->data);
 			free(new_node);
 			return NULL;
 		}
@@ -370,7 +370,7 @@ dll_list_add_sorted_with_limit(double_linked_list_t *list, void *value,
 
 	if (list->size > limit) {
 		dll_node_t *to_remove = dll_remove_tail(list);
-		list->free_data_function(to_remove->data);
+//		list->free_data_function(to_remove->data);
 		free(to_remove);
 	}
 
