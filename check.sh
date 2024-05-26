@@ -1,1 +1,1 @@
-make clean; make; ./posts < checker/input/debug.in > out.log
+make clean; make; ./feed < checker/input/debug.in > out.log

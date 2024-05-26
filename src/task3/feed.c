@@ -8,11 +8,10 @@
 #include "../task2/post.h"
 #include "../task1/stack.h"
 
-void __print_all_posts_for_user(linked_list_t *posts, uint16_t user_id);
-
 void print_profile(string_t username);
 void __print_reposting_friends(linked_list_t *posts, linked_list_t *friends);
 void friends_repost(string_t username, uint32_t post_id);
+void __get_all_posts_for_user(linked_list_t *posts, uint16_t user_id, uint32_t *output, uint32_t *size);
 
 void show_feed(graph_t *friends_graph, char *name, int size);
 void find_clique(graph_t *friends_graph, char *name);
@@ -74,28 +73,49 @@ void show_feed(graph_t *friends_graph, char *name, int size) {
 	}
 }
 
-void __print_all_posts_for_user(linked_list_t *posts, uint16_t user_id) {
+void __get_all_posts_for_user(linked_list_t *posts, uint16_t user_id, uint32_t *output, uint32_t *size) {
 	node_t *current = posts->head;
 
 	while (current != NULL) {
 		post_t *post = (post_t *)current->data;
 
 		if (post->user_id == user_id) {
-			if (post->is_repost) {
-				printf("Reposted: %s\n", post->title);
-			} else {
-				printf("Posted: %s\n", post->title);
-			}
+			output[(*size)++] = post->id;
 		}
 
-		__print_all_posts_for_user(post->reposts, user_id);
+		__get_all_posts_for_user(post->reposts, user_id, output, size);
 		current = current->next;
 	}
 }
 
 void print_profile(string_t username) {
 	uint16_t id = get_user_id(username);
-	__print_all_posts_for_user(get_all_posts(), id);
+	uint32_t *output = safe_malloc(get_all_posts()->size);
+	uint32_t output_size = 0;
+
+	__get_all_posts_for_user(get_all_posts(), id,output, &output_size);
+
+	// sort output
+	for (uint32_t i = 0; i < output_size; i++) {
+		for (uint32_t j = i + 1; j < output_size; j++) {
+			if (output[i] > output[j]) {
+				uint32_t temp = output[i];
+				output[i] = output[j];
+				output[j] = temp;
+			}
+		}
+	}
+
+	for (uint32_t i = 0; i < output_size; i++) {
+		post_t *post = post_get(get_all_posts(), output[i], 0);
+		if (post->is_repost) {
+			printf("Reposted: %s\n", post->title);
+		} else {
+			printf("Posted: %s\n", post->title);
+		}
+	}
+
+	free(output);
 }
 
 void __print_reposting_friends(linked_list_t *posts, linked_list_t *friends) {
