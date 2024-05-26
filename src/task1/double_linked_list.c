@@ -165,7 +165,7 @@ void dll_add_tail(double_linked_list_t *list, dll_node_t *node) {
 	list->size++;
 }
 
-void dll_add_tail_value(double_linked_list_t *list, void *value){
+void dll_add_tail_value(double_linked_list_t *list, void *value) {
 	dll_node_t *new_node = dll_node_alloc();
 
 	new_node->data = malloc(list->data_size);
@@ -174,7 +174,6 @@ void dll_add_tail_value(double_linked_list_t *list, void *value){
 	memcpy(new_node->data, value, list->data_size);
 
 	dll_add_tail(list, new_node);
-
 }
 
 void dll_refresh_node(double_linked_list_t *list, dll_node_t *node) {
@@ -250,7 +249,7 @@ dll_node_t *dll_list_add_sorted(double_linked_list_t *list, void *value,
 	while (curr_node) {
 		int cmp_val = cmp(curr_node->data, new_node->data);
 
-		if(cmp_val == 0){
+		if (cmp_val == 0) {
 			free(new_node->data);
 			free(new_node);
 			return NULL;

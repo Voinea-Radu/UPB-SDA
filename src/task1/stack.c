@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2024 Coman Andrei-Madalin <andrei.coman1301@stud.acs.upb.ro>
+ */
+
 #include "stack.h"
 
 stack_t *stack_init(size_t data_size, void (*free_data_function)(void *)) {

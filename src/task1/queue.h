@@ -5,9 +5,9 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#include <stdlib.h> 			 // for size_t
-#include <stdbool.h> 			 // for bool
-#include "mem_alloc_check.h"	 // for DIE
+#include <stdlib.h>             // for size_t
+#include <stdbool.h>             // for bool
+#include "mem_alloc_check.h"     // for DIE
 #include "double_linked_list.h"  // for double_linked_list_t
 
 typedef struct queue_t {

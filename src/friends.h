@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2024 Coman Andrei-Madalin <andrei.coman1301@stud.acs.upb.ro>
+ */
+
 #ifndef FRIENDS_H
 #define FRIENDS_H
 
@@ -19,7 +23,7 @@
 */
 void handle_input_friends(const char *input, graph_t *friends_graph);
 
-double_linked_list_t * get_friends(graph_t *friends, uint16_t id);
+double_linked_list_t *get_friends(graph_t *friends, uint16_t id);
 
 graph_t *get_all_friends();
 

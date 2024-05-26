@@ -5,8 +5,8 @@
 #include "linked_list.h"
 #include "../utils/utils.h"
 
-linked_list_t *linked_list_init(void (*free)(void *), bool (*compare)(void *, void *))
-{
+linked_list_t *
+linked_list_init(void (*free)(void *), bool (*compare)(void *, void *)) {
 	linked_list_t *list = safe_malloc(sizeof(linked_list_t));
 
 	list->head = NULL;
@@ -19,8 +19,7 @@ linked_list_t *linked_list_init(void (*free)(void *), bool (*compare)(void *, vo
 	return list;
 }
 
-void linked_list_add(linked_list_t *list, void *data)
-{
+void linked_list_add(linked_list_t *list, void *data) {
 	node_t *node = safe_malloc(sizeof(node_t));
 	node->data = data;
 	node->next = NULL;
@@ -36,8 +35,7 @@ void linked_list_add(linked_list_t *list, void *data)
 	list->size++;
 }
 
-void linked_list_remove(linked_list_t *list, void *data)
-{
+void linked_list_remove(linked_list_t *list, void *data) {
 	node_t *current = list->head;
 	node_t *previous = NULL;
 
@@ -67,8 +65,7 @@ void linked_list_remove(linked_list_t *list, void *data)
 	}
 }
 
-void linked_list_free(linked_list_t *list)
-{
+void linked_list_free(linked_list_t *list) {
 	node_t *current = list->head;
 	node_t *next = NULL;
 
@@ -82,8 +79,8 @@ void linked_list_free(linked_list_t *list)
 	free(list);
 }
 
-void linked_list_print_prefixed(linked_list_t *list, string_t prefix, void (*print)(string_t, void *))
-{
+void linked_list_print_prefixed(linked_list_t *list, string_t prefix,
+								void (*print)(string_t, void *)) {
 	node_t *current = list->head;
 
 	while (current != NULL) {
@@ -93,9 +90,7 @@ void linked_list_print_prefixed(linked_list_t *list, string_t prefix, void (*pri
 	}
 }
 
-
-void linked_list_print(linked_list_t *list, void (*print)(void *data))
-{
+void linked_list_print(linked_list_t *list, void (*print)(void *data)) {
 	node_t *current = list->head;
 
 	while (current != NULL) {
@@ -104,8 +99,7 @@ void linked_list_print(linked_list_t *list, void (*print)(void *data))
 	}
 }
 
-void for_each(linked_list_t *list, void (*callback)(void *data))
-{
+void for_each(linked_list_t *list, void (*callback)(void *data)) {
 	node_t *current = list->head;
 
 	while (current != NULL) {
@@ -114,8 +108,7 @@ void for_each(linked_list_t *list, void (*callback)(void *data))
 	}
 }
 
-bool linked_list_contains(linked_list_t *list, void *data)
-{
+bool linked_list_contains(linked_list_t *list, void *data) {
 	node_t *current = list->head;
 
 	while (current != NULL) {

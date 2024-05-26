@@ -8,6 +8,7 @@
 #include <malloc.h>
 
 typedef char *string_t;
+
 typedef unsigned int uint;
 
 #define DEBUG 0

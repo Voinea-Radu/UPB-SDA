@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2024 Coman Andrei-Madalin <andrei.coman1301@stud.acs.upb.ro>
+ * Copyright (c) 2024, Voinea Radu-Mihai <contact@voinearadu.com>
+ */
+
 #include <string.h>
 
 #include "feed.h"
@@ -11,7 +16,8 @@
 void print_profile(string_t username);
 void __print_reposting_friends(linked_list_t *posts, linked_list_t *friends);
 void friends_repost(string_t username, uint32_t post_id);
-void __get_all_posts_for_user(linked_list_t *posts, uint16_t user_id, uint32_t *output, uint32_t *size);
+void __get_all_posts_for_user(linked_list_t *posts, uint16_t user_id,
+							  uint32_t *output, uint32_t *size);
 
 void show_feed(graph_t *friends_graph, char *name, int size);
 void find_clique(graph_t *friends_graph, char *name);
@@ -78,7 +84,8 @@ void show_feed(graph_t *friends_graph, char *name, int size) {
 	free(feed);
 }
 
-void __get_all_posts_for_user(linked_list_t *posts, uint16_t user_id, uint32_t *output, uint32_t *size) {
+void __get_all_posts_for_user(linked_list_t *posts, uint16_t user_id,
+							  uint32_t *output, uint32_t *size) {
 	node_t *current = posts->head;
 
 	while (current != NULL) {
@@ -95,10 +102,10 @@ void __get_all_posts_for_user(linked_list_t *posts, uint16_t user_id, uint32_t *
 
 void print_profile(string_t username) {
 	uint16_t id = get_user_id(username);
-	uint32_t *output = safe_malloc(get_all_posts()->size);
+	uint32_t *output = safe_malloc(get_all_posts()->size + 10);
 	uint32_t output_size = 0;
 
-	__get_all_posts_for_user(get_all_posts(), id,output, &output_size);
+	__get_all_posts_for_user(get_all_posts(), id, output, &output_size);
 
 	for (uint32_t i = 0; i < output_size; i++) {
 		for (uint32_t j = i + 1; j < output_size; j++) {
@@ -178,9 +185,10 @@ void check_if_bigger(double_linked_list_t **clique,
 }
 
 void dfs_recursive(graph_t *friends_graph, bool *visited,
-				   double_linked_list_t **clique, double_linked_list_t
-				   *possible_clique, double_linked_list_t *checked_users,
-				   uint16_t current, bool *done) {
+				   double_linked_list_t **clique,
+				   double_linked_list_t *possible_clique,
+				   double_linked_list_t *checked_users, uint16_t current,
+				   bool *done) {
 	visited[current] = true;
 	stack_t *stack = stack_init(sizeof(uint16_t), free);
 
@@ -200,7 +208,7 @@ void dfs_recursive(graph_t *friends_graph, bool *visited,
 		bool found = false;
 
 		while (1) {
-			if(curr_friend_node == NULL)
+			if (curr_friend_node == NULL)
 				break;
 
 			uint16_t friend = *(uint16_t *)curr_friend_node->data;
@@ -235,14 +243,14 @@ void dfs_recursive(graph_t *friends_graph, bool *visited,
 	}
 
 //	TODO: free everything
-	if(possible_clique->size == 0) {
+	if (possible_clique->size == 0) {
 		return;
 	}
 
 	dll_list_add_sorted(checked_users, &current, compare_uint16);
 	check_if_bigger(clique, checked_users);
 
-	if(possible_clique->size == checked_users->size) {
+	if (possible_clique->size == checked_users->size) {
 		bool is_same = true;
 
 		dll_node_t *curr_poss_node = dll_get_head(possible_clique);
@@ -251,7 +259,7 @@ void dfs_recursive(graph_t *friends_graph, bool *visited,
 			uint16_t poss = *(uint16_t *)curr_poss_node->data;
 			uint16_t checked = *(uint16_t *)curr_checked_node->data;
 
-			if(poss != checked) {
+			if (poss != checked) {
 				is_same = false;
 				break;
 			}
@@ -260,8 +268,7 @@ void dfs_recursive(graph_t *friends_graph, bool *visited,
 			curr_checked_node = curr_checked_node->next;
 		}
 
-		if(is_same)
-		{
+		if (is_same) {
 			*done = true;
 
 			stack_free(stack);
@@ -285,8 +292,7 @@ void dfs_recursive(graph_t *friends_graph, bool *visited,
 			dfs_recursive(friends_graph, visited, clique, new_clique,
 						  checked_users, *friend, done);
 
-			if(*done)
-			{
+			if (*done) {
 				free(friend);
 				dll_list_free(new_clique);
 				stack_free(stack);
@@ -300,7 +306,6 @@ void dfs_recursive(graph_t *friends_graph, bool *visited,
 	}
 
 	stack_free(stack);
-
 }
 
 void find_clique(graph_t *friends_graph, char *name) {
@@ -320,7 +325,7 @@ void find_clique(graph_t *friends_graph, char *name) {
 	for (size_t i = 0; i < friends->size; i++) {
 		uint16_t friend = *(uint16_t *)friends_node->data;
 
-		if(visited[friend]) {
+		if (visited[friend]) {
 			friends_node = friends_node->next;
 			continue;
 		}

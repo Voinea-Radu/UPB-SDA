@@ -5,8 +5,8 @@
 #include "hash_map.h"
 #include "../utils/utils.h"
 
-hash_map_t *hash_map_init(uint32_t size, uint (*hash_function)(void *), bool (*compare_keys)(void *, void *))
-{
+hash_map_t *hash_map_init(uint32_t size, uint (*hash_function)(void *),
+						  bool (*compare_keys)(void *, void *)) {
 	hash_map_t *map = safe_malloc(sizeof(hash_map_t));
 
 	map->size = size;
@@ -17,8 +17,7 @@ hash_map_t *hash_map_init(uint32_t size, uint (*hash_function)(void *), bool (*c
 	return map;
 }
 
-void hash_map_put(hash_map_t *map, void *key, void *value)
-{
+void hash_map_put(hash_map_t *map, void *key, void *value) {
 	uint32_t index = map->hash_function(key) % map->size;
 	hash_node_t *node = safe_malloc(sizeof(hash_node_t));
 	node->key = key;
@@ -27,8 +26,7 @@ void hash_map_put(hash_map_t *map, void *key, void *value)
 	map->nodes[index] = node;
 }
 
-void *hash_map_get(hash_map_t *map, void *key)
-{
+void *hash_map_get(hash_map_t *map, void *key) {
 	uint index = map->hash_function(key) % map->size;
 	hash_node_t *node = map->nodes[index];
 
@@ -42,8 +40,7 @@ void *hash_map_get(hash_map_t *map, void *key)
 	return NULL;
 }
 
-void hash_map_delete(hash_map_t *map, void *key)
-{
+void hash_map_delete(hash_map_t *map, void *key) {
 	uint index = map->hash_function(key) % map->size;
 	hash_node_t *node = map->nodes[index];
 	hash_node_t *prev = NULL;
@@ -62,8 +59,7 @@ void hash_map_delete(hash_map_t *map, void *key)
 	free(node);
 }
 
-void hash_map_free(hash_map_t *map)
-{
+void hash_map_free(hash_map_t *map) {
 	for (uint32_t i = 0; i < map->size; i++) {
 		hash_node_t *node = map->nodes[i];
 		while (node != NULL) {

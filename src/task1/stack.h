@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2024 Coman Andrei-Madalin <andrei.coman1301@stud.acs.upb.ro>
+ */
+
 #ifndef STACK_H
 #define STACK_H
 

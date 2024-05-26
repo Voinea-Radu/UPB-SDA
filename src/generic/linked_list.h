@@ -23,10 +23,10 @@ typedef struct {
 	void (*free)(void *);
 
 	bool (*compare)(void *, void *);
-
 } linked_list_t;
 
-linked_list_t *linked_list_init(void (*free)(void *), bool (*compare)(void *, void *));
+linked_list_t *
+linked_list_init(void (*free)(void *), bool (*compare)(void *, void *));
 
 void linked_list_add(linked_list_t *list, void *data);
 
@@ -35,7 +35,8 @@ void linked_list_remove(linked_list_t *list, void *data);
 void linked_list_free(linked_list_t *list);
 
 // TODO move to debug class
-void linked_list_print_prefixed(linked_list_t *list, string_t prefix, void (*print)(string_t, void *));
+void linked_list_print_prefixed(linked_list_t *list, string_t prefix,
+								void (*print)(string_t, void *));
 
 // TODO move to debug class
 void linked_list_print(linked_list_t *list, void (*print)(void *));

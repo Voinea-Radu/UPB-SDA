@@ -20,10 +20,11 @@ typedef struct {
 	hash_node_t **nodes;
 
 	uint32_t (*hash_function)(void *);
-	bool (*compare_keys)(void *, void*);
+	bool (*compare_keys)(void *, void *);
 } hash_map_t;
 
-hash_map_t *hash_map_init(uint32_t size, uint32_t (*hash_function)(void *), bool (*compare_keys)(void *, void*));
+hash_map_t *hash_map_init(uint32_t size, uint32_t (*hash_function)(void *),
+						  bool (*compare_keys)(void *, void *));
 
 void hash_map_put(hash_map_t *map, void *key, void *value);
 

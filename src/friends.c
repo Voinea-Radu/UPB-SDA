@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2024 Coman Andrei-Madalin <andrei.coman1301@stud.acs.upb.ro>
+ */
+
 #include "friends.h"
 #include "utils/constants.h"
 #include "generic/linked_list.h"
