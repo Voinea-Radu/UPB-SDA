@@ -70,8 +70,13 @@ void show_feed(graph_t *friends_graph, char *name, int size) {
 
 		char *username = get_username(post->user_id);
 		printf("%s: %s\n", username, post->title);
+		dll_node_t *to_free = curr_node;
 		curr_node = curr_node->next;
+
+		free(to_free);
 	}
+
+	free(feed);
 }
 
 void __print_all_posts_for_user(linked_list_t *posts, uint16_t user_id) {
