@@ -49,6 +49,8 @@ void dll_add_head(double_linked_list_t *list, void *value);
 
 void dll_add_tail(double_linked_list_t *list, dll_node_t *node);
 
+void dll_add_tail_value(double_linked_list_t *list, void *value);
+
 void dll_refresh_node(double_linked_list_t *list, dll_node_t *node);
 
 void dll_list_free(double_linked_list_t *list);

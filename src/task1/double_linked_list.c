@@ -165,6 +165,18 @@ void dll_add_tail(double_linked_list_t *list, dll_node_t *node) {
 	list->size++;
 }
 
+void dll_add_tail_value(double_linked_list_t *list, void *value){
+	dll_node_t *new_node = dll_node_alloc();
+
+	new_node->data = malloc(list->data_size);
+	DIE(!new_node->data, "malloc() failed");
+
+	memcpy(new_node->data, value, list->data_size);
+
+	dll_add_tail(list, new_node);
+
+}
+
 void dll_refresh_node(double_linked_list_t *list, dll_node_t *node) {
 	if (node == list->tail)
 		return;
@@ -222,7 +234,7 @@ dll_node_t *dll_remove_tail(double_linked_list_t *list) {
  * @param list: A double linked list
  * @param value: Value you want to add to list
  * @param cmp: Compare function, needs to return 1 if the data already in the
- * list is "bigger", -1 otherwise.
+ * list is "bigger", 0 if they are "equal, -1 otherwise.
  * @return Return the node added
  */
 dll_node_t *dll_list_add_sorted(double_linked_list_t *list, void *value,
@@ -238,7 +250,13 @@ dll_node_t *dll_list_add_sorted(double_linked_list_t *list, void *value,
 	while (curr_node) {
 		int cmp_val = cmp(curr_node->data, new_node->data);
 
-		if (cmp_val >= 0) {
+		if(cmp_val == 0){
+			free(new_node->data);
+			free(new_node);
+			return NULL;
+		}
+
+		if (cmp_val > 0) {
 			prev = curr_node;
 			curr_node = curr_node->next;
 			continue;

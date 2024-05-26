@@ -6,6 +6,7 @@
 #include "../friends.h"
 #include "../task2/task2.h"
 #include "../task2/post.h"
+#include "../task1/stack.h"
 
 void __print_all_posts_for_user(linked_list_t *posts, uint16_t user_id);
 
@@ -14,6 +15,7 @@ void __print_reposting_friends(linked_list_t *posts, linked_list_t *friends);
 void friends_repost(string_t username, uint32_t post_id);
 
 void show_feed(graph_t *friends_graph, char *name, int size);
+void find_clique(graph_t *friends_graph, char *name);
 
 void handle_input_feed(char *input) {
 	char *command = strtok(input, "\n ");
@@ -41,8 +43,11 @@ void handle_input_feed(char *input) {
 		uint32_t post_id = atoi(strtok(NULL, "\n "));
 
 		friends_repost(username, post_id);
-	} else if (!strcmp(command, "common-groups")) {
-		// TODO
+	} else if (!strcmp(command, "common-group")) {
+		char *name = strtok(NULL, "\n ");
+
+		graph_t *friends = get_all_friends();
+		find_clique(friends, name);
 	}
 }
 
@@ -129,3 +134,157 @@ void friends_repost(string_t username, uint32_t post_id) {
 	linked_list_free(friends);
 }
 
+int compare_uint16(void *a, void *b) {
+	return *(uint16_t *)b - *(uint16_t *)a;
+}
+
+void check_if_bigger(double_linked_list_t **clique,
+					 double_linked_list_t *curr_clique) {
+	if (curr_clique->size > (*clique)->size) {
+		dll_list_free(*clique);
+		*clique = dll_list_init(sizeof(uint16_t), free);
+
+		dll_node_t *curr_node = dll_get_head(curr_clique);
+		for (size_t i = 0; i < curr_clique->size; i++) {
+			uint16_t friend = *(uint16_t *)curr_node->data;
+			dll_list_add_sorted((*clique), &friend, compare_uint16);
+			curr_node = curr_node->next;
+		}
+	}
+}
+
+void dfs_recursive(graph_t *friends_graph, bool *visited,
+				   double_linked_list_t **clique, double_linked_list_t
+				   *possible_clique, double_linked_list_t *checked_users,
+				   uint16_t current) {
+	visited[current] = true;
+	stack_t *stack = stack_init(sizeof(uint16_t), free);
+
+	double_linked_list_t *friends = friends_graph->adjacency_list[current];
+
+	dll_node_t *curr_clique_node = dll_get_head(possible_clique);
+	dll_node_t *curr_friend_node = dll_get_head(friends);
+
+	for (size_t i = 0; i < possible_clique->size; i++) {
+		uint16_t in_clique = *(uint16_t *)curr_clique_node->data;
+
+		if (in_clique == current) {
+			curr_clique_node = curr_clique_node->next;
+			continue;
+		}
+
+		bool found = false;
+
+		while (1) {
+			uint16_t friend = *(uint16_t *)curr_friend_node->data;
+
+			if (in_clique == friend) {
+				found = true;
+				if (!visited[friend])
+					stack_push(stack, &friend);
+				break;
+			}
+
+			if (in_clique > friend) {
+				curr_friend_node = curr_friend_node->next;
+				continue;
+			}
+
+			if (in_clique < friend) {
+				break;
+			}
+		}
+
+		if (!found) {
+			curr_clique_node = curr_clique_node->next;
+			dll_node_t *to_free = dll_remove_nth_node(possible_clique, i);
+			possible_clique->free_data_function(to_free->data);
+			free(to_free);
+			i--;
+			continue;
+		}
+
+		curr_clique_node = curr_clique_node->next;
+	}
+
+//	TODO: free everything
+	if(possible_clique->size == 0) {
+		return;
+	}
+
+	check_if_bigger(clique, checked_users);
+
+	while (!stack_is_empty(stack)) {
+		uint16_t *friend = stack_pop(stack);
+		if (!visited[*friend]) {
+			double_linked_list_t *new_clique = dll_list_init(sizeof(uint16_t),
+															  free);
+			dll_node_t *curr_node = dll_get_head(possible_clique);
+			for (size_t i = 0; i < possible_clique->size; i++) {
+				uint16_t poss_mem = *(uint16_t *)curr_node->data;
+				dll_list_add_sorted(new_clique, &poss_mem, compare_uint16);
+				curr_node = curr_node->next;
+			}
+			dll_list_add_sorted(new_clique, &friend, compare_uint16);
+
+			dfs_recursive(friends_graph, visited, clique, new_clique,
+						  checked_users, *friend);
+
+			dll_list_free(new_clique);
+		}
+
+		free(friend);
+	}
+
+}
+
+void find_clique(graph_t *friends_graph, char *name) {
+	uint16_t id = get_user_id(name);
+	if (id == MAX_UINT16) {
+		printf("User not found\n");
+		return;
+	}
+
+	double_linked_list_t *clique = dll_list_init(sizeof(uint16_t), free);
+
+	double_linked_list_t *friends = friends_graph->adjacency_list[id];
+	dll_node_t *friends_node = friends->head;
+	for (size_t i = 0; i < friends->size; i++) {
+		uint16_t friend = *(uint16_t *)friends_node->data;
+
+		bool *visited = safe_calloc(friends_graph->num_nodes * sizeof(bool));
+		visited[id] = true;
+
+//		Init everything
+		double_linked_list_t *curr_clique = dll_list_init(sizeof(uint16_t),
+														  free);
+		double_linked_list_t *checked_users = dll_list_init(sizeof(uint16_t),
+															free);
+		dll_add_tail_value(checked_users, &id);
+
+		dll_node_t *curr_node = dll_get_head(friends);
+//	Initially, the clique is formed by all the friends of the user + the user
+		for (size_t j = 0; j < friends->size; j++) {
+			uint16_t poss_mem = *(uint16_t *)curr_node->data;
+			dll_list_add_sorted(curr_clique, &poss_mem, compare_uint16);
+			curr_node = curr_node->next;
+		}
+
+		dll_list_add_sorted(curr_clique, &id, compare_uint16);
+
+//		DFS on the current friend
+		dfs_recursive(friends_graph, visited, &clique, curr_clique,
+					  checked_users, friend);
+//		next
+		friends_node = friends_node->next;
+	}
+
+	printf("The closest friend group of %s is:\n", name);
+
+	dll_node_t *curr_node = dll_get_head(clique);
+	for (size_t i = 0; i < clique->size; i++) {
+		uint16_t friend = *(uint16_t *)curr_node->data;
+		printf("%s\n", get_username(friend));
+		curr_node = curr_node->next;
+	}
+}
