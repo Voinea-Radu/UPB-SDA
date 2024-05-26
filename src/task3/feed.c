@@ -263,6 +263,8 @@ void dfs_recursive(graph_t *friends_graph, bool *visited,
 		if(is_same)
 		{
 			*done = true;
+
+			stack_free(stack);
 			return;
 		}
 	}
@@ -271,7 +273,7 @@ void dfs_recursive(graph_t *friends_graph, bool *visited,
 		uint16_t *friend = stack_pop(stack);
 		if (!visited[*friend]) {
 			double_linked_list_t *new_clique = dll_list_init(sizeof(uint16_t),
-															  free);
+															 free);
 			dll_node_t *curr_node = dll_get_head(possible_clique);
 			for (size_t i = 0; i < possible_clique->size; i++) {
 				uint16_t poss_mem = *(uint16_t *)curr_node->data;
@@ -284,13 +286,20 @@ void dfs_recursive(graph_t *friends_graph, bool *visited,
 						  checked_users, *friend, done);
 
 			if(*done)
+			{
+				free(friend);
+				dll_list_free(new_clique);
+				stack_free(stack);
 				return;
+			}
 
 			dll_list_free(new_clique);
 		}
 
 		free(friend);
 	}
+
+	stack_free(stack);
 
 }
 
@@ -339,6 +348,9 @@ void find_clique(graph_t *friends_graph, char *name) {
 					  checked_users, friend, &done);
 //		next
 		friends_node = friends_node->next;
+
+		dll_list_free(curr_clique);
+		dll_list_free(checked_users);
 	}
 
 	printf("The closest friend group of %s is:\n", name);
@@ -349,4 +361,7 @@ void find_clique(graph_t *friends_graph, char *name) {
 		printf("%s\n", get_username(friend));
 		curr_node = curr_node->next;
 	}
+
+	dll_list_free(clique);
+	free(visited);
 }
