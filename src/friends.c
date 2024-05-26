@@ -3,8 +3,7 @@
 #include "generic/linked_list.h"
 #include "utils/utils.h"
 
-graph_t *get_all_friends()
-{
+graph_t *get_all_friends() {
 	static graph_t *friends_graph = NULL;
 
 	if (friends_graph == NULL) {
@@ -14,13 +13,11 @@ graph_t *get_all_friends()
 	return friends_graph;
 }
 
-int cmp_ids(void *a, void *b)
-{
+int cmp_ids(void *a, void *b) {
 	return *(uint16_t *)b - *(uint16_t *)a;
 }
 
-void add_friend(char *name1, char *name2, graph_t *graph)
-{
+void add_friend(char *name1, char *name2, graph_t *graph) {
 	uint16_t id1 = get_user_id(name1);
 	uint16_t id2 = get_user_id(name2);
 
@@ -35,8 +32,7 @@ void add_friend(char *name1, char *name2, graph_t *graph)
 	printf("Added connection %s - %s\n", name1, name2);
 }
 
-void remove_friend(char *name1, char *name2, graph_t *graph)
-{
+void remove_friend(char *name1, char *name2, graph_t *graph) {
 	uint16_t id1 = get_user_id(name1);
 	uint16_t id2 = get_user_id(name2);
 
@@ -51,8 +47,8 @@ void remove_friend(char *name1, char *name2, graph_t *graph)
 	printf("Removed connection %s - %s\n", name1, name2);
 }
 
-uint16_t __get_distance(graph_t *graph, uint16_t curr_node, uint16_t find_node)
-{
+uint16_t
+__get_distance(graph_t *graph, uint16_t curr_node, uint16_t find_node) {
 	uint16_t *dist = calloc(graph->num_nodes, sizeof(uint16_t));
 	queue_t *q = queue_create(sizeof(uint16_t), free);
 
@@ -96,8 +92,7 @@ uint16_t __get_distance(graph_t *graph, uint16_t curr_node, uint16_t find_node)
 	return -1;
 }
 
-void distance(char *name1, char *name2, graph_t *graph)
-{
+void distance(char *name1, char *name2, graph_t *graph) {
 	uint16_t id1 = get_user_id(name1);
 	uint16_t id2 = get_user_id(name2);
 
@@ -114,8 +109,7 @@ void distance(char *name1, char *name2, graph_t *graph)
 		printf("The distance between %s - %s is %d\n", name1, name2, distance);
 }
 
-double_linked_list_t *__get_suggestions(graph_t *graph, uint16_t starting_id)
-{
+double_linked_list_t *__get_suggestions(graph_t *graph, uint16_t starting_id) {
 	double_linked_list_t *suggestions = dll_list_init(sizeof(uint16_t), free);
 
 	uint16_t *visited = calloc(graph->num_nodes, sizeof(uint16_t));
@@ -167,8 +161,7 @@ double_linked_list_t *__get_suggestions(graph_t *graph, uint16_t starting_id)
 	return suggestions;
 }
 
-void suggestions(char *name, graph_t *graph)
-{
+void suggestions(char *name, graph_t *graph) {
 	uint16_t id1 = get_user_id(name);
 
 	if (id1 == MAX_UINT16) {
@@ -198,8 +191,7 @@ void suggestions(char *name, graph_t *graph)
 	dll_list_free(suggestions);
 }
 
-uint16_t get_number_of_friends(uint16_t id, graph_t *graph)
-{
+uint16_t get_number_of_friends(uint16_t id, graph_t *graph) {
 	if (id == MAX_UINT16) {
 		printf("User not found\n");
 		return 0;
@@ -208,8 +200,7 @@ uint16_t get_number_of_friends(uint16_t id, graph_t *graph)
 	return graph->adjacency_list[id]->size;
 }
 
-double_linked_list_t *__get_common(uint16_t id1, uint16_t id2, graph_t *graph)
-{
+double_linked_list_t *__get_common(uint16_t id1, uint16_t id2, graph_t *graph) {
 	double_linked_list_t *common = dll_list_init(sizeof(uint16_t), free);
 
 	double_linked_list_t *from_list1 = graph->adjacency_list[id1];
@@ -236,8 +227,7 @@ double_linked_list_t *__get_common(uint16_t id1, uint16_t id2, graph_t *graph)
 	return common;
 }
 
-void common_friends(char *name1, char *name2, graph_t *graph)
-{
+void common_friends(char *name1, char *name2, graph_t *graph) {
 	uint16_t id1 = get_user_id(name1);
 	uint16_t id2 = get_user_id(name2);
 
@@ -263,8 +253,7 @@ void common_friends(char *name1, char *name2, graph_t *graph)
 	dll_list_free(common_friends);
 }
 
-void most_popular(char *name, graph_t *graph)
-{
+void most_popular(char *name, graph_t *graph) {
 	uint16_t starting_id = get_user_id(name);
 
 	uint16_t most_popular_id = starting_id;
@@ -294,8 +283,7 @@ void most_popular(char *name, graph_t *graph)
 	}
 }
 
-void handle_input_friends(const char *input, graph_t *friends_graph)
-{
+void handle_input_friends(const char *input, graph_t *friends_graph) {
 	string_t command = strdup(input);
 	char *cmd = strtok(command, "\n ");
 
@@ -341,8 +329,7 @@ void handle_input_friends(const char *input, graph_t *friends_graph)
 	free(command);
 }
 
-double_linked_list_t *get_friends(graph_t *friends, uint16_t id)
-{
+double_linked_list_t *get_friends(graph_t *friends, uint16_t id) {
 	return friends->adjacency_list[id];
 }
 

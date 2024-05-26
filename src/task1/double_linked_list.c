@@ -4,8 +4,7 @@
 
 #include "double_linked_list.h"
 
-dll_node_t *dll_node_alloc(void)
-{
+dll_node_t *dll_node_alloc(void) {
 	dll_node_t *new_node = malloc(sizeof(*new_node));
 	DIE(!new_node, "malloc() failed");
 
@@ -16,8 +15,7 @@ dll_node_t *dll_node_alloc(void)
 	return new_node;
 }
 
-double_linked_list_t *dll_alloc(void)
-{
+double_linked_list_t *dll_alloc(void) {
 	double_linked_list_t *new_list = calloc(1, sizeof(*new_list));
 	DIE(!new_list, "calloc() failed");
 
@@ -28,8 +26,7 @@ double_linked_list_t *dll_alloc(void)
 }
 
 double_linked_list_t *
-dll_list_init(size_t data_size, void *free_data_function)
-{
+dll_list_init(size_t data_size, void *free_data_function) {
 	double_linked_list_t *new_list = dll_alloc();
 
 	new_list->free_data_function = free_data_function;
@@ -39,18 +36,15 @@ dll_list_init(size_t data_size, void *free_data_function)
 	return new_list;
 }
 
-size_t dll_get_size(double_linked_list_t *list)
-{
+size_t dll_get_size(double_linked_list_t *list) {
 	return list->size;
 }
 
-bool dll_is_empty(double_linked_list_t *list)
-{
+bool dll_is_empty(double_linked_list_t *list) {
 	return dll_get_size(list) == 0;
 }
 
-void dll_set_head(double_linked_list_t *list, dll_node_t *node)
-{
+void dll_set_head(double_linked_list_t *list, dll_node_t *node) {
 	if (!list->head) {
 		list->head = node;
 		list->tail = node;
@@ -66,8 +60,7 @@ void dll_set_head(double_linked_list_t *list, dll_node_t *node)
 	list->size++;
 }
 
-void dll_add_nth_node(double_linked_list_t *list, size_t n, const void *data)
-{
+void dll_add_nth_node(double_linked_list_t *list, size_t n, const void *data) {
 	dll_node_t *new_node = dll_node_alloc();
 
 	new_node->data = malloc(list->data_size);
@@ -101,8 +94,7 @@ void dll_add_nth_node(double_linked_list_t *list, size_t n, const void *data)
 	list->size++;
 }
 
-dll_node_t *dll_remove_nth_node(double_linked_list_t *list, size_t n)
-{
+dll_node_t *dll_remove_nth_node(double_linked_list_t *list, size_t n) {
 	if (n == 0)
 		return dll_remove_head(list);
 
@@ -126,18 +118,15 @@ dll_node_t *dll_remove_nth_node(double_linked_list_t *list, size_t n)
 	return curr_node;
 }
 
-dll_node_t *dll_get_head(double_linked_list_t *list)
-{
+dll_node_t *dll_get_head(double_linked_list_t *list) {
 	return list->head;
 }
 
-dll_node_t *dll_get_tail(double_linked_list_t *list)
-{
+dll_node_t *dll_get_tail(double_linked_list_t *list) {
 	return list->tail;
 }
 
-dll_node_t *dll_remove_head(double_linked_list_t *list)
-{
+dll_node_t *dll_remove_head(double_linked_list_t *list) {
 	dll_node_t *to_remove = list->head;
 
 	if (!to_remove) {
@@ -159,8 +148,7 @@ dll_node_t *dll_remove_head(double_linked_list_t *list)
 	return to_remove;
 }
 
-void dll_add_tail(double_linked_list_t *list, dll_node_t *node)
-{
+void dll_add_tail(double_linked_list_t *list, dll_node_t *node) {
 	if (!list->tail) {
 		list->head = node;
 		list->tail = node;
@@ -177,8 +165,7 @@ void dll_add_tail(double_linked_list_t *list, dll_node_t *node)
 	list->size++;
 }
 
-void dll_refresh_node(double_linked_list_t *list, dll_node_t *node)
-{
+void dll_refresh_node(double_linked_list_t *list, dll_node_t *node) {
 	if (node == list->tail)
 		return;
 
@@ -196,8 +183,7 @@ void dll_refresh_node(double_linked_list_t *list, dll_node_t *node)
 	list->tail = node;
 }
 
-void dll_list_free(double_linked_list_t *list)
-{
+void dll_list_free(double_linked_list_t *list) {
 	dll_node_t *curr_node = dll_get_head(list);
 	while (curr_node) {
 		dll_node_t *to_del = curr_node;
@@ -212,6 +198,25 @@ void dll_list_free(double_linked_list_t *list)
 	free(list);
 }
 
+dll_node_t *dll_remove_tail(double_linked_list_t *list) {
+	dll_node_t *to_remove = list->tail;
+
+	if (!to_remove) {
+		printf("List is empty!\n");
+		exit(1);
+	}
+
+	list->tail = to_remove->prev;
+	list->size--;
+
+	if (!list->tail)
+		list->head = NULL;
+	else
+		list->tail->next = NULL;
+
+	return to_remove;
+}
+
 /**
  *
  * @param list: A double linked list
@@ -221,8 +226,7 @@ void dll_list_free(double_linked_list_t *list)
  * @return Return the node added
  */
 dll_node_t *dll_list_add_sorted(double_linked_list_t *list, void *value,
-								int (*cmp)(void *, void *))
-{
+								int (*cmp)(void *, void *)) {
 	dll_node_t *new_node = dll_node_alloc();
 
 	new_node->data = malloc(list->data_size);
@@ -279,6 +283,81 @@ dll_node_t *dll_list_add_sorted(double_linked_list_t *list, void *value,
 	return new_node;
 }
 
+dll_node_t *
+dll_list_add_sorted_with_limit(double_linked_list_t *list, void *value,
+							   int (*cmp)(void *, void *), size_t limit) {
+	dll_node_t *new_node = dll_node_alloc();
+	new_node->data = malloc(list->data_size);
+	memcpy(new_node->data, value, list->data_size);
+
+	dll_node_t *curr_node = dll_get_head(list);
+	dll_node_t *prev = NULL;
+	while (curr_node) {
+		int cmp_val = cmp(curr_node->data, new_node->data);
+
+		if (cmp_val >= 0) {
+			prev = curr_node;
+			curr_node = curr_node->next;
+			continue;
+		}
+
+		break;
+	}
+
+	list->size++;
+
+	if (!prev && !curr_node) {
+		list->head = new_node;
+		list->tail = new_node;
+		return new_node;
+	}
+
+	if (!prev) {
+		new_node->next = curr_node;
+
+		if (curr_node)
+			curr_node->prev = new_node;
+
+		list->head = new_node;
+
+		if (list->size > limit) {
+			dll_node_t *to_remove = dll_remove_tail(list);
+			list->free_data_function(to_remove->data);
+			free(to_remove);
+		}
+
+		return new_node;
+	}
+
+	if (!curr_node) {
+		if (list->size > limit) {
+			list->free_data_function(new_node->data);
+			free(new_node);
+			return NULL;
+		}
+		new_node->prev = prev;
+
+		prev->next = new_node;
+
+		list->tail = new_node;
+		return new_node;
+	}
+
+	prev->next = new_node;
+	new_node->prev = prev;
+
+	curr_node->prev = new_node;
+	new_node->next = curr_node;
+
+	if (list->size > limit) {
+		dll_node_t *to_remove = dll_remove_tail(list);
+		list->free_data_function(to_remove->data);
+		free(to_remove);
+	}
+
+	return new_node;
+}
+
 /**
  *
  * @param list: A double linked list
@@ -288,8 +367,7 @@ dll_node_t *dll_list_add_sorted(double_linked_list_t *list, void *value,
  * @return Return the node removed, NULL if no node was removed
  */
 dll_node_t *dll_list_remove_custom(double_linked_list_t *list, void *value,
-								   int (*cmp)(void *, void *))
-{
+								   int (*cmp)(void *, void *)) {
 	dll_node_t *curr_node = dll_get_head(list);
 	dll_node_t *prev = NULL;
 
@@ -317,4 +395,27 @@ dll_node_t *dll_list_remove_custom(double_linked_list_t *list, void *value,
 	}
 
 	return NULL;
+}
+
+void dll_add_head(double_linked_list_t *list, void *value) {
+	dll_node_t *new_node = dll_node_alloc();
+
+	new_node->data = malloc(list->data_size);
+	DIE(!new_node->data, "malloc() failed");
+
+	memcpy(new_node->data, value, list->data_size);
+
+	if (!list->head) {
+		list->head = new_node;
+		list->tail = new_node;
+		new_node->next = NULL;
+		new_node->prev = NULL;
+	} else {
+		new_node->next = list->head;
+		list->head->prev = new_node;
+		list->head = new_node;
+		new_node->prev = NULL;
+	}
+
+	list->size++;
 }
